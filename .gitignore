@@ -50,3 +50,5 @@ Thumbs.db
 #python bytecode cache, for some plugins.
 *.pyc
 Assets/tatumi/kloppenheim_02_4k.hdr
+2DHukuokaGameContest2023/Temp/PsdPlugin.dll.hash
+2DHukuokaGameContest2023/Temp
