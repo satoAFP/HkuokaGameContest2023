@@ -22,6 +22,9 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("レイの距離"), Range(1, 10)]
     private float raydistance;
 
+    [SerializeField, Header("主人公に近づいて止まる距離"), Range(0, 5)]
+    private float StopDistance;
+
 
     private Rigidbody2D rigidbody;              //リジットボディ2D取得
     private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
@@ -53,13 +56,27 @@ public class BaseEnemy : BaseStatusClass
 
         //Corgi、Shibaレイヤーとだけ衝突する
         int layerMask = LayerMask.GetMask(new string[] { "Player" });
+        hit = Physics2D.Raycast(ray.origin, new Vector2(0, 0) * raydistance, raydistance, layerMask);
 
         //レイの回転の初期化
-        rotato += RaySpeed;
-        RayRotato = new Vector2(Mathf.Cos(rotato), Mathf.Sin(rotato));
-        //レイを飛ばす
-        hit = Physics2D.Raycast(ray.origin + RayRotato, RayRotato * raydistance, raydistance, layerMask);
-        Debug.DrawRay(ray.origin + RayRotato, RayRotato * raydistance, Color.green);
+        if (!AttckMode)
+        {
+            rotato += RaySpeed;
+            RayRotato = new Vector2(Mathf.Cos(rotato), Mathf.Sin(rotato));
+            //レイを飛ばす
+            hit = Physics2D.Raycast(ray.origin + RayRotato, RayRotato * raydistance, raydistance, layerMask);
+            Debug.DrawRay(ray.origin + RayRotato, RayRotato * raydistance, Color.green);
+        }
+        else
+        {
+            var angles = new Vector3(GetAim(SearchGameObject.transform.position, transform.position), 0, 0);
+            var direction = Quaternion.Euler(angles) * Vector3.forward;
+
+            RayRotato = new Vector2(direction.x, direction.y);
+            //レイを飛ばす
+            hit = Physics2D.Raycast(ray.origin + RayRotato, RayRotato * raydistance, raydistance, layerMask);
+            Debug.DrawRay(ray.origin + RayRotato, RayRotato * raydistance, Color.green);
+        }
 
         if (hit.collider)
         {
@@ -103,7 +120,22 @@ public class BaseEnemy : BaseStatusClass
         //攻撃モードの行動
         else
         {
-            //ここ書いてね
+            //右居る時
+            if (SearchGameObject.transform.localPosition.x < transform.localPosition.x) 
+            {
+                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= StopDistance) 
+                {
+                    Debug.Log("aaa");
+                }
+            }
+            //左居る時
+            if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
+            {
+                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
+                {
+                    Debug.Log("bbb");
+                }
+            }
         }
 
 
@@ -114,5 +146,20 @@ public class BaseEnemy : BaseStatusClass
 
         
 
+    }
+
+
+    /// <summary>
+    /// 二点間の角度を求める関数
+    /// </summary>
+    /// <param name="p1">原点となるオブジェクト座標</param>
+    /// <param name="p2">角度を求めたいオブジェクト座標</param>
+    /// <returns>二点間の角度</returns>
+    public float GetAim(Vector3 p1, Vector3 p2)
+    {
+        float dx = p2.x - p1.x;
+        float dy = p2.y - p1.y;
+        float rad = Mathf.Atan2(dy, dx);
+        return rad * Mathf.Rad2Deg;
     }
 }
