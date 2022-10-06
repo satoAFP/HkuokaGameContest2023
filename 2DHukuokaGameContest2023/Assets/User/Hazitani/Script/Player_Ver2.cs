@@ -17,13 +17,13 @@ public class Player_Ver2 : MonoBehaviour
 	private float Gravity;
 
 
-
+	private Rigidbody2D rb2D;
 	private bool first = true;
-	private Rigidbody2D rigidbody;
+	private int jump_count = 0;
 
 	void Start()
 	{
-		rigidbody = gameObject.GetComponent<Rigidbody2D>();
+		rb2D = GetComponent<Rigidbody2D>();
 	}
 
 	void FixedUpdate()
@@ -35,35 +35,49 @@ public class Player_Ver2 : MonoBehaviour
 		if (Input.GetKey(KeyCode.A))
 		{
 			//最高速度になるとそれ以上加速しない
-			if (rigidbody.velocity.x > -LimitSpeed)
+			if (rb2D.velocity.x > -LimitSpeed)
 			{
-				rigidbody.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+				rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
 				//rigidbody.velocity = new Vector3(-MoveSpeed, 0, 0);
 			}
 		}
 		if (Input.GetKey(KeyCode.D))
 		{
 			//最高速度になるとそれ以上加速しない
-			if (rigidbody.velocity.x < LimitSpeed)
+			if (rb2D.velocity.x < LimitSpeed)
 			{
-				rigidbody.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+				rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
 				//rigidbody.velocity = new Vector3(MoveSpeed, 0, 0);
 			}
 		}
 
 
-
 		//ジャンプ処理
-		if (Input.GetKey(KeyCode.Space))
+		if (Input.GetKey(KeyCode.Space) && jump_count < 2)
 		{
+			//1回のみ
 			if (first)
 			{
-				rigidbody.AddForce(transform.up * JumpPower);
-				rigidbody.velocity = transform.up * JumpPower;
+				Debug.Log("ジャンプ入力された");
+				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
+
+				//カウント増加
+				jump_count++;
+				first = false;
 			}
-			first = false;
 		}
 		else
 			first = true;
 	}
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+		//Groundタグに触れた場合
+        if(other.gameObject.CompareTag("Ground"))
+        {
+			Debug.Log("着地しました");
+			//カウントリセット
+			jump_count = 0;
+        }
+    }
 }
