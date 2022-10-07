@@ -25,12 +25,14 @@ public class Player_Ver2 : MonoBehaviour
 
 	private Rigidbody2D rb2D;
 	private int jump_count = 0;
+	private bool ground_hit = false;
 	private int now_move = 0;//左:-1・停止:0・右:1
 
 	private Ray2D ray;				//飛ばすレイ
-	private float distance = 0.1f;	//レイを飛ばす距離
+	private float distance = 2.0f;	//レイを飛ばす距離
 	private RaycastHit2D hit;		//レイが何かに当たった時の情報
-	private Vector3 rayPosition;	//レイを発射する位置
+	private Vector3 rayPosition;    //レイを発射する位置
+	private GameObject SearchGameObject = null;//レイに触れたオブジェクト取得用
 
 	void Start()
 	{
@@ -40,24 +42,30 @@ public class Player_Ver2 : MonoBehaviour
 	void Update()
     {
 		//レイを発射する位置の調整
-		rayPosition = transform.position + new Vector3(0.0f, -0.5f, 0.0f);
+		rayPosition = this.transform.position + new Vector3(0.0f, -0.5f, 0.0f); ;
 		//レイを下に飛ばす
-		ray = new Ray2D(rayPosition, transform.up * -1);
+		ray = new Ray2D(rayPosition, -transform.up);
+
+		//Groundとだけ衝突する
+		int layerMask = LayerMask.GetMask(new string[] { "Ground" });
+		hit = Physics2D.Raycast(ray.origin, ray.direction, distance, layerMask);
+		
 		//レイを赤色で表示させる
 		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
 
-		////レイが当たったとき
-		//if (Physics2D.Raycast())
-		//{
-		//	if (hit.collider.tag == "Ground")
-		//	{
-		//		Debug.Log("レイ当たってます");
-		//		jump_count = 0;
-		//	}
-		//}
+		if (hit.collider)
+		{
+			SearchGameObject = hit.collider.gameObject;
 
-		//ジャンプ処理
-		if (Input.GetKeyDown(KeyCode.Space) && jump_count < 2)
+			if (SearchGameObject.tag == "Ground" && ground_hit == true && jump_count > 0)
+			{
+				Debug.Log("着地してる！");
+				jump_count = 0;
+			}
+		}
+
+        //ジャンプ処理
+        if (Input.GetKeyDown(KeyCode.Space) && jump_count < 1)
 		{
 			Debug.Log("ジャンプ入力された");
 			rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
@@ -131,12 +139,19 @@ public class Player_Ver2 : MonoBehaviour
 		}
 	}
 
-	private void OnCollisionEnter2D(Collision2D other)
-	{
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+			ground_hit = true;
+		}
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
 		if (other.gameObject.CompareTag("Ground"))
 		{
-			Debug.Log("着地した！");
-			jump_count = 0;
+			ground_hit = false;
 		}
 	}
 }
