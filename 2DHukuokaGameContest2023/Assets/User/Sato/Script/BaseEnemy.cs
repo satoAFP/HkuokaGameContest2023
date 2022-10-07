@@ -33,6 +33,10 @@ public class BaseEnemy : BaseStatusClass
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
 
+
+
+    private bool first = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,12 +55,17 @@ public class BaseEnemy : BaseStatusClass
         //主人公サーチ-------------------------------------------------------------------------------------------------------------
         //オブジェクトから右側にRayを伸ばす
         Ray2D ray = new Ray2D(transform.position, transform.right);
-        SearchGameObject = null;
+        //SearchGameObject = null;
         RaycastHit2D hit;
 
         //Corgi、Shibaレイヤーとだけ衝突する
         int layerMask = LayerMask.GetMask(new string[] { "Player" });
-        hit = Physics2D.Raycast(ray.origin, new Vector2(0, 0) * raydistance, raydistance, layerMask);
+
+        if (first)
+        {
+            hit = Physics2D.Raycast(ray.origin, new Vector2(0, 0) * raydistance, raydistance, layerMask);
+            first = false;
+        }
 
         //レイの回転の初期化
         if (!AttckMode)
@@ -72,10 +81,14 @@ public class BaseEnemy : BaseStatusClass
             var angles = new Vector3(GetAim(SearchGameObject.transform.position, transform.position), 0, 0);
             var direction = Quaternion.Euler(angles) * Vector3.forward;
 
+
+            Debug.Log(SearchGameObject.transform.localPosition);
+            Debug.Log(ray.origin);
+
             RayRotato = new Vector2(direction.x, direction.y);
             //レイを飛ばす
-            hit = Physics2D.Raycast(ray.origin + RayRotato, RayRotato * raydistance, raydistance, layerMask);
-            Debug.DrawRay(ray.origin + RayRotato, RayRotato * raydistance, Color.green);
+            hit = Physics2D.Raycast(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y)- ray.origin, raydistance, layerMask);
+            Debug.DrawRay(ray.origin , new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, Color.green);
         }
 
         if (hit.collider)
@@ -120,22 +133,22 @@ public class BaseEnemy : BaseStatusClass
         //攻撃モードの行動
         else
         {
-            //右居る時
-            if (SearchGameObject.transform.localPosition.x < transform.localPosition.x) 
-            {
-                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= StopDistance) 
-                {
-                    Debug.Log("aaa");
-                }
-            }
-            //左居る時
-            if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
-            {
-                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
-                {
-                    Debug.Log("bbb");
-                }
-            }
+            ////右居る時
+            //if (SearchGameObject.transform.localPosition.x < transform.localPosition.x) 
+            //{
+            //    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= StopDistance) 
+            //    {
+            //        Debug.Log("aaa");
+            //    }
+            //}
+            ////左居る時
+            //if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
+            //{
+            //    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
+            //    {
+            //        Debug.Log("bbb");
+            //    }
+            //}
         }
 
 
