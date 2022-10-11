@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Ver2 : MonoBehaviour
+public class Player_Ver2 : BaseStatusClass
 {
 	[SerializeField, Header("ƒWƒƒƒ“ƒv—Í"), Range(0, 100)]
 	private float JumpPower;
@@ -15,6 +15,7 @@ public class Player_Ver2 : MonoBehaviour
 
 	[SerializeField, Header("d—Í"), Range(0, 100)]
 	private float Gravity;
+
 
 	public enum Direction
 	{
