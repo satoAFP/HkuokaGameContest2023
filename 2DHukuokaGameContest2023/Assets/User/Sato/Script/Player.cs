@@ -39,7 +39,6 @@ public class Player : MonoBehaviour
 			if (rigidbody2d.velocity.x > -LimitSpeed)
 			{
 				rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
-				//rigidbody.velocity = new Vector3(-MoveSpeed, 0, 0);
 			}
 		}
 		if (Input.GetKey(KeyCode.D))
@@ -48,7 +47,6 @@ public class Player : MonoBehaviour
 			if (rigidbody2d.velocity.x < LimitSpeed)
 			{
 				rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-				//rigidbody.velocity = new Vector3(MoveSpeed, 0, 0);
 			}
 		}
 

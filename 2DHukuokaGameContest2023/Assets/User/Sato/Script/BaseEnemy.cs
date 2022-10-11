@@ -16,7 +16,7 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("重力"), Range(0, 100)]
     private float Gravity;
 
-    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1)] 
+    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1)]
     private float RaySpeed;
 
     [SerializeField, Header("レイの距離"), Range(1, 10)]
@@ -25,6 +25,9 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("主人公に近づいて止まる距離"), Range(0, 5)]
     private float StopDistance;
 
+    [SerializeField, Header("当たり判定オブジェクト")]
+    private GameObject AttckCollision;
+
 
     private Rigidbody2D rigidbody2d;              //リジットボディ2D取得
     private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
@@ -32,10 +35,12 @@ public class BaseEnemy : BaseStatusClass
     private float rotato = 0;                   //回転量
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
+    private bool AttckRight = false;            //右に攻撃
+    private bool AttckLeft = false;             //左に攻撃
+    private bool Attck1 = false;                //攻撃1
 
-
-
-    private bool first = true;
+    private bool first1 = true;
+    private bool first2 = true;
 
     // Start is called before the first frame update
     void Start()
@@ -55,38 +60,34 @@ public class BaseEnemy : BaseStatusClass
         //主人公サーチ-------------------------------------------------------------------------------------------------------------
         //オブジェクトから右側にRayを伸ばす
         Ray2D ray = new Ray2D(transform.position, transform.right);
-        //SearchGameObject = null;
         RaycastHit2D hit;
 
         //Corgi、Shibaレイヤーとだけ衝突する
         int layerMask = LayerMask.GetMask(new string[] { "Player" });
 
-        if (first)
+        //処理の最初に初期化
+        if (first1)
         {
             hit = Physics2D.Raycast(ray.origin, new Vector2(0, 0) * raydistance, raydistance, layerMask);
-            first = false;
+            first1 = false;
         }
 
-        //レイの回転の初期化
+        //レイの回転処理
         if (!AttckMode)
         {
             rotato += RaySpeed;
             RayRotato = new Vector2(Mathf.Cos(rotato), Mathf.Sin(rotato));
+
             //レイを飛ばす
             hit = Physics2D.Raycast(ray.origin + RayRotato, RayRotato * raydistance, raydistance, layerMask);
             Debug.DrawRay(ray.origin + RayRotato, RayRotato * raydistance, Color.green);
         }
         else
         {
-            var angles = new Vector3(GetAim(SearchGameObject.transform.position, transform.position), 0, 0);
-            var direction = Quaternion.Euler(angles) * Vector3.forward;
 
-
-
-            RayRotato = new Vector2(direction.x, direction.y);
             //レイを飛ばす
-            hit = Physics2D.Raycast(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y)- ray.origin, raydistance, layerMask);
-            Debug.DrawRay(ray.origin , new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, Color.green);
+            hit = Physics2D.Raycast(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, raydistance, layerMask);
+            Debug.DrawRay(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, Color.green);
         }
 
         if (hit.collider)
@@ -99,6 +100,8 @@ public class BaseEnemy : BaseStatusClass
             }
         }
 
+
+        
 
 
         //移動処理----------------------------------------------------------------------------------------------------------------
@@ -139,9 +142,11 @@ public class BaseEnemy : BaseStatusClass
                     //最高速度になるとそれ以上加速しない
                     if (rigidbody2d.velocity.x > -LimitSpeed)
                     {
+                        //移動処理
                         rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
                     }
                 }
+                AttckLeft = true;
             }
             //左居る時
             if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
@@ -154,31 +159,29 @@ public class BaseEnemy : BaseStatusClass
                         rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
                     }
                 }
+                AttckRight = true;
+            }
+
+
+            if (Input.GetKey(KeyCode.G))
+            {
+                if (first2)
+                    Attck1 = true;
+                first2 = false;
+            }
+            else
+                first2 = true;
+
+            Vector3 pos = transform.position;
+            pos.x += 1f;
+
+            //攻撃処理
+            if (Attck1)
+            {
+                Instantiate(AttckCollision, pos, Quaternion.identity);
+                Attck1 = false;
             }
         }
 
-
-
-
-        
-        
-
-        
-
-    }
-
-
-    /// <summary>
-    /// 二点間の角度を求める関数
-    /// </summary>
-    /// <param name="p1">原点となるオブジェクト座標</param>
-    /// <param name="p2">角度を求めたいオブジェクト座標</param>
-    /// <returns>二点間の角度</returns>
-    public float GetAim(Vector3 p1, Vector3 p2)
-    {
-        float dx = p2.x - p1.x;
-        float dy = p2.y - p1.y;
-        float rad = Mathf.Atan2(dy, dx);
-        return rad * Mathf.Rad2Deg;
     }
 }
