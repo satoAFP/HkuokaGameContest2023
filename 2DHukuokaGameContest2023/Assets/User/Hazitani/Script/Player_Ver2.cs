@@ -28,28 +28,22 @@ public class Player_Ver2 : MonoBehaviour
 	private bool ground_hit = false;
 	private int now_move = 0;//左:-1・停止:0・右:1
 
-	private Ray2D ray;				//飛ばすレイ
-	private float distance = 2.0f;	//レイを飛ばす距離
-	private RaycastHit2D hit;		//レイが何かに当たった時の情報
-	private Vector3 rayPosition;    //レイを発射する位置
-	private GameObject SearchGameObject = null;//レイに触れたオブジェクト取得用
-
-	void Start()
-	{
-		rb2D = GetComponent<Rigidbody2D>();
-	}
-
-	void Update()
+	private Ray2D ray_left, ray_right;			//飛ばすレイ
+	private float distance = 2.0f;				//レイを飛ばす距離
+	private RaycastHit2D hit_left,hit_right;	//レイが何かに当たった時の情報
+	private Vector3 rayPosition1, rayPosition2;	//レイを発射する位置
+	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
+	
+	//レイの接地判定
+	private void RayGround(Ray2D ray, RaycastHit2D hit, Vector3 vec)
     {
-		//レイを発射する位置の調整
-		rayPosition = this.transform.position + new Vector3(0.0f, -0.5f, 0.0f); ;
 		//レイを下に飛ばす
-		ray = new Ray2D(rayPosition, -transform.up);
+		ray = new Ray2D(vec, -transform.up);
 
 		//Groundとだけ衝突する
 		int layerMask = LayerMask.GetMask(new string[] { "Ground" });
 		hit = Physics2D.Raycast(ray.origin, ray.direction, distance, layerMask);
-		
+
 		//レイを赤色で表示させる
 		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
 
@@ -63,6 +57,22 @@ public class Player_Ver2 : MonoBehaviour
 				jump_count = 0;
 			}
 		}
+	}
+
+	void Start()
+	{
+		rb2D = GetComponent<Rigidbody2D>();
+	}
+
+	void Update()
+    {
+		//レイを発射する位置の調整
+		rayPosition1 = this.transform.position + new Vector3(-0.5f, -0.5f, 0.0f);
+		rayPosition2 = this.transform.position + new Vector3(0.5f, -0.5f, 0.0f);
+
+		//レイの接地判定
+		RayGround(ray_left, hit_left, rayPosition1);
+		RayGround(ray_right, hit_right, rayPosition2);
 
         //ジャンプ処理
         if (Input.GetKeyDown(KeyCode.Space) && jump_count < 1)
