@@ -19,11 +19,11 @@ public class Player : MonoBehaviour
 
 
 	private bool first = true;
-	private Rigidbody2D rigidbody;
+	private Rigidbody2D rigidbody2d;
 
 	void Start()
 	{
-		rigidbody = gameObject.GetComponent<Rigidbody2D>();
+		rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
 	}
 
 	void FixedUpdate()
@@ -36,18 +36,18 @@ public class Player : MonoBehaviour
 		if (Input.GetKey(KeyCode.A))
 		{
 			//ç≈çÇë¨ìxÇ…Ç»ÇÈÇ∆ÇªÇÍà»è„â¡ë¨ÇµÇ»Ç¢
-			if (rigidbody.velocity.x > -LimitSpeed)
+			if (rigidbody2d.velocity.x > -LimitSpeed)
 			{
-				rigidbody.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+				rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
 				//rigidbody.velocity = new Vector3(-MoveSpeed, 0, 0);
 			}
 		}
 		if (Input.GetKey(KeyCode.D))
 		{
 			//ç≈çÇë¨ìxÇ…Ç»ÇÈÇ∆ÇªÇÍà»è„â¡ë¨ÇµÇ»Ç¢
-			if (rigidbody.velocity.x < LimitSpeed)
+			if (rigidbody2d.velocity.x < LimitSpeed)
 			{
-				rigidbody.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+				rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
 				//rigidbody.velocity = new Vector3(MoveSpeed, 0, 0);
 			}
 		}
@@ -59,8 +59,8 @@ public class Player : MonoBehaviour
 		{
 			if (first)
 			{
-				rigidbody.AddForce(transform.up * JumpPower);
-				rigidbody.velocity = transform.up * JumpPower;
+				rigidbody2d.AddForce(transform.up * JumpPower);
+				rigidbody2d.velocity = transform.up * JumpPower;
 			}
 			first = false;
 		}
