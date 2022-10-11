@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BaseStatusClass : MonoBehaviour
 {
-    private float HP;
-    private float ATK;
-    private float DEF;
-
-
+    [SerializeField]protected float HP;
+    [SerializeField] protected float ATK;
 }

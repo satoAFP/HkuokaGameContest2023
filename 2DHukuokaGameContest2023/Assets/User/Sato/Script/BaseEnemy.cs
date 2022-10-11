@@ -26,7 +26,7 @@ public class BaseEnemy : BaseStatusClass
     private float StopDistance;
 
 
-    private Rigidbody2D rigidbody;              //リジットボディ2D取得
+    private Rigidbody2D rigidbody2d;              //リジットボディ2D取得
     private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
     private Vector2 RayRotato;                  //レイの回転位置決定変数
     private float rotato = 0;                   //回転量
@@ -40,7 +40,7 @@ public class BaseEnemy : BaseStatusClass
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -82,8 +82,6 @@ public class BaseEnemy : BaseStatusClass
             var direction = Quaternion.Euler(angles) * Vector3.forward;
 
 
-            Debug.Log(SearchGameObject.transform.localPosition);
-            Debug.Log(ray.origin);
 
             RayRotato = new Vector2(direction.x, direction.y);
             //レイを飛ばす
@@ -111,17 +109,17 @@ public class BaseEnemy : BaseStatusClass
             if (MoveCount <= (MoveFrame / 2))
             {
                 //最高速度になるとそれ以上加速しない
-                if (rigidbody.velocity.x > -LimitSpeed)
+                if (rigidbody2d.velocity.x > -LimitSpeed)
                 {
-                    rigidbody.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+                    rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
                 }
             }
             if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
             {
                 //最高速度になるとそれ以上加速しない
-                if (rigidbody.velocity.x < LimitSpeed)
+                if (rigidbody2d.velocity.x < LimitSpeed)
                 {
-                    rigidbody.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+                    rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
                 }
             }
             if (MoveCount > MoveFrame)
@@ -133,22 +131,30 @@ public class BaseEnemy : BaseStatusClass
         //攻撃モードの行動
         else
         {
-            ////右居る時
-            //if (SearchGameObject.transform.localPosition.x < transform.localPosition.x) 
-            //{
-            //    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= StopDistance) 
-            //    {
-            //        Debug.Log("aaa");
-            //    }
-            //}
-            ////左居る時
-            //if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
-            //{
-            //    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
-            //    {
-            //        Debug.Log("bbb");
-            //    }
-            //}
+            //右居る時
+            if (SearchGameObject.transform.localPosition.x < transform.localPosition.x)
+            {
+                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= -StopDistance)
+                {
+                    //最高速度になるとそれ以上加速しない
+                    if (rigidbody2d.velocity.x > -LimitSpeed)
+                    {
+                        rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+                    }
+                }
+            }
+            //左居る時
+            if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
+            {
+                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
+                {
+                    //最高速度になるとそれ以上加速しない
+                    if (rigidbody2d.velocity.x < LimitSpeed)
+                    {
+                        rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+                    }
+                }
+            }
         }
 
 
