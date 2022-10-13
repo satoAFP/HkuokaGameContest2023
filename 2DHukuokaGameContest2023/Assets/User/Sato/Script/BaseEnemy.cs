@@ -25,6 +25,9 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("ålŒö‚É‹ß‚Ã‚¢‚Ä~‚Ü‚é‹——£"), Range(0, 5)]
     private float StopDistance;
 
+    [SerializeField, Header("©g‚©‚ç‚Ç‚ÌˆÊ’u‚ÉUŒ‚”»’è‚ğİ’è‚·‚é‚©")]
+    private Vector3 AttackPos;
+
     [SerializeField, Header("UŒ‚•p“x"), Range(0, 500)]
     private int AttackFrequency;
 
@@ -187,18 +190,19 @@ public class BaseEnemy : BaseStatusClass
 
             if (AttckDirection == 1) 
             {
-                pos.x += 1f;
+                pos += AttackPos;
             }
             if (AttckDirection == 2)
             {
-                pos.x -= 1f;
+                pos -= AttackPos;
             }
 
 
             //UŒ‚ˆ—
             if (Attck1)
             {
-                Instantiate(AttackCollision, pos, Quaternion.identity);
+                GameObject obj = Instantiate(AttackCollision, pos, Quaternion.identity);
+                obj.transform.parent = gameObject.transform;
                 Attck1 = false;
             }
         }
