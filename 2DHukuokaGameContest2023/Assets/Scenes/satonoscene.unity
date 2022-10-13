@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 621624874}
   - component: {fileID: 621624873}
   m_Layer: 0
-  m_Name: enemy(kari)
+  m_Name: EnemyTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -390,13 +390,14 @@ MonoBehaviour:
   HP: 0
   ATK: 0
   MoveSpeed: 100
-  LimitSpeed: 6
+  LimitSpeed: 5
   MoveFrame: 300
   Gravity: 50
   RaySpeed: 1
   raydistance: 5
   StopDistance: 3
-  AttckCollision: {fileID: 3433109412725544667, guid: 48d9d7e1e470e43418d5f427cbeab2b3, type: 3}
+  AttackFrequency: 200
+  AttackCollision: {fileID: 3433109412725544667, guid: 48d9d7e1e470e43418d5f427cbeab2b3, type: 3}
 --- !u!50 &621624874
 Rigidbody2D:
   serializedVersion: 4

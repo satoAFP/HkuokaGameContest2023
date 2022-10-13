@@ -25,18 +25,24 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("主人公に近づいて止まる距離"), Range(0, 5)]
     private float StopDistance;
 
+    [SerializeField, Header("攻撃頻度"), Range(0, 500)]
+    private int AttackFrequency;
+
+
     [SerializeField, Header("当たり判定オブジェクト")]
-    private GameObject AttckCollision;
+    private GameObject AttackCollision;
 
 
-    private Rigidbody2D rigidbody2d;              //リジットボディ2D取得
+
+
+    private Rigidbody2D rigidbody2d;            //リジットボディ2D取得
     private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
     private Vector2 RayRotato;                  //レイの回転位置決定変数
     private float rotato = 0;                   //回転量
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
-    private bool AttckRight = false;            //右に攻撃
-    private bool AttckLeft = false;             //左に攻撃
+    private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
+    private int AttackFreCount = 0;             //攻撃頻度計算時フレームカウント用
     private bool Attck1 = false;                //攻撃1
 
     private bool first1 = true;
@@ -130,10 +136,16 @@ public class BaseEnemy : BaseStatusClass
                 //カウントリセット
                 MoveCount = 0;
             }
+
+            //攻撃モードでない時は攻撃までのフレームカウントをリセット
+            AttackFreCount = 0;
         }
         //攻撃モードの行動
         else
         {
+            //攻撃までのフレームカウント
+            AttackFreCount++;
+
             //右居る時
             if (SearchGameObject.transform.localPosition.x < transform.localPosition.x)
             {
@@ -146,7 +158,8 @@ public class BaseEnemy : BaseStatusClass
                         rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
                     }
                 }
-                AttckLeft = true;
+                //左に攻撃
+                AttckDirection = 2;
             }
             //左居る時
             if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
@@ -159,26 +172,33 @@ public class BaseEnemy : BaseStatusClass
                         rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
                     }
                 }
-                AttckRight = true;
+                //右に攻撃
+                AttckDirection = 1;
             }
 
 
-            if (Input.GetKey(KeyCode.G))
+            if (AttackFrequency == AttackFreCount) 
             {
-                if (first2)
-                    Attck1 = true;
-                first2 = false;
+                Attck1 = true;
+                AttackFreCount = 0;
             }
-            else
-                first2 = true;
 
             Vector3 pos = transform.position;
-            pos.x += 1f;
+
+            if (AttckDirection == 1) 
+            {
+                pos.x += 1f;
+            }
+            if (AttckDirection == 2)
+            {
+                pos.x -= 1f;
+            }
+
 
             //攻撃処理
             if (Attck1)
             {
-                Instantiate(AttckCollision, pos, Quaternion.identity);
+                Instantiate(AttackCollision, pos, Quaternion.identity);
                 Attck1 = false;
             }
         }
