@@ -31,6 +31,9 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("攻撃頻度"), Range(0, 500)]
     private int AttackFrequency;
 
+    [SerializeField, Header("主人公と衝突した時のノックバック")]
+    private Vector2 KnockbackPow;
+
 
     [SerializeField, Header("当たり判定オブジェクト")]
     private GameObject AttackCollision;
@@ -99,12 +102,14 @@ public class BaseEnemy : BaseStatusClass
             Debug.DrawRay(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, Color.green);
         }
 
+        //レイで主人公を見つけた時
         if (hit.collider)
         {
             SearchGameObject = hit.collider.gameObject;
 
             if (SearchGameObject.tag == "Player")
             {
+                //攻撃モードに移行
                 AttckMode = true;
             }
         }
@@ -113,8 +118,8 @@ public class BaseEnemy : BaseStatusClass
         
 
 
-        //移動処理----------------------------------------------------------------------------------------------------------------
-        //攻撃モードに入っていないときの行動
+        //行動処理----------------------------------------------------------------------------------------------------------------
+        //攻撃モードに入っていないときの行動>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if (!AttckMode)
         {
             MoveCount++;
@@ -143,7 +148,10 @@ public class BaseEnemy : BaseStatusClass
             //攻撃モードでない時は攻撃までのフレームカウントをリセット
             AttackFreCount = 0;
         }
-        //攻撃モードの行動
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+        //攻撃モードの行動>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         else
         {
             //攻撃までのフレームカウント
@@ -180,32 +188,59 @@ public class BaseEnemy : BaseStatusClass
             }
 
 
+            //攻撃処理
+            Vector3 pos = transform.position;//攻撃位置の座標更新用
+            //攻撃までタイミング
             if (AttackFrequency == AttackFreCount) 
             {
                 Attck1 = true;
                 AttackFreCount = 0;
             }
 
-            Vector3 pos = transform.position;
-
+            //攻撃するときの向き
             if (AttckDirection == 1) 
             {
-                pos += AttackPos;
+                pos += AttackPos;//右
             }
             if (AttckDirection == 2)
             {
-                pos -= AttackPos;
+                pos -= AttackPos;//左
             }
 
-
-            //攻撃処理
+            //攻撃
             if (Attck1)
             {
                 GameObject obj = Instantiate(AttackCollision, pos, Quaternion.identity);
                 obj.transform.parent = gameObject.transform;
+                obj.GetComponent<AttckCollision>().Damage = ATK;
                 Attck1 = false;
             }
+            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         }
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag=="Player")
+        {
+            if (AttckDirection == 1)
+            {
+                rigidbody2d.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
+            }
+            if (AttckDirection == 2)
+            {
+                rigidbody2d.AddForce(KnockbackPow, ForceMode2D.Force);
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //主人公の攻撃に当たった時
+        if (collision.tag == "PlayerAttack") 
+        {
+
+        }
     }
 }
