@@ -37,6 +37,9 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("主人公と衝突した時のノックバック")]
     private Vector2 KnockbackPow;
 
+    [SerializeField, Header("けり上げ時のノックバック")]
+    private Vector2 KnockbackKickPow;
+
 
     [SerializeField, Header("当たり判定オブジェクト")]
     private GameObject AttackCollision;
@@ -52,6 +55,7 @@ public class BaseEnemy : BaseStatusClass
 
     private Rigidbody2D rigidbody2d;            //リジットボディ2D取得
     private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
+    private bool MoveStop = false;              //動きを止めたいとき使用
     private Vector2 RayRotato;                  //レイの回転位置決定変数
     private float rotato = 0;                   //回転量
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
@@ -74,13 +78,25 @@ public class BaseEnemy : BaseStatusClass
     // Update is called once per frame
     void FixedUpdate()
     {
-        //重力設定-----------------------------------------------------------------------------------------------------------------
+        //重力設定>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
+        //死亡処理>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        if (HP <= 0) 
+        {
+            //アイテムドロップ処理
 
-        //主人公サーチ-------------------------------------------------------------------------------------------------------------
+            //削除
+            Destroy(gameObject);
+        }
+
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+        //主人公サーチ>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //オブジェクトから右側にRayを伸ばす
         Ray2D ray = new Ray2D(transform.position, transform.right);
         RaycastHit2D hit;
@@ -124,137 +140,148 @@ public class BaseEnemy : BaseStatusClass
                 AttckMode = true;
             }
         }
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-        
 
 
-        //行動処理----------------------------------------------------------------------------------------------------------------
-        //攻撃モードに入っていないときの行動>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        if (!AttckMode)
+        //行動処理>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        if (!MoveStop)
         {
-            MoveCount++;
-            if (MoveCount <= (MoveFrame / 2))
+            //攻撃モードに入っていないときの行動---------------------------------------------------
+            if (!AttckMode)
             {
-                //最高速度になるとそれ以上加速しない
-                if (rigidbody2d.velocity.x > -LimitSpeed)
-                {
-                    rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
-                }
-                transform.localScale = new Vector3(-1f, 1f, 1f);
-            }
-            if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
-            {
-                //最高速度になるとそれ以上加速しない
-                if (rigidbody2d.velocity.x < LimitSpeed)
-                {
-                    rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-                }
-                transform.localScale = new Vector3(1f, 1f, 1f);
-            }
-            if (MoveCount > MoveFrame)
-            {
-                //カウントリセット
-                MoveCount = 0;
-            }
-
-            //攻撃モードでない時は攻撃までのフレームカウントをリセット
-            AttackFreCount = 0;
-        }
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-
-        //攻撃モードの行動>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        else
-        {
-            //攻撃までのフレームカウント
-            AttackFreCount++;
-
-            //右居る時
-            if (SearchGameObject.transform.localPosition.x < transform.localPosition.x)
-            {
-                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= -StopDistance)
+                MoveCount++;
+                if (MoveCount <= (MoveFrame / 2))
                 {
                     //最高速度になるとそれ以上加速しない
                     if (rigidbody2d.velocity.x > -LimitSpeed)
                     {
-                        //移動処理
                         rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
                     }
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
                 }
-                //左に攻撃
-                AttckDirection = 2;
-                //左向く
-                transform.localScale = new Vector3(-1f, 1f, 1f);
-            }
-            //左居る時
-            if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
-            {
-                if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
+                if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
                 {
                     //最高速度になるとそれ以上加速しない
                     if (rigidbody2d.velocity.x < LimitSpeed)
                     {
                         rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
                     }
+                    transform.localScale = new Vector3(1f, 1f, 1f);
                 }
-                //右に攻撃
-                AttckDirection = 1;
-                //右向く
-                transform.localScale = new Vector3(1f, 1f, 1f);
-            }
-
-
-            //攻撃処理
-            Vector3 pos = transform.position;//攻撃位置の座標更新用
-            //攻撃までタイミング
-            if (AttackFrequency == AttackFreCount) 
-            {
-                Attck1 = true;
-                AttackMotCheck = true;
-                AttackFreCount = 0;
-                gameObject.GetComponent<SpriteRenderer>().sprite = AttackImage;
-            }
-
-            //攻撃するときの向き
-            if (AttckDirection == 1) 
-            {
-                pos += AttackPos;//右
-            }
-            if (AttckDirection == 2)
-            {
-                pos -= AttackPos;//左
-            }
-
-            //攻撃モーション
-            if(AttackMotCheck)
-            {
-                AttackMotCount++;
-                //モーション終了条件
-                if (AttackMotionFrame == AttackMotCount)
+                if (MoveCount > MoveFrame)
                 {
-                    AttackMotCount = 0;
-                    AttackMotCheck = false;
-                    gameObject.GetComponent<SpriteRenderer>().sprite = StandImage;
+                    //カウントリセット
+                    MoveCount = 0;
                 }
-            }
 
-            //攻撃
-            if (Attck1)
+                //攻撃モードでない時は攻撃までのフレームカウントをリセット
+                AttackFreCount = 0;
+            }
+            //------------------------------------------------------------------
+
+
+            //攻撃モードの行動--------------------------------------------------
+            else
             {
-                GameObject obj = Instantiate(AttackCollision, pos, Quaternion.identity);
-                obj.transform.parent = gameObject.transform;
-                obj.GetComponent<AttckCollision>().Damage = ATK;
-                Attck1 = false;
-            }
-            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        }
+                //攻撃までのフレームカウント
+                AttackFreCount++;
 
+                //右居る時
+                if (SearchGameObject.transform.localPosition.x < transform.localPosition.x)
+                {
+                    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= -StopDistance)
+                    {
+                        //最高速度になるとそれ以上加速しない
+                        if (rigidbody2d.velocity.x > -LimitSpeed)
+                        {
+                            //移動処理
+                            rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+                        }
+                    }
+                    //左に攻撃
+                    AttckDirection = 2;
+                    //左向く
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                }
+                //左居る時
+                if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
+                {
+                    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
+                    {
+                        //最高速度になるとそれ以上加速しない
+                        if (rigidbody2d.velocity.x < LimitSpeed)
+                        {
+                            rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+                        }
+                    }
+                    //右に攻撃
+                    AttckDirection = 1;
+                    //右向く
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                }
+
+
+                //攻撃処理
+                Vector3 pos = transform.position;//攻撃位置の座標更新用
+                                                 //攻撃までタイミング
+                if (AttackFrequency == AttackFreCount)
+                {
+                    Attck1 = true;
+                    AttackMotCheck = true;
+                    AttackFreCount = 0;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = AttackImage;
+                }
+
+                //攻撃するときの向き
+                if (AttckDirection == 1)
+                {
+                    pos += AttackPos;//右
+                }
+                if (AttckDirection == 2)
+                {
+                    pos -= AttackPos;//左
+                }
+
+                //攻撃モーション
+                if (AttackMotCheck)
+                {
+                    AttackMotCount++;
+                    //モーション終了条件
+                    if (AttackMotionFrame == AttackMotCount)
+                    {
+                        AttackMotCount = 0;
+                        AttackMotCheck = false;
+                        gameObject.GetComponent<SpriteRenderer>().sprite = StandImage;
+                    }
+                }
+
+                //攻撃
+                if (Attck1)
+                {
+                    GameObject obj = Instantiate(AttackCollision, pos, Quaternion.identity);
+                    obj.transform.parent = gameObject.transform;
+                    obj.GetComponent<AttckCollision>().Damage = ATK;
+                    Attck1 = false;
+                }
+                //-------------------------------------------------------------------------
+            }
+        }
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag=="Player")
+        //地面に着地で移動停止終了
+        if (collision.gameObject.tag == "Ground")
+        {
+            MoveStop = false;
+        }
+
+
+        //主人公と衝突時のノックバック
+        if (collision.gameObject.tag=="Player")
         {
             if (AttckDirection == 1)
             {
@@ -264,7 +291,10 @@ public class BaseEnemy : BaseStatusClass
             {
                 rigidbody2d.AddForce(KnockbackPow, ForceMode2D.Force);
             }
+            MoveStop = true;
         }
+
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -272,7 +302,22 @@ public class BaseEnemy : BaseStatusClass
         //主人公の攻撃に当たった時
         if (collision.tag == "PlayerAttack") 
         {
+            //HP減らす処理
 
+        }
+
+        //蹴り上げられた時の処理
+        if (collision.tag == "Finish") 
+        {
+            if (AttckDirection == 1)
+            {
+                rigidbody2d.AddForce(new Vector2(-KnockbackKickPow.x, KnockbackKickPow.y), ForceMode2D.Force);
+            }
+            if (AttckDirection == 2)
+            {
+                rigidbody2d.AddForce(KnockbackKickPow, ForceMode2D.Force);
+            }
+            MoveStop = true;
         }
     }
 }
