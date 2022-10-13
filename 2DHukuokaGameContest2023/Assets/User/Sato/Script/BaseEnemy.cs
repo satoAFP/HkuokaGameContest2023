@@ -31,12 +31,21 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("攻撃頻度"), Range(0, 500)]
     private int AttackFrequency;
 
+    [SerializeField, Header("攻撃モーションのフレーム"), Range(0, 50)]
+    private int AttackMotionFrame;
+
     [SerializeField, Header("主人公と衝突した時のノックバック")]
     private Vector2 KnockbackPow;
 
 
     [SerializeField, Header("当たり判定オブジェクト")]
     private GameObject AttackCollision;
+
+    [SerializeField, Header("待機時の画像")]
+    private Sprite StandImage;
+
+    [SerializeField, Header("攻撃時の画像")]
+    private Sprite AttackImage;
 
 
 
@@ -49,6 +58,8 @@ public class BaseEnemy : BaseStatusClass
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
     private int AttackFreCount = 0;             //攻撃頻度計算時フレームカウント用
+    private int AttackMotCount = 0;             //攻撃モーション計算時フレームカウント用
+    private bool AttackMotCheck = false;        //攻撃モーション中trueになる
     private bool Attck1 = false;                //攻撃1
 
     private bool first1 = true;
@@ -130,6 +141,7 @@ public class BaseEnemy : BaseStatusClass
                 {
                     rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
                 }
+                transform.localScale = new Vector3(-1f, 1f, 1f);
             }
             if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
             {
@@ -138,6 +150,7 @@ public class BaseEnemy : BaseStatusClass
                 {
                     rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
                 }
+                transform.localScale = new Vector3(1f, 1f, 1f);
             }
             if (MoveCount > MoveFrame)
             {
@@ -171,6 +184,8 @@ public class BaseEnemy : BaseStatusClass
                 }
                 //左に攻撃
                 AttckDirection = 2;
+                //左向く
+                transform.localScale = new Vector3(-1f, 1f, 1f);
             }
             //左居る時
             if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
@@ -185,6 +200,8 @@ public class BaseEnemy : BaseStatusClass
                 }
                 //右に攻撃
                 AttckDirection = 1;
+                //右向く
+                transform.localScale = new Vector3(1f, 1f, 1f);
             }
 
 
@@ -194,7 +211,9 @@ public class BaseEnemy : BaseStatusClass
             if (AttackFrequency == AttackFreCount) 
             {
                 Attck1 = true;
+                AttackMotCheck = true;
                 AttackFreCount = 0;
+                gameObject.GetComponent<SpriteRenderer>().sprite = AttackImage;
             }
 
             //攻撃するときの向き
@@ -205,6 +224,19 @@ public class BaseEnemy : BaseStatusClass
             if (AttckDirection == 2)
             {
                 pos -= AttackPos;//左
+            }
+
+            //攻撃モーション
+            if(AttackMotCheck)
+            {
+                AttackMotCount++;
+                //モーション終了条件
+                if (AttackMotionFrame == AttackMotCount)
+                {
+                    AttackMotCount = 0;
+                    AttackMotCheck = false;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = StandImage;
+                }
             }
 
             //攻撃
