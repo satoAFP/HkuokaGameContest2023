@@ -40,9 +40,15 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("けり上げ時のノックバック")]
     private Vector2 KnockbackKickPow;
 
+    [SerializeField, Header("アイテムドロップ率"), Range(0, 100)]
+    private int dropRate;
+
 
     [SerializeField, Header("当たり判定オブジェクト")]
     private GameObject AttackCollision;
+
+    [SerializeField, Header("当たり判定オブジェクト")]
+    private DropItemList dropItemList;
 
     [SerializeField, Header("待機時の画像")]
     private Sprite StandImage;
@@ -88,6 +94,10 @@ public class BaseEnemy : BaseStatusClass
         if (HP <= 0) 
         {
             //アイテムドロップ処理
+            if (dropRate >= Random.Range(0, 100)) 
+            {
+                Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
+            }
 
             //削除
             Destroy(gameObject);
@@ -318,6 +328,7 @@ public class BaseEnemy : BaseStatusClass
                 rigidbody2d.AddForce(KnockbackKickPow, ForceMode2D.Force);
             }
             MoveStop = true;
+            HP -= 50;
         }
     }
 }
