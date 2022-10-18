@@ -19,6 +19,18 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("回避距離"), Range(0, 100)]
 	private float AvoidDis;
 
+	[SerializeField, Header("回避時間"), Range(0, 100)]
+	private int AvoidTime;
+
+	[SerializeField, Header("自身からどの位置に攻撃判定を設定するか")]
+	private Vector3 AttackPos;
+
+	[SerializeField, Header("当たり判定パンチ")]
+	private GameObject AttackCollisionPunch;
+
+	[SerializeField, Header("当たり判定キック")]
+	private GameObject AttackCollisionKick;
+
 
 	public enum Direction
 	{
@@ -35,11 +47,13 @@ public class Player_Ver2 : BaseStatusClass
 	}
 
 	private Rigidbody2D rb2D;
-	private int jump_count = 0;
-	private bool ground_hit = false;
-	private int now_move = 0;//左:-1・停止:0・右:1
-	private int last_attack = 0;
-	private bool avoiding = false;
+	private int jump_count = 0;			//ジャンプ回数
+	private bool ground_hit = false;	//地面に立っているか
+	private int now_move = 0;			//左:-1・停止:0・右:1
+	private bool player_frip = false;	//プレイヤーの向き
+	private int last_attack = 0;		//最後の攻撃（コンボがつながるか確認用）
+	private bool avoiding = false;      //回避中かどうか
+	private float avoid_time = 0;		//回避時間
 
 	private Ray2D ray_left, ray_right;			//飛ばすレイ
 	private float distance = 2.0f;				//レイを飛ばす距離
@@ -97,6 +111,13 @@ public class Player_Ver2 : BaseStatusClass
 			jump_count++;
 		}
 
+		//攻撃の向き設定
+		Vector3 pos = transform.position;//攻撃位置の座標更新用
+		if (player_frip)
+			pos += AttackPos;//右
+		else
+			pos -= AttackPos;//左
+
 		//弱攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -104,51 +125,72 @@ public class Player_Ver2 : BaseStatusClass
             {
 				case (int)Direction.LEFT:
 					Debug.Log("左弱キック！");
+					GameObject obj = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
+					obj.transform.parent = gameObject.transform;
+					obj.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("弱パンチ！");
+					GameObject obj1 = Instantiate(AttackCollisionPunch, pos, Quaternion.identity);
+					obj1.transform.parent = gameObject.transform;
+					obj1.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右弱キック！");
+					GameObject obj2 = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
+					obj2.transform.parent = gameObject.transform;
+					obj2.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 			}
 			last_attack = (int)LastAttack.WEAK;
 		}
 
 		//強攻撃
-		if (Input.GetMouseButtonDown(1) && last_attack == (int)LastAttack.NONE || last_attack == (int)LastAttack.WEAK)
+		if (Input.GetMouseButtonDown(1))
 		{
 			switch (now_move)
 			{
 				case (int)Direction.LEFT:
 					Debug.Log("左強キック！");
+					GameObject obj = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
+					obj.transform.parent = gameObject.transform;
+					obj.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("強パンチ！");
+					GameObject obj1 = Instantiate(AttackCollisionPunch, pos, Quaternion.identity);
+					obj1.transform.parent = gameObject.transform;
+					obj1.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右強キック！");
+					GameObject obj2 = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
+					obj2.transform.parent = gameObject.transform;
+					obj2.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 			}
 			last_attack = (int)LastAttack.STRONG;
 		}
 
 		//回避
-		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl) && avoiding == false)
+		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl))
         {
-			avoiding = true;
-			if (Input.GetKey(KeyCode.A))
-            {
-				Debug.Log("左回避");
-				rb2D.velocity = -transform.right * AvoidDis;
-			}
-			else if (Input.GetKey(KeyCode.D))
+			if (!avoiding)
 			{
-				Debug.Log("右回避");
-				rb2D.velocity = transform.right * AvoidDis;
+				avoiding = true;
+				if (Input.GetKey(KeyCode.A))
+				{
+					Debug.Log("左回避");
+					rb2D.velocity = -transform.right * AvoidDis;
+				}
+				else if (Input.GetKey(KeyCode.D))
+				{
+					Debug.Log("右回避");
+					rb2D.velocity = transform.right * AvoidDis;
+				}
+				else
+					Debug.Log("その場回避");
 			}
-			else
-				Debug.Log("その場回避");
         }
 	}
 
@@ -158,27 +200,42 @@ public class Player_Ver2 : BaseStatusClass
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//移動処理
-		if (Input.GetKey(KeyCode.A) && avoiding == false)
+		if (!avoiding)
 		{
-			now_move = (int)Direction.LEFT;
-			//最高速度になるとそれ以上加速しない
-			if (rb2D.velocity.x > -LimitSpeed)
+			if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
 			{
-				rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
+				now_move = (int)Direction.LEFT;
+				player_frip = false;//左向き
+				//最高速度になるとそれ以上加速しない
+				if (rb2D.velocity.x > -LimitSpeed)
+				{
+					rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
+				}
+			}
+			if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+			{
+				now_move = (int)Direction.RIGHT;
+				player_frip = true;//右向き
+				//最高速度になるとそれ以上加速しない
+				if (rb2D.velocity.x < LimitSpeed)
+				{
+					rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+				}
+			}
+			if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+			{
+				now_move = (int)Direction.STOP;
 			}
 		}
-		if (Input.GetKey(KeyCode.D) && avoiding == false)
-		{
-			now_move = (int)Direction.RIGHT;
-			//最高速度になるとそれ以上加速しない
-			if (rb2D.velocity.x < LimitSpeed)
-			{
-				rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-			}
-		}
-		if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+		else
         {
-			now_move = (int)Direction.STOP;
+			avoid_time++;
+
+			if(avoid_time >= AvoidTime)
+            {
+				avoiding = false;
+				avoid_time = 0;
+			}
 		}
 	}
 
