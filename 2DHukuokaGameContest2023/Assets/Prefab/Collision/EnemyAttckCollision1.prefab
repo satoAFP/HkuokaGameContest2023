@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3327688062786633539}
   - component: {fileID: 2372785533811577393}
   m_Layer: 0
-  m_Name: EnemyAttckCollision
+  m_Name: EnemyAttckCollision1
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

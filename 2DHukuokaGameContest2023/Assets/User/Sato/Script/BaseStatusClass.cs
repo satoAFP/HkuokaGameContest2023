@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class BaseStatusClass : MonoBehaviour
 {
-    [SerializeField] protected int HP;
+    [SerializeField,Header("ステータス")] protected int HP;
     [SerializeField] protected int ATK;
 }
