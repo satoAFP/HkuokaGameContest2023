@@ -16,6 +16,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("重力"), Range(0, 100)]
 	private float Gravity;
 
+	[SerializeField, Header("回避距離"), Range(0, 100)]
+	private float AvoidDis;
+
 
 	public enum Direction
 	{
@@ -24,10 +27,19 @@ public class Player_Ver2 : BaseStatusClass
 		RIGHT,
 	}
 
+	private enum LastAttack
+    {
+		NONE,	//何もしていない
+		WEAK,	//弱攻撃
+		STRONG,	//強攻撃
+	}
+
 	private Rigidbody2D rb2D;
 	private int jump_count = 0;
 	private bool ground_hit = false;
 	private int now_move = 0;//左:-1・停止:0・右:1
+	private int last_attack = 0;
+	private bool avoiding = false;
 
 	private Ray2D ray_left, ray_right;			//飛ばすレイ
 	private float distance = 2.0f;				//レイを飛ばす距離
@@ -68,8 +80,8 @@ public class Player_Ver2 : BaseStatusClass
 	void Update()
     {
 		//レイを発射する位置の調整
-		rayPosition1 = this.transform.position + new Vector3(-0.5f, -0.5f, 0.0f);
-		rayPosition2 = this.transform.position + new Vector3(0.5f, -0.5f, 0.0f);
+		rayPosition1 = this.transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
+		rayPosition2 = this.transform.position + new Vector3( 0.5f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
 		RayGround(ray_left, hit_left, rayPosition1);
@@ -100,10 +112,11 @@ public class Player_Ver2 : BaseStatusClass
 					Debug.Log("右弱キック！");
 					break;
 			}
+			last_attack = (int)LastAttack.WEAK;
 		}
 
 		//強攻撃
-		if (Input.GetMouseButtonDown(1))
+		if (Input.GetMouseButtonDown(1) && last_attack == (int)LastAttack.NONE || last_attack == (int)LastAttack.WEAK)
 		{
 			switch (now_move)
 			{
@@ -117,7 +130,26 @@ public class Player_Ver2 : BaseStatusClass
 					Debug.Log("右強キック！");
 					break;
 			}
+			last_attack = (int)LastAttack.STRONG;
 		}
+
+		//回避
+		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl) && avoiding == false)
+        {
+			avoiding = true;
+			if (Input.GetKey(KeyCode.A))
+            {
+				Debug.Log("左回避");
+				rb2D.velocity = -transform.right * AvoidDis;
+			}
+			else if (Input.GetKey(KeyCode.D))
+			{
+				Debug.Log("右回避");
+				rb2D.velocity = transform.right * AvoidDis;
+			}
+			else
+				Debug.Log("その場回避");
+        }
 	}
 
     void FixedUpdate()
@@ -126,7 +158,7 @@ public class Player_Ver2 : BaseStatusClass
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//移動処理
-		if (Input.GetKey(KeyCode.A))
+		if (Input.GetKey(KeyCode.A) && avoiding == false)
 		{
 			now_move = (int)Direction.LEFT;
 			//最高速度になるとそれ以上加速しない
@@ -135,7 +167,7 @@ public class Player_Ver2 : BaseStatusClass
 				rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
 			}
 		}
-		if (Input.GetKey(KeyCode.D))
+		if (Input.GetKey(KeyCode.D) && avoiding == false)
 		{
 			now_move = (int)Direction.RIGHT;
 			//最高速度になるとそれ以上加速しない
