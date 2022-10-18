@@ -244,7 +244,13 @@ MonoBehaviour:
   MoveSpeed: 80
   LimitSpeed: 8
   Gravity: 50
-  AvoidDis: 20
+  AvoidDis: 10
+  AvoidTime: 30
+  AttackPos: {x: 1, y: 0, z: 0}
+  AtkColWeekPunch: {fileID: 3623859446744083619, guid: 4e14a8581147ea84caa7ab50acf01eb4, type: 3}
+  AtkColWeekKick: {fileID: 3623859446744083619, guid: d9f1931d9c875104db9035cf855e2b9d, type: 3}
+  AtkColStrongPunch: {fileID: 3623859446744083619, guid: 68f9b1c8c8d3d28458b18175a1586891, type: 3}
+  AtkColStrongKick: {fileID: 3623859446744083619, guid: 75e49a2e73b5f8b498dfbc0221230801, type: 3}
 --- !u!50 &1050592509
 Rigidbody2D:
   serializedVersion: 4

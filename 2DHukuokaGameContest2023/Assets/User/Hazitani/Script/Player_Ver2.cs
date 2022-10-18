@@ -25,11 +25,17 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("自身からどの位置に攻撃判定を設定するか")]
 	private Vector3 AttackPos;
 
-	[SerializeField, Header("当たり判定パンチ")]
-	private GameObject AttackCollisionPunch;
+	[SerializeField, Header("当たり判定弱パンチ")]
+	private GameObject AtkColWeekPunch;
 
-	[SerializeField, Header("当たり判定キック")]
-	private GameObject AttackCollisionKick;
+	[SerializeField, Header("当たり判定弱キック")]
+	private GameObject AtkColWeekKick;
+
+	[SerializeField, Header("当たり判定強パンチ")]
+	private GameObject AtkColStrongPunch;
+
+	[SerializeField, Header("当たり判定強キック")]
+	private GameObject AtkColStrongKick;
 
 
 	public enum Direction
@@ -125,21 +131,21 @@ public class Player_Ver2 : BaseStatusClass
             {
 				case (int)Direction.LEFT:
 					Debug.Log("左弱キック！");
-					GameObject obj = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
-					obj.transform.parent = gameObject.transform;
-					obj.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject week_left_kick = Instantiate(AtkColWeekKick, pos, Quaternion.identity);
+					week_left_kick.transform.parent = gameObject.transform;
+					week_left_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("弱パンチ！");
-					GameObject obj1 = Instantiate(AttackCollisionPunch, pos, Quaternion.identity);
-					obj1.transform.parent = gameObject.transform;
-					obj1.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject week_punch = Instantiate(AtkColWeekPunch, pos, Quaternion.identity);
+					week_punch.transform.parent = gameObject.transform;
+					week_punch.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右弱キック！");
-					GameObject obj2 = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
-					obj2.transform.parent = gameObject.transform;
-					obj2.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject week_right_kick = Instantiate(AtkColWeekKick, pos, Quaternion.identity);
+					week_right_kick.transform.parent = gameObject.transform;
+					week_right_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 			}
 			last_attack = (int)LastAttack.WEAK;
@@ -152,21 +158,21 @@ public class Player_Ver2 : BaseStatusClass
 			{
 				case (int)Direction.LEFT:
 					Debug.Log("左強キック！");
-					GameObject obj = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
-					obj.transform.parent = gameObject.transform;
-					obj.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject strong_left_kick = Instantiate(AtkColStrongKick, pos, Quaternion.identity);
+					strong_left_kick.transform.parent = gameObject.transform;
+					strong_left_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("強パンチ！");
-					GameObject obj1 = Instantiate(AttackCollisionPunch, pos, Quaternion.identity);
-					obj1.transform.parent = gameObject.transform;
-					obj1.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject strong_punch = Instantiate(AtkColStrongPunch, pos, Quaternion.identity);
+					strong_punch.transform.parent = gameObject.transform;
+					strong_punch.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右強キック！");
-					GameObject obj2 = Instantiate(AttackCollisionKick, pos, Quaternion.identity);
-					obj2.transform.parent = gameObject.transform;
-					obj2.GetComponent<AttckCollision>().Damage = ATK;
+					GameObject strong_right_kick = Instantiate(AtkColStrongKick, pos, Quaternion.identity);
+					strong_right_kick.transform.parent = gameObject.transform;
+					strong_right_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 			}
 			last_attack = (int)LastAttack.STRONG;
