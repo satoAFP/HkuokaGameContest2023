@@ -50,6 +50,7 @@ public class Player_Ver2 : BaseStatusClass
 		NONE,	//何もしていない
 		WEAK,	//弱攻撃
 		STRONG,	//強攻撃
+		STRONG2,//強攻撃2回目
 	}
 
 	private Rigidbody2D rb2D;
@@ -57,7 +58,8 @@ public class Player_Ver2 : BaseStatusClass
 	private bool ground_hit = false;	//地面に立っているか
 	private int now_move = 0;			//左:-1・停止:0・右:1
 	private bool player_frip = false;	//プレイヤーの向き
-	private int last_attack = 0;		//最後の攻撃（コンボがつながるか確認用）
+	private int last_attack = 0;        //最後の攻撃（コンボがつながるか確認用）
+	private float gap_time = 0;			//攻撃後の後隙の時間
 	private bool avoiding = false;      //回避中かどうか
 	private float avoid_time = 0;		//回避時間
 
@@ -80,6 +82,7 @@ public class Player_Ver2 : BaseStatusClass
 		//レイを赤色で表示させる
 		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
 
+		//コライダーとレイが接触
 		if (hit.collider)
 		{
 			SearchGameObject = hit.collider.gameObject;
@@ -118,11 +121,11 @@ public class Player_Ver2 : BaseStatusClass
 		}
 
 		//攻撃の向き設定
-		Vector3 pos = transform.position;//攻撃位置の座標更新用
+		Vector3 attackfrip = transform.position;//攻撃位置の座標更新用
 		if (player_frip)
-			pos += AttackPos;//右
+			attackfrip += AttackPos;//右
 		else
-			pos -= AttackPos;//左
+			attackfrip -= AttackPos;//左
 
 		//弱攻撃
 		if (Input.GetMouseButtonDown(0))
@@ -131,51 +134,67 @@ public class Player_Ver2 : BaseStatusClass
             {
 				case (int)Direction.LEFT:
 					Debug.Log("左弱キック！");
-					GameObject week_left_kick = Instantiate(AtkColWeekKick, pos, Quaternion.identity);
+					GameObject week_left_kick = Instantiate(AtkColWeekKick, attackfrip, Quaternion.identity);
 					week_left_kick.transform.parent = gameObject.transform;
 					week_left_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("弱パンチ！");
-					GameObject week_punch = Instantiate(AtkColWeekPunch, pos, Quaternion.identity);
+					GameObject week_punch = Instantiate(AtkColWeekPunch, attackfrip, Quaternion.identity);
 					week_punch.transform.parent = gameObject.transform;
 					week_punch.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右弱キック！");
-					GameObject week_right_kick = Instantiate(AtkColWeekKick, pos, Quaternion.identity);
+					GameObject week_right_kick = Instantiate(AtkColWeekKick, attackfrip, Quaternion.identity);
 					week_right_kick.transform.parent = gameObject.transform;
 					week_right_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 			}
 			last_attack = (int)LastAttack.WEAK;
+			gap_time = 20;
 		}
 
 		//強攻撃
 		if (Input.GetMouseButtonDown(1))
 		{
-			switch (now_move)
+			if (last_attack != (int)LastAttack.STRONG2)
 			{
-				case (int)Direction.LEFT:
-					Debug.Log("左強キック！");
-					GameObject strong_left_kick = Instantiate(AtkColStrongKick, pos, Quaternion.identity);
-					strong_left_kick.transform.parent = gameObject.transform;
-					strong_left_kick.GetComponent<AttckCollision>().Damage = ATK;
-					break;
-				case (int)Direction.STOP:
-					Debug.Log("強パンチ！");
-					GameObject strong_punch = Instantiate(AtkColStrongPunch, pos, Quaternion.identity);
-					strong_punch.transform.parent = gameObject.transform;
-					strong_punch.GetComponent<AttckCollision>().Damage = ATK;
-					break;
-				case (int)Direction.RIGHT:
-					Debug.Log("右強キック！");
-					GameObject strong_right_kick = Instantiate(AtkColStrongKick, pos, Quaternion.identity);
-					strong_right_kick.transform.parent = gameObject.transform;
-					strong_right_kick.GetComponent<AttckCollision>().Damage = ATK;
-					break;
+				switch (now_move)
+				{
+					case (int)Direction.LEFT:
+						Debug.Log("左強キック！");
+						GameObject strong_left_kick = Instantiate(AtkColStrongKick, attackfrip, Quaternion.identity);
+						strong_left_kick.transform.parent = gameObject.transform;
+						strong_left_kick.GetComponent<AttckCollision>().Damage = ATK;
+						break;
+					case (int)Direction.STOP:
+						Debug.Log("強パンチ！");
+						GameObject strong_punch = Instantiate(AtkColStrongPunch, attackfrip, Quaternion.identity);
+						strong_punch.transform.parent = gameObject.transform;
+						strong_punch.GetComponent<AttckCollision>().Damage = ATK;
+						break;
+					case (int)Direction.RIGHT:
+						Debug.Log("右強キック！");
+						GameObject strong_right_kick = Instantiate(AtkColStrongKick, attackfrip, Quaternion.identity);
+						strong_right_kick.transform.parent = gameObject.transform;
+						strong_right_kick.GetComponent<AttckCollision>().Damage = ATK;
+						break;
+				}
+
+				//最後の攻撃が「何もしていない」か「弱攻撃」のとき「強攻撃」にする
+				if (last_attack == (int)LastAttack.NONE || last_attack == (int)LastAttack.WEAK)
+				{
+					last_attack = (int)LastAttack.STRONG;
+					gap_time = 30;
+				}
+				//「強攻撃」のとき「強攻撃2回目」にする
+				else if(last_attack == (int)LastAttack.STRONG)
+				{
+					last_attack = (int)LastAttack.STRONG2;
+					gap_time = 60;
+				}
 			}
-			last_attack = (int)LastAttack.STRONG;
 		}
 
 		//回避
@@ -195,7 +214,9 @@ public class Player_Ver2 : BaseStatusClass
 					rb2D.velocity = transform.right * AvoidDis;
 				}
 				else
+				{
 					Debug.Log("その場回避");
+				}
 			}
         }
 	}
@@ -206,6 +227,7 @@ public class Player_Ver2 : BaseStatusClass
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//移動処理
+		//回避中ではないとき
 		if (!avoiding)
 		{
 			if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -235,6 +257,7 @@ public class Player_Ver2 : BaseStatusClass
 		}
 		else
         {
+			//回避時間
 			avoid_time++;
 
 			if(avoid_time >= AvoidTime)
@@ -243,8 +266,21 @@ public class Player_Ver2 : BaseStatusClass
 				avoid_time = 0;
 			}
 		}
-	}
 
+		//攻撃した後
+		if(last_attack != (int)LastAttack.NONE && gap_time >= 0)
+        {
+			gap_time--;
+
+			if(gap_time <= 0)
+            {
+				last_attack = (int)LastAttack.NONE;
+				gap_time = 0;
+			}
+		}
+	}
+	
+	//コライダーに触れた時
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
@@ -253,6 +289,7 @@ public class Player_Ver2 : BaseStatusClass
 		}
     }
 
+	//コライダーから離れた時
     private void OnCollisionExit2D(Collision2D other)
     {
 		if (other.gameObject.CompareTag("Ground"))

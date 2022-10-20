@@ -397,7 +397,7 @@ MonoBehaviour:
   MoveSpeed: 80
   LimitSpeed: 8
   Gravity: 50
-  AvoidDis: 10
+  AvoidDis: 12
   AvoidTime: 30
   AttackPos: {x: 1, y: 0, z: 0}
   AtkColWeekPunch: {fileID: 3623859446744083619, guid: 4e14a8581147ea84caa7ab50acf01eb4, type: 3}
