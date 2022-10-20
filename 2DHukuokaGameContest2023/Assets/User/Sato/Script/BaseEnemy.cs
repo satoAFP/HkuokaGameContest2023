@@ -150,17 +150,14 @@ public class BaseEnemy : BaseStatusClass
                     MoveCount++;
                     if (MoveCount <= (MoveFrame / 2))
                     {
-                        LeftMove(); Debug.Log("ccc");
                     }
                     if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
                     {
                         RightMove();
-                        Debug.Log("aaa");
                     }
                     if (MoveCount > MoveFrame)
                     {
                         //カウントリセット
-                        MoveCount = 0; Debug.Log("bbb");
                     }
                 }
 
