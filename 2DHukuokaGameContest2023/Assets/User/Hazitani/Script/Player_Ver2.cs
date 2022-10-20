@@ -60,7 +60,8 @@ public class Player_Ver2 : BaseStatusClass
 	private int jump_count = 0;			//ジャンプ回数
 	private bool ground_hit = false;	//地面に立っているか
 	private int now_move = 0;			//左:-1・停止:0・右:1
-	private bool player_frip = false;	//プレイヤーの向きtrue右false左
+	private bool player_frip = false;   //プレイヤーの向きtrue右false左
+	private bool move_stop = false;     //動きを止めたいとき使用
 	private int last_attack = 0;        //最後の攻撃（コンボがつながるか確認用）
 	private float gap_time = 0;			//攻撃後の後隙の時間
 	private bool avoiding = false;      //回避中かどうか
@@ -230,43 +231,46 @@ public class Player_Ver2 : BaseStatusClass
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//移動処理
-		//回避中ではないとき
-		if (!avoiding)
+		if (!move_stop)
 		{
-			if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+			//回避中ではないとき
+			if (!avoiding)
 			{
-				now_move = (int)Direction.LEFT;
-				player_frip = false;//左向き
-				//最高速度になるとそれ以上加速しない
-				if (rb2D.velocity.x > -LimitSpeed)
+				if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
 				{
-					rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
+					now_move = (int)Direction.LEFT;
+					player_frip = false;//左向き
+										//最高速度になるとそれ以上加速しない
+					if (rb2D.velocity.x > -LimitSpeed)
+					{
+						rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
+					}
+				}
+				if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+				{
+					now_move = (int)Direction.RIGHT;
+					player_frip = true;//右向き
+									   //最高速度になるとそれ以上加速しない
+					if (rb2D.velocity.x < LimitSpeed)
+					{
+						rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+					}
+				}
+				if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+				{
+					now_move = (int)Direction.STOP;
 				}
 			}
-			if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+			else
 			{
-				now_move = (int)Direction.RIGHT;
-				player_frip = true;//右向き
-				//最高速度になるとそれ以上加速しない
-				if (rb2D.velocity.x < LimitSpeed)
-				{
-					rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-				}
-			}
-			if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-			{
-				now_move = (int)Direction.STOP;
-			}
-		}
-		else
-        {
-			//回避時間
-			avoid_time++;
+				//回避時間
+				avoid_time++;
 
-			if(avoid_time >= AvoidTime)
-            {
-				avoiding = false;
-				avoid_time = 0;
+				if (avoid_time >= AvoidTime)
+				{
+					avoiding = false;
+					avoid_time = 0;
+				}
 			}
 		}
 
@@ -289,12 +293,13 @@ public class Player_Ver2 : BaseStatusClass
         if (other.gameObject.CompareTag("Ground"))
         {
 			ground_hit = true;
+			move_stop = false;
 		}
 
 		//主人公と衝突時のノックバック
 		if (other.gameObject.tag == "Enemy")
 		{
-			if (!player_frip)
+			if (player_frip)
 			{
 				rb2D.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
 			}
@@ -302,6 +307,7 @@ public class Player_Ver2 : BaseStatusClass
 			{
 				rb2D.AddForce(KnockbackPow, ForceMode2D.Force);
 			}
+			move_stop = true;
 		}
 	}
 
