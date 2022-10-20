@@ -22,6 +22,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("回避時間"), Range(0, 100)]
 	private int AvoidTime;
 
+	[SerializeField, Header("敵と衝突した時のノックバック")]
+	private Vector2 KnockbackPow;
+
 	[SerializeField, Header("自身からどの位置に攻撃判定を設定するか")]
 	private Vector3 AttackPos;
 
@@ -57,7 +60,7 @@ public class Player_Ver2 : BaseStatusClass
 	private int jump_count = 0;			//ジャンプ回数
 	private bool ground_hit = false;	//地面に立っているか
 	private int now_move = 0;			//左:-1・停止:0・右:1
-	private bool player_frip = false;	//プレイヤーの向き
+	private bool player_frip = false;	//プレイヤーの向きtrue右false左
 	private int last_attack = 0;        //最後の攻撃（コンボがつながるか確認用）
 	private float gap_time = 0;			//攻撃後の後隙の時間
 	private bool avoiding = false;      //回避中かどうか
@@ -287,7 +290,20 @@ public class Player_Ver2 : BaseStatusClass
         {
 			ground_hit = true;
 		}
-    }
+
+		//主人公と衝突時のノックバック
+		if (other.gameObject.tag == "Enemy")
+		{
+			if (!player_frip)
+			{
+				rb2D.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
+			}
+			else
+			{
+				rb2D.AddForce(KnockbackPow, ForceMode2D.Force);
+			}
+		}
+	}
 
 	//コライダーから離れた時
     private void OnCollisionExit2D(Collision2D other)

@@ -243,18 +243,28 @@ MonoBehaviour:
   MoveSpeed: 100
   LimitSpeed: 5
   MoveFrame: 300
+  JumpPower: 0
+  JumpInterval: 0
   Gravity: 50
   RaySpeed: 1
   raydistance: 5
   StopDistance: 3
-  AttackPos: {x: 1, y: 0, z: 0}
+  AttackPunchPos: {x: 0, y: 0, z: 0}
+  AttackKickPos: {x: 0, y: 0, z: 0}
   AttackFrequency: 200
   AttackMotionFrame: 5
   KnockbackPow: {x: 200, y: 200}
   KnockbackKickPow: {x: 0, y: 1000}
   dropRate: 10
-  AttackCollision: {fileID: 3433109412725544667, guid: 48d9d7e1e470e43418d5f427cbeab2b3, type: 3}
-  dropItemList: {fileID: 1440569841}
+  RLMoveFrag: 1
+  RMoveFrag: 0
+  LMoveFrag: 0
+  TrackingFrag: 1
+  JumpFrag: 0
+  PunchFrag: 0
+  KickFrag: 0
+  Attack1Collision: {fileID: 0}
+  Attack2Collision: {fileID: 0}
   StandImage: {fileID: 21300000, guid: 8c9bf8d4c8d579e43b497105b5035a29, type: 3}
   AttackImage: {fileID: 21300000, guid: d772e85b95fefea4d9b60ffe0379b902, type: 3}
 --- !u!50 &540382224
@@ -399,6 +409,7 @@ MonoBehaviour:
   Gravity: 50
   AvoidDis: 12
   AvoidTime: 30
+  KnockbackPow: {x: 200, y: 200}
   AttackPos: {x: 1, y: 0, z: 0}
   AtkColWeekPunch: {fileID: 3623859446744083619, guid: 4e14a8581147ea84caa7ab50acf01eb4, type: 3}
   AtkColWeekKick: {fileID: 3623859446744083619, guid: d9f1931d9c875104db9035cf855e2b9d, type: 3}
