@@ -316,6 +316,8 @@ public class BaseEnemy : BaseStatusClass
         //主人公の攻撃に当たった時
         if (collision.tag == "PlayerAttack") 
         {
+            HP -= collision.gameObject.transform.parent.gameObject.GetComponent<Player_Ver2>().ATK;
+
             if(PunchFrag)
             {
                 //プレイヤーの攻撃力とパンチ判定受け取る
@@ -324,15 +326,15 @@ public class BaseEnemy : BaseStatusClass
             {
                 //プレイヤーの攻撃力とキック判定受け取る
 
-                //蹴り上げられた時の処理
-                if (AttckDirection == 1)
-                {
-                    rigidbody2d.AddForce(new Vector2(-KnockbackKickPow.x, KnockbackKickPow.y), ForceMode2D.Force);
-                }
-                if (AttckDirection == 2)
-                {
-                    rigidbody2d.AddForce(KnockbackKickPow, ForceMode2D.Force);
-                }
+                ////蹴り上げられた時の処理
+                //if (AttckDirection == 1)
+                //{
+                //    rigidbody2d.AddForce(new Vector2(-KnockbackKickPow.x, KnockbackKickPow.y), ForceMode2D.Force);
+                //}
+                //if (AttckDirection == 2)
+                //{
+                //    rigidbody2d.AddForce(KnockbackKickPow, ForceMode2D.Force);
+                //}
                 MoveStop = true;
             }
 
