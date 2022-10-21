@@ -58,7 +58,7 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("アイテムドロップ率"), Range(0, 100), Space(50)]
     private int dropRate;
 
-    
+
     [SerializeField, Header("左右移動"), Space(50)]
     private bool RLMoveFrag;
     [SerializeField, Header("右移動")]
@@ -150,14 +150,18 @@ public class BaseEnemy : BaseStatusClass
                     MoveCount++;
                     if (MoveCount <= (MoveFrame / 2))
                     {
+                        LeftMove();
+                        AttckDirection = 2;
                     }
                     if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
                     {
                         RightMove();
+                        AttckDirection = 1;
                     }
                     if (MoveCount > MoveFrame)
                     {
                         //カウントリセット
+                        MoveCount = 0;
                     }
                 }
 
