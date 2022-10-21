@@ -256,9 +256,9 @@ MonoBehaviour:
   KnockbackPow: {x: 200, y: 200}
   KnockbackKickPow: {x: 0, y: 1000}
   dropRate: 10
-  RLMoveFrag: 1
+  RLMoveFrag: 0
   RMoveFrag: 0
-  LMoveFrag: 0
+  LMoveFrag: 1
   TrackingFrag: 1
   JumpFrag: 0
   PunchFrag: 0
@@ -409,7 +409,7 @@ MonoBehaviour:
   Gravity: 50
   AvoidDis: 12
   AvoidTime: 30
-  KnockbackPow: {x: 200, y: 200}
+  KnockbackPow: {x: 400, y: 400}
   AttackPos: {x: 1, y: 0, z: 0}
   AtkColWeekPunch: {fileID: 3623859446744083619, guid: 4e14a8581147ea84caa7ab50acf01eb4, type: 3}
   AtkColWeekKick: {fileID: 3623859446744083619, guid: d9f1931d9c875104db9035cf855e2b9d, type: 3}
