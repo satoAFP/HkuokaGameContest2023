@@ -65,4 +65,16 @@ public class Player : MonoBehaviour
 		else
 			first = true;
 	}
+
+
+	//二点間の角度を求める関数
+	//引数1　原点となるオブジェクト座標
+	//引数2　角度を求めたいオブジェクト座標
+	public float GetAim(Vector3 p1, Vector3 p2)
+	{
+		float dx = p2.x - p1.x;
+		float dy = p2.y - p1.y;
+		float rad = Mathf.Atan2(dy, dx);
+		return rad * Mathf.Rad2Deg;
+	}
 }
