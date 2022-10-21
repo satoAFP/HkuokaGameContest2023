@@ -298,10 +298,7 @@ public class BaseEnemyFly : BaseStatusClass
     private bool Near(float near)
     {
         if (((MaxSpeed / 2) - Deceleration) < near && ((MaxSpeed / 2) + Deceleration) > near)
-        {
-            Debug.Log("aaa");
             return true;
-        }
         else
             return false;
     }
