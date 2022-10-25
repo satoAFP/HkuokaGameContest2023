@@ -77,7 +77,7 @@ public class BaseEnemyFly : BaseStatusClass
         {
             RayPlayerCheck();
         }
-
+        Debug.Log(movespeed);
 
         //s“®ˆ—>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if (!MoveStop)
@@ -239,7 +239,6 @@ public class BaseEnemyFly : BaseStatusClass
         }
         else
         {
-
             //ƒŒƒC‚ð”ò‚Î‚·
             hit = Physics2D.Raycast(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, raydistance, layerMask);
             Debug.DrawRay(ray.origin, new Vector2(SearchGameObject.transform.localPosition.x, SearchGameObject.transform.localPosition.y) - ray.origin, Color.green);
@@ -288,6 +287,8 @@ public class BaseEnemyFly : BaseStatusClass
         transform.position -= new Vector3(movespeed, 0, 0);
         transform.localScale = new Vector3(-1f, 1f, 1f);
     }
+
+
 
 
     /// <summary>

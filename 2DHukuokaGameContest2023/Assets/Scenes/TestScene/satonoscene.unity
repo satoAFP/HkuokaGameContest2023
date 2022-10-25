@@ -418,7 +418,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1026,17 +1026,63 @@ MonoBehaviour:
   ATK: 10
   MaxSpeed: 0.5
   Deceleration: 0.005
-  RaySpeed: 0.01
-  raydistance: 1
+  RaySpeed: 1
+  raydistance: 5
   StopDistance: 0
   KnockbackPow: {x: 0, y: 0}
   dropRate: 0
-  RLMoveFrag: 1
+  RLMoveFrag: 0
   RMoveFrag: 0
-  LMoveFrag: 0
+  LMoveFrag: 1
   TrackingFrag: 0
   StandImage: {fileID: 21300000, guid: 8c9bf8d4c8d579e43b497105b5035a29, type: 3}
   AttackImage: {fileID: 21300000, guid: d772e85b95fefea4d9b60ffe0379b902, type: 3}
+--- !u!1 &1847647802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1847647804}
+  - component: {fileID: 1847647803}
+  m_Layer: 0
+  m_Name: SpawnEnemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1847647803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847647802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4635708c9b352114a98f19797bd2ec38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FrequencyAppearance: 2
+  spawnEnemy:
+  - {fileID: 1751301659}
+--- !u!4 &1847647804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847647802}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.74, y: -2.71, z: -10.600513}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &127081039303729026
 PrefabInstance:
   m_ObjectHideFlags: 0
