@@ -124,8 +124,8 @@ public class Player_Ver2 : BaseStatusClass
 			jump_count++;
 		}
 
-		Vector3 mousePos = Input.mousePosition;
-		GetAim(this.transform.position, mousePos);
+		//Vector3 mousePos = Input.mousePosition;
+		//GetAim(this.transform.position, mousePos);
 
 		//攻撃の向き設定
 		Vector3 attackfrip = transform.position;//攻撃位置の座標更新用
@@ -243,7 +243,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.LEFT;
 					player_frip = false;//左向き
-										//最高速度になるとそれ以上加速しない
+					//最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x > -LimitSpeed)
 					{
 						rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
@@ -253,7 +253,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.RIGHT;
 					player_frip = true;//右向き
-									   //最高速度になるとそれ以上加速しない
+					//最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x < LimitSpeed)
 					{
 						rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
