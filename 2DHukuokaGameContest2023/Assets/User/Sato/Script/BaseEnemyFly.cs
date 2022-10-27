@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class BaseEnemyFly : BaseStatusClass
 {
-    [SerializeField, Header("最高速度"), Range(0, 1), Space(50)]
+    [SerializeField, Header("最高速度"), Range(0, 1)]
     private float MaxSpeed;
 
     [SerializeField, Header("加速減速"), Range(0, 0.1f)]
     private float Deceleration;
 
+    [SerializeField, Header("一直線の時の移動速度"), Range(0, 100)]
+    private float MoveSpeed;
+
+    [SerializeField, Header("最高速度"), Range(0, 20)]
+    private float LimitSpeed;
+
+    [SerializeField, Header("停止までのフレーム"), Range(0, 500)]
+    private int StopCount;
 
 
-    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1)]
+
+    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1), Space(50)]
     private float RaySpeed;
 
     [SerializeField, Header("レイの距離"), Range(1, 10)]
@@ -61,10 +70,18 @@ public class BaseEnemyFly : BaseStatusClass
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
     private DropItemList dropItemList;          //ドロップアイテム管理用
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
-    private bool MoveChange = true;             //移動方向変更用
-    private bool AccChange = true;              //移動量変更用
+    public int stopCount = 0;                  //移動停止までのカウント
 
     private bool first1 = true;
+
+
+
+    void Start()
+    {
+        rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
+        dropItemList = GameObject.Find("DropItemList").GetComponent<DropItemList>();
+    }
+
 
     // Update is called once per frame
     void FixedUpdate()
@@ -77,7 +94,6 @@ public class BaseEnemyFly : BaseStatusClass
         {
             RayPlayerCheck();
         }
-        Debug.Log(movespeed);
 
         //行動処理>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if (!MoveStop)
@@ -85,37 +101,24 @@ public class BaseEnemyFly : BaseStatusClass
             //攻撃モードに入っていないときの行動---------------------------------------------------
             if (!AttckMode)
             {
-                //左右移動
-                if (RLMoveFrag)
+                if (StopCount > stopCount)
                 {
-                    if (MoveChange)
-                    {
-                        LeftMove();
-                        AttckDirection = 2;
-                    }
-                    else
+                    //右移動
+                    if (RMoveFrag)
                     {
                         RightMove();
-                        AttckDirection = 1;
                     }
-                    if (movespeed <= 0)
+                    //左移動
+                    if (LMoveFrag)
                     {
-                        MoveChange = !MoveChange;
-                        movespeed = 0;
-                        AccChange = !AccChange;
+                        LeftMove();
                     }
                 }
+                else
+                    rigidbody2d.velocity = Vector3.zero;
 
-                //右移動
-                if (RMoveFrag)
-                {
-                    RightMove();
-                }
-                //左移動
-                if (LMoveFrag)
-                {
-                    LeftMove();
-                }
+
+                stopCount++;
             }
             //------------------------------------------------------------------
 
@@ -145,9 +148,6 @@ public class BaseEnemyFly : BaseStatusClass
                     AttckDirection = 1;
                     transform.localScale = new Vector3(1f, 1f, 1f);
                 }
-
-
-                
             }
         }
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -258,36 +258,27 @@ public class BaseEnemyFly : BaseStatusClass
     }
 
 
-
     private void RightMove()
     {
-        if (AccChange)
-            movespeed += Deceleration;
-        else
-            movespeed -= Deceleration;
-
-        if (Near(movespeed))
-            AccChange = !AccChange;
-
-        transform.position += new Vector3(movespeed, 0, 0);
+        //最高速度になるとそれ以上加速しない
+        if (rigidbody2d.velocity.x < LimitSpeed)
+        {
+            rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+        }
         transform.localScale = new Vector3(1f, 1f, 1f);
     }
 
 
     private void LeftMove()
     {
-        if (AccChange)
-            movespeed += Deceleration;
-        else
-            movespeed -= Deceleration;
-
-        if (Near(movespeed))
-            AccChange = !AccChange;
-
-        transform.position -= new Vector3(movespeed, 0, 0);
+        //止まるフレームまで動く
+        //最高速度になるとそれ以上加速しない
+        if (rigidbody2d.velocity.x > -LimitSpeed)
+        {
+            rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+        }
         transform.localScale = new Vector3(-1f, 1f, 1f);
     }
-
 
 
 
