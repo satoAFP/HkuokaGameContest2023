@@ -58,7 +58,7 @@ public class BaseEnemy : BaseStatusClass
     [SerializeField, Header("アイテムドロップ率"), Range(0, 100), Space(50)]
     private int dropRate;
 
-    
+
     [SerializeField, Header("左右移動"), Space(50)]
     private bool RLMoveFrag;
     [SerializeField, Header("右移動")]
@@ -150,14 +150,18 @@ public class BaseEnemy : BaseStatusClass
                     MoveCount++;
                     if (MoveCount <= (MoveFrame / 2))
                     {
+                        LeftMove();
+                        AttckDirection = 2;
                     }
                     if (MoveCount > (MoveFrame / 2) && MoveCount <= MoveFrame)
                     {
                         RightMove();
+                        AttckDirection = 1;
                     }
                     if (MoveCount > MoveFrame)
                     {
                         //カウントリセット
+                        MoveCount = 0;
                     }
                 }
 
@@ -316,7 +320,7 @@ public class BaseEnemy : BaseStatusClass
         //主人公の攻撃に当たった時
         if (collision.tag == "PlayerAttack") 
         {
-            HP -= collision.gameObject.transform.parent.gameObject.GetComponent<Player_Ver2>().ATK;
+            HP -= collision.gameObject.transform.root.gameObject.GetComponent<Player_Ver2>().ATK;
 
             if(PunchFrag)
             {
