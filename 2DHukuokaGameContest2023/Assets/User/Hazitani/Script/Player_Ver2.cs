@@ -26,7 +26,7 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector2 KnockbackPow;
 
 	[SerializeField, Header("自身からどの位置に攻撃判定を設定するか")]
-	private Vector3 AttackPos;
+	private float AttackPos;
 
 	[SerializeField, Header("当たり判定弱パンチ")]
 	private GameObject AtkColWeekPunch;
@@ -65,7 +65,11 @@ public class Player_Ver2 : BaseStatusClass
 	private int last_attack = 0;        //最後の攻撃（コンボがつながるか確認用）
 	private float gap_time = 0;			//攻撃後の後隙の時間
 	private bool avoiding = false;      //回避中かどうか
-	private float avoid_time = 0;		//回避時間
+	private float avoid_time = 0;       //回避時間
+
+	private Vector3 mousePos;			//マウスの位置取得用
+	private Vector3 target;				//攻撃位置
+	private Quaternion atkQuaternion;	//攻撃角度
 
 	private Ray2D ray_left, ray_right;			//飛ばすレイ
 	private float distance = 2.0f;				//レイを飛ばす距離
@@ -124,36 +128,34 @@ public class Player_Ver2 : BaseStatusClass
 			jump_count++;
 		}
 
-		//Vector3 mousePos = Input.mousePosition;
-		//GetAim(this.transform.position, mousePos);
-
 		//攻撃の向き設定
-		Vector3 attackfrip = transform.position;//攻撃位置の座標更新用
-		if (player_frip)
-			attackfrip += AttackPos;//右
-		else
-			attackfrip -= AttackPos;//左
+		Vector3 attackpos = this.transform.position;//攻撃位置の座標更新用
+		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
 
 		//弱攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
+			//角度設定
+			atkQuaternion = Quaternion.AngleAxis(GetAim(this.transform.position, mousePos), Vector3.forward);
+
 			switch (now_move)
             {
 				case (int)Direction.LEFT:
 					Debug.Log("左弱キック！");
-					GameObject week_left_kick = Instantiate(AtkColWeekKick, attackfrip, Quaternion.identity);
+					GameObject week_left_kick = Instantiate(AtkColWeekKick, attackpos += target, atkQuaternion);
 					week_left_kick.transform.parent = gameObject.transform;
 					week_left_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("弱パンチ！");
-					GameObject week_punch = Instantiate(AtkColWeekPunch, attackfrip, Quaternion.identity);
+					GameObject week_punch = Instantiate(AtkColWeekPunch, attackpos += target, atkQuaternion);
 					week_punch.transform.parent = gameObject.transform;
 					week_punch.GetComponent<AttckCollision>().Damage = ATK;
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右弱キック！");
-					GameObject week_right_kick = Instantiate(AtkColWeekKick, attackfrip, Quaternion.identity);
+					GameObject week_right_kick = Instantiate(AtkColWeekKick, attackpos += target, atkQuaternion);
 					week_right_kick.transform.parent = gameObject.transform;
 					week_right_kick.GetComponent<AttckCollision>().Damage = ATK;
 					break;
@@ -167,23 +169,26 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			if (last_attack != (int)LastAttack.STRONG2)
 			{
+				//角度設定
+				atkQuaternion = Quaternion.AngleAxis(GetAim(this.transform.position, mousePos), Vector3.forward);
+
 				switch (now_move)
 				{
 					case (int)Direction.LEFT:
 						Debug.Log("左強キック！");
-						GameObject strong_left_kick = Instantiate(AtkColStrongKick, attackfrip, Quaternion.identity);
+						GameObject strong_left_kick = Instantiate(AtkColStrongKick, attackpos += target, atkQuaternion);
 						strong_left_kick.transform.parent = gameObject.transform;
 						strong_left_kick.GetComponent<AttckCollision>().Damage = ATK;
 						break;
 					case (int)Direction.STOP:
 						Debug.Log("強パンチ！");
-						GameObject strong_punch = Instantiate(AtkColStrongPunch, attackfrip, Quaternion.identity);
+						GameObject strong_punch = Instantiate(AtkColStrongPunch, attackpos += target, atkQuaternion);
 						strong_punch.transform.parent = gameObject.transform;
 						strong_punch.GetComponent<AttckCollision>().Damage = ATK;
 						break;
 					case (int)Direction.RIGHT:
 						Debug.Log("右強キック！");
-						GameObject strong_right_kick = Instantiate(AtkColStrongKick, attackfrip, Quaternion.identity);
+						GameObject strong_right_kick = Instantiate(AtkColStrongKick, attackpos += target, atkQuaternion);
 						strong_right_kick.transform.parent = gameObject.transform;
 						strong_right_kick.GetComponent<AttckCollision>().Damage = ATK;
 						break;
