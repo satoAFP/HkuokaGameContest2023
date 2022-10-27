@@ -180,7 +180,7 @@ public class BaseEnemyFly : BaseStatusClass
         //ålŒö‚ÌUŒ‚‚É“–‚½‚Á‚½
         if (collision.tag == "PlayerAttack")
         {
-            HP -= collision.gameObject.transform.parent.gameObject.GetComponent<Player_Ver2>().ATK;
+            HP -= collision.gameObject.transform.root.gameObject.GetComponent<Player_Ver2>().ATK;
 
 
         }
