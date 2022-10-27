@@ -25,14 +25,43 @@ public class SpawnEnemy : MonoBehaviour
     [SerializeField, Header("出したい右移動敵の種類")]
     public GameObject[] spawnRightEnemy;
 
+    [System.Serializable]
+    public struct GameFlow
+    {
+        [SerializeField]
+        public GameObject EnemySet;
+        [SerializeField]
+        public int NextFrame;
+        [SerializeField]
+        public Vector3 spawnPos;
+    }
+
+    [SerializeField, Header("敵出現フロー作成用")]
+    private GameFlow[] GF;
+
+
 
     private int FrequencyCount = 0;     //出現頻度カウント用
     private int spawnCount = 0;         //スポーン数カウント用
+    private int FrameCount = 0;         //フレームカウント用
+    private int NextSpawnNum = 0;       //次敵が出現するフレーム
+    private int NowArrangement = 0;     //現在の配列番号
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        FluctuationSpawn();
 
+
+
+
+    }
+
+
+
+
+    private void FixedSpawn()
+    {
         if (spawnMax == spawnCount)
         {
             FrequencyCount++;
@@ -55,7 +84,20 @@ public class SpawnEnemy : MonoBehaviour
                 FrequencyCount = 0;
             }
         }
-
-
     }
+
+
+    private void FluctuationSpawn()
+    {
+        if (NextSpawnNum == FrameCount)
+        {
+            GameObject clone = Instantiate(GF[NowArrangement].EnemySet, GF[NowArrangement].spawnPos, Quaternion.identity);
+
+            NextSpawnNum += GF[NowArrangement].NextFrame;
+            NowArrangement++;
+        }
+
+        FrameCount++;
+    }
+
 }
