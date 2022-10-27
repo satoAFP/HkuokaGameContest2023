@@ -25,17 +25,8 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵と衝突した時のノックバック")]
 	private Vector2 KnockbackPow;
 
-	[SerializeField, Header("当たり判定弱パンチ")]
-	private GameObject AtkColWeekPunch;
-
-	[SerializeField, Header("当たり判定弱キック")]
-	private GameObject AtkColWeekKick;
-
-	[SerializeField, Header("当たり判定強パンチ")]
-	private GameObject AtkColStrongPunch;
-
-	[SerializeField, Header("当たり判定強キック")]
-	private GameObject AtkColStrongKick;
+	[SerializeField, Header("攻撃当たり判定")]
+	private GameObject AttackkCollider;
 
 
 	public enum Direction
@@ -45,22 +36,12 @@ public class Player_Ver2 : BaseStatusClass
 		RIGHT,
 	}
 
-	private enum LastAttack
-    {
-		NONE,	//何もしていない
-		WEAK,	//弱攻撃
-		STRONG,	//強攻撃
-		STRONG2,//強攻撃2回目
-	}
-
 	private Rigidbody2D rb2D;
 	private int jump_count = 0;			//ジャンプ回数
 	private bool ground_hit = false;	//地面に立っているか
 	private int now_move = 0;			//左:-1・停止:0・右:1
 	private bool player_frip = false;   //プレイヤーの向きtrue右false左
 	private bool move_stop = false;     //動きを止めたいとき使用
-	private int last_attack = 0;        //最後の攻撃（コンボがつながるか確認用）
-	private float gap_time = 0;			//攻撃後の後隙の時間
 	private bool avoiding = false;      //回避中かどうか
 	private float avoid_time = 0;       //回避時間
 
@@ -69,6 +50,10 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 target;             //攻撃位置調整用
 	private Quaternion atkQuaternion;   //攻撃角度
 	private GameObject attack = null;   //攻撃オブジェクト
+	[System.NonSerialized]//これ付けたらパブリックでもインスペクターに出てこん！！！！！
+	public Vector3 hit_enemy_pos;       //攻撃が当たった敵の位置
+	[System.NonSerialized]
+	public bool hit_enemy = false;		//攻撃が敵に当たったかどうか
 
 	//レイ関連
 	private Ray2D ray_left, ray_right;			//飛ばすレイ
@@ -85,8 +70,8 @@ public class Player_Ver2 : BaseStatusClass
 	void Update()
     {
 		//レイを発射する位置の調整
-		rayPosition1 = this.transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
-		rayPosition2 = this.transform.position + new Vector3( 0.5f, -transform.localScale.y / 2, 0.0f);
+		rayPosition1 = transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
+		rayPosition2 = transform.position + new Vector3( 0.5f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
 		RayGround(ray_left, hit_left, rayPosition1);
@@ -103,74 +88,37 @@ public class Player_Ver2 : BaseStatusClass
 		}
 
 		//攻撃の向き設定
-		Vector3 attackpos = this.transform.position;//攻撃位置の座標更新用
+		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
 		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
 
 		//攻撃の位置調整したいけどわからん
 
-		//弱攻撃
+		//攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
 			//角度設定
-			atkQuaternion = Quaternion.AngleAxis(GetAim(this.transform.position, mousePos), Vector3.forward);
+			atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
-			switch (now_move)
-            {
-				case (int)Direction.LEFT:
-					Debug.Log("左弱キック！");
-					PlayerAttack(attack, AtkColWeekKick, attackpos);
-					break;
-				case (int)Direction.STOP:
-					Debug.Log("弱パンチ！");
-					PlayerAttack(attack, AtkColWeekPunch, attackpos);
-					break;
-				case (int)Direction.RIGHT:
-					Debug.Log("右弱キック！");
-					PlayerAttack(attack, AtkColWeekKick, attackpos);
-					break;
-			}
-			last_attack = (int)LastAttack.WEAK;
-			gap_time = 20;
+			Debug.Log("こうげき！");
+			PlayerAttack(attack, AttackkCollider, attackpos);
 		}
 
-		//強攻撃
-		if (Input.GetMouseButtonDown(1))
-		{
-			if (last_attack != (int)LastAttack.STRONG2)
-			{
-				//角度設定
-				atkQuaternion = Quaternion.AngleAxis(GetAim(this.transform.position, mousePos), Vector3.forward);
-
-				switch (now_move)
-				{
-					case (int)Direction.LEFT:
-						Debug.Log("左強キック！");
-						PlayerAttack(attack, AtkColStrongKick, attackpos);
-						break;
-					case (int)Direction.STOP:
-						Debug.Log("強パンチ！");
-						PlayerAttack(attack, AtkColStrongPunch, attackpos);
-						break;
-					case (int)Direction.RIGHT:
-						Debug.Log("右強キック！");
-						PlayerAttack(attack, AtkColStrongKick, attackpos);
-						break;
-				}
-
-				//最後の攻撃が「何もしていない」か「弱攻撃」のとき「強攻撃」にする
-				if (last_attack == (int)LastAttack.NONE || last_attack == (int)LastAttack.WEAK)
-				{
-					last_attack = (int)LastAttack.STRONG;
-					gap_time = 30;
-				}
-				//「強攻撃」のとき「強攻撃2回目」にする
-				else if(last_attack == (int)LastAttack.STRONG)
-				{
-					last_attack = (int)LastAttack.STRONG2;
-					gap_time = 60;
-				}
+		//攻撃が敵に当たった場合
+		if(hit_enemy)
+        {
+			Debug.Log("攻撃当たった");
+			switch(now_move)
+            {
+				case (int)Direction.LEFT:
+					transform.position = hit_enemy_pos + new Vector3(1, 0, 0);
+					break;
+				case (int)Direction.RIGHT:
+					transform.position = hit_enemy_pos + new Vector3(-1, 0, 0);
+					break;
 			}
+			transform.position = hit_enemy_pos + new Vector3(1, 0, 0);
+			hit_enemy = false;
 		}
 
 		//回避
@@ -243,18 +191,6 @@ public class Player_Ver2 : BaseStatusClass
 					avoiding = false;
 					avoid_time = 0;
 				}
-			}
-		}
-
-		//攻撃した後
-		if(last_attack != (int)LastAttack.NONE && gap_time >= 0)
-        {
-			gap_time--;
-
-			if(gap_time <= 0)
-            {
-				last_attack = (int)LastAttack.NONE;
-				gap_time = 0;
 			}
 		}
 	}

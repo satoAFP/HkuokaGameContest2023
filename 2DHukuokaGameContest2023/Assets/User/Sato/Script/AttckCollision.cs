@@ -10,7 +10,6 @@ public class AttckCollision : MonoBehaviour
 
     private int count = 0;      //フレームカウント用
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         count++;
