@@ -25,9 +25,6 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵と衝突した時のノックバック")]
 	private Vector2 KnockbackPow;
 
-	[SerializeField, Header("自身からどの位置に攻撃判定を設定するか")]
-	private float AttackPos;
-
 	[SerializeField, Header("当たり判定弱パンチ")]
 	private GameObject AtkColWeekPunch;
 
@@ -67,41 +64,18 @@ public class Player_Ver2 : BaseStatusClass
 	private bool avoiding = false;      //回避中かどうか
 	private float avoid_time = 0;       //回避時間
 
-	private Vector3 mousePos;			//マウスの位置取得用
-	private Vector3 target;				//攻撃位置
-	private Quaternion atkQuaternion;	//攻撃角度
+	//攻撃関連
+	private Vector3 mousePos;           //マウスの位置取得用
+	private Vector3 target;             //攻撃位置調整用
+	private Quaternion atkQuaternion;   //攻撃角度
+	private GameObject attack = null;   //攻撃オブジェクト
 
+	//レイ関連
 	private Ray2D ray_left, ray_right;			//飛ばすレイ
 	private float distance = 2.0f;				//レイを飛ばす距離
 	private RaycastHit2D hit_left,hit_right;	//レイが何かに当たった時の情報
 	private Vector3 rayPosition1, rayPosition2;	//レイを発射する位置
 	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
-	
-	//レイの接地判定
-	private void RayGround(Ray2D ray, RaycastHit2D hit, Vector3 vec)
-    {
-		//レイを下に飛ばす
-		ray = new Ray2D(vec, -transform.up);
-
-		//Groundとだけ衝突する
-		int layerMask = LayerMask.GetMask(new string[] { "Ground" });
-		hit = Physics2D.Raycast(ray.origin, ray.direction, distance, layerMask);
-
-		//レイを赤色で表示させる
-		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
-
-		//コライダーとレイが接触
-		if (hit.collider)
-		{
-			SearchGameObject = hit.collider.gameObject;
-
-			if (SearchGameObject.tag == "Ground" && ground_hit == true && jump_count > 0)
-			{
-				Debug.Log("着地してる！");
-				jump_count = 0;
-			}
-		}
-	}
 
 	void Start()
 	{
@@ -133,6 +107,8 @@ public class Player_Ver2 : BaseStatusClass
 		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
 
+		//攻撃の位置調整したいけどわからん
+
 		//弱攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -143,21 +119,15 @@ public class Player_Ver2 : BaseStatusClass
             {
 				case (int)Direction.LEFT:
 					Debug.Log("左弱キック！");
-					GameObject week_left_kick = Instantiate(AtkColWeekKick, attackpos += target, atkQuaternion);
-					week_left_kick.transform.parent = gameObject.transform;
-					week_left_kick.GetComponent<AttckCollision>().Damage = ATK;
+					PlayerAttack(attack, AtkColWeekKick, attackpos);
 					break;
 				case (int)Direction.STOP:
 					Debug.Log("弱パンチ！");
-					GameObject week_punch = Instantiate(AtkColWeekPunch, attackpos += target, atkQuaternion);
-					week_punch.transform.parent = gameObject.transform;
-					week_punch.GetComponent<AttckCollision>().Damage = ATK;
+					PlayerAttack(attack, AtkColWeekPunch, attackpos);
 					break;
 				case (int)Direction.RIGHT:
 					Debug.Log("右弱キック！");
-					GameObject week_right_kick = Instantiate(AtkColWeekKick, attackpos += target, atkQuaternion);
-					week_right_kick.transform.parent = gameObject.transform;
-					week_right_kick.GetComponent<AttckCollision>().Damage = ATK;
+					PlayerAttack(attack, AtkColWeekKick, attackpos);
 					break;
 			}
 			last_attack = (int)LastAttack.WEAK;
@@ -176,21 +146,15 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					case (int)Direction.LEFT:
 						Debug.Log("左強キック！");
-						GameObject strong_left_kick = Instantiate(AtkColStrongKick, attackpos += target, atkQuaternion);
-						strong_left_kick.transform.parent = gameObject.transform;
-						strong_left_kick.GetComponent<AttckCollision>().Damage = ATK;
+						PlayerAttack(attack, AtkColStrongKick, attackpos);
 						break;
 					case (int)Direction.STOP:
 						Debug.Log("強パンチ！");
-						GameObject strong_punch = Instantiate(AtkColStrongPunch, attackpos += target, atkQuaternion);
-						strong_punch.transform.parent = gameObject.transform;
-						strong_punch.GetComponent<AttckCollision>().Damage = ATK;
+						PlayerAttack(attack, AtkColStrongPunch, attackpos);
 						break;
 					case (int)Direction.RIGHT:
 						Debug.Log("右強キック！");
-						GameObject strong_right_kick = Instantiate(AtkColStrongKick, attackpos += target, atkQuaternion);
-						strong_right_kick.transform.parent = gameObject.transform;
-						strong_right_kick.GetComponent<AttckCollision>().Damage = ATK;
+						PlayerAttack(attack, AtkColStrongKick, attackpos);
 						break;
 				}
 
@@ -326,6 +290,40 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			ground_hit = false;
 		}
+	}
+
+	//レイの接地判定
+	private void RayGround(Ray2D ray, RaycastHit2D hit, Vector3 vec)
+	{
+		//レイを下に飛ばす
+		ray = new Ray2D(vec, -transform.up);
+
+		//Groundとだけ衝突する
+		int layerMask = LayerMask.GetMask(new string[] { "Ground" });
+		hit = Physics2D.Raycast(ray.origin, ray.direction, distance, layerMask);
+
+		//レイを赤色で表示させる
+		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
+
+		//コライダーとレイが接触
+		if (hit.collider)
+		{
+			SearchGameObject = hit.collider.gameObject;
+
+			if (SearchGameObject.tag == "Ground" && ground_hit == true && jump_count > 0)
+			{
+				Debug.Log("着地してる！");
+				jump_count = 0;
+			}
+		}
+	}
+
+	//攻撃オブジェクト生成
+	private void PlayerAttack(GameObject attack, GameObject prefab, Vector3 attackpos)
+    {
+		attack = Instantiate(prefab, attackpos += target, atkQuaternion);
+		attack.transform.parent = gameObject.transform;
+		attack.GetComponentInChildren<AttckCollision>().Damage = ATK;
 	}
 
 	//二点間の角度を求める関数
