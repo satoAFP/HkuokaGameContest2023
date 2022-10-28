@@ -91,7 +91,8 @@ public class SpawnEnemy : MonoBehaviour
     {
         if (NextSpawnNum == FrameCount)
         {
-            GameObject clone = Instantiate(GF[NowArrangement].EnemySet, GF[NowArrangement].spawnPos, Quaternion.identity);
+            Vector3 MyPos = transform.localPosition;
+            GameObject clone = Instantiate(GF[NowArrangement].EnemySet, MyPos + GF[NowArrangement].spawnPos, Quaternion.identity);
 
             NextSpawnNum += GF[NowArrangement].NextFrame;
             NowArrangement++;
