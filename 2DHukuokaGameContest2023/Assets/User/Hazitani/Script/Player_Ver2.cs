@@ -26,8 +26,13 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector2 KnockbackPow;
 
 	[SerializeField, Header("攻撃当たり判定")]
-	private GameObject AttackkCollider;
+	private GameObject AttackCollider;
 
+	[SerializeField, Header("攻撃を当てた時の移送位置")]
+	private Vector3 AttackMovePos;
+
+	[SerializeField, Header("攻撃を当てた時の移送速度")]
+	private float AttackMoveSpeed;
 
 	public enum Direction
 	{
@@ -49,6 +54,7 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 mousePos;           //マウスの位置取得用
 	private Vector3 target;             //攻撃位置調整用
 	private Quaternion atkQuaternion;   //攻撃角度
+	private bool attacking = false;		//攻撃中かどうか
 	private GameObject attack = null;   //攻撃オブジェクト
 	[System.NonSerialized]//これ付けたらパブリックでもインスペクターに出てこん！！！！！
 	public Vector3 hit_enemy_pos;       //攻撃が当たった敵の位置
@@ -89,41 +95,42 @@ public class Player_Ver2 : BaseStatusClass
 
 		//攻撃の向き設定
 		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
-		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
-
-		//攻撃の位置調整したいけどわからん
 
 		//攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
+			attacking = true;
+
 			//角度設定
+			mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
 			atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 			Debug.Log("こうげき！");
-			PlayerAttack(attack, AttackkCollider, attackpos);
+			//コライダーを生成
+			PlayerAttack(attack, AttackCollider, attackpos);
 		}
 
 		//攻撃が敵に当たった場合
-		if(hit_enemy)
+		if (hit_enemy)
         {
 			Debug.Log("攻撃当たった");
-			switch(now_move)
-            {
-				case (int)Direction.LEFT:
-					transform.position = hit_enemy_pos + new Vector3(1, 0, 0);
-					break;
-				case (int)Direction.RIGHT:
-					transform.position = hit_enemy_pos + new Vector3(-1, 0, 0);
-					break;
+
+			if(transform.position.x < hit_enemy_pos.x)
+				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
+			else
+				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
+
+			if (transform.position == hit_enemy_pos + AttackMovePos || transform.position == hit_enemy_pos - AttackMovePos)
+			{
+				hit_enemy = false;
 			}
-			transform.position = hit_enemy_pos + new Vector3(1, 0, 0);
-			hit_enemy = false;
 		}
 
 		//回避
 		if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl))
         {
+			//回避中ではない
 			if (!avoiding)
 			{
 				avoiding = true;
@@ -145,7 +152,7 @@ public class Player_Ver2 : BaseStatusClass
         }
 	}
 
-    void FixedUpdate()
+	void FixedUpdate()
 	{
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
@@ -160,7 +167,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.LEFT;
 					player_frip = false;//左向き
-					//最高速度になるとそれ以上加速しない
+										//最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x > -LimitSpeed)
 					{
 						rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
@@ -170,7 +177,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.RIGHT;
 					player_frip = true;//右向き
-					//最高速度になるとそれ以上加速しない
+									   //最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x < LimitSpeed)
 					{
 						rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
@@ -193,8 +200,16 @@ public class Player_Ver2 : BaseStatusClass
 				}
 			}
 		}
+
+		////攻撃した
+		//if (attacking)
+		//{
+		//	attacking = false;
+		//	Vector3 force = new Vector3(0,1,0);//力の設定
+		//	rb2D.AddForce(force, ForceMode2D.Impulse);
+		//}ここ途中！！！！
 	}
-	
+
 	//コライダーに触れた時
     private void OnCollisionEnter2D(Collision2D other)
     {

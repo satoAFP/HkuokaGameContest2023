@@ -363,7 +363,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540382222}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.54, y: -1, z: 0}
+  m_LocalPosition: {x: 9.5, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -409,8 +409,10 @@ MonoBehaviour:
   Gravity: 50
   AvoidDis: 12
   AvoidTime: 30
-  KnockbackPow: {x: 400, y: 400}
-  AttackkCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
+  KnockbackPow: {x: 0, y: 0}
+  AttackCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
+  AttackMovePos: {x: 1, y: 0, z: 0}
+  AttackMoveSpeed: 0.1
 --- !u!50 &1050592509
 Rigidbody2D:
   serializedVersion: 4

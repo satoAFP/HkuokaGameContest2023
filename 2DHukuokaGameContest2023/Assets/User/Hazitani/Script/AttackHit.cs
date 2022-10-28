@@ -13,12 +13,11 @@ public class AttackHit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("UŒ‚‚ ‚½‚Á‚Ä‚è");
         if (collision.gameObject.tag == "Enemy")
         {
             player.hit_enemy = true;
             player.hit_enemy_pos = collision.gameObject.transform.position;
-            Debug.Log(player.hit_enemy_pos);
+            Debug.Log( "“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
         }
     }
 }
