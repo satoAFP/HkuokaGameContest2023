@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player_Ver2 : BaseStatusClass
@@ -72,7 +73,7 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public bool enemy_alive = true;			//攻撃した敵が生きているか
 	private Ray2D ray_attack;				//攻撃時に飛ばすレイ
-	private float ray_attack_distance = 100;  //攻撃レイの距離
+	private float ray_attack_distance = 10;	//攻撃レイの距離
 	private RaycastHit2D hit_attack;		//攻撃レイが何かに当たった時の情報
 
 
@@ -120,15 +121,15 @@ public class Player_Ver2 : BaseStatusClass
 			target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
 			atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
-			//レイを下に飛ばす
+			//レイをマウス方向に飛ばす
 			ray_attack = new Ray2D(transform.position, target);
 
-			//Groundとだけ衝突する
+			//Enemyとだけ衝突する
 			int layerMask_attack = LayerMask.GetMask(new string[] { "Enemy" });
-			hit_attack = Physics2D.Raycast(ray_attack.origin, ray_attack.direction, ray_attack_distance, layerMask_attack);
+			hit_attack = Physics2D.RaycastAll(ray_attack.origin, ray_attack.direction).Last();
 
-			//レイを赤色で表示させる
-			Debug.DrawRay(ray_attack.origin, ray_attack.direction * ray_attack_distance, Color.cyan);
+			//レイを青色で表示させる
+			Debug.DrawRay(ray_attack.origin, ray_attack.direction * ray_attack_distance, Color.blue);
 
 			//コライダーとレイが接触
 			if (hit_attack.collider)
@@ -137,7 +138,7 @@ public class Player_Ver2 : BaseStatusClass
 
 				if (SearchGameObject.tag == "Enemy")
 				{
-					Debug.Log("敵に当たった");
+					Debug.Log(SearchGameObject.name.ToString());
 				}
 			}
 
@@ -243,7 +244,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.LEFT;
 					player_frip = false;//左向き
-										//最高速度になるとそれ以上加速しない
+					//最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x > -LimitSpeed)
 					{
 						rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
@@ -253,7 +254,7 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					now_move = (int)Direction.RIGHT;
 					player_frip = true;//右向き
-									   //最高速度になるとそれ以上加速しない
+					//最高速度になるとそれ以上加速しない
 					if (rb2D.velocity.x < LimitSpeed)
 					{
 						rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
