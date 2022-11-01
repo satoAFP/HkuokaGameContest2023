@@ -70,9 +70,14 @@ public class BaseEnemyFly : BaseStatusClass
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
     private DropItemList dropItemList;          //ドロップアイテム管理用
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
-    public int stopCount = 0;                  //移動停止までのカウント
+    public int stopCount = 0;                   //移動停止までのカウント
 
     private bool first1 = true;
+
+
+
+    [System.NonSerialized]
+    public bool deth = false;                   //主人公受け渡し用死亡判定
 
 
 
@@ -201,6 +206,9 @@ public class BaseEnemyFly : BaseStatusClass
             {
                 Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
             }
+
+            //死亡判定受け渡し用
+            deth = true;
 
             //削除
             Destroy(gameObject);
