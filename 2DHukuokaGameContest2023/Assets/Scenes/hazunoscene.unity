@@ -225,7 +225,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &540382223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,6 +413,8 @@ MonoBehaviour:
   AttackCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
   AttackMovePos: {x: 1, y: 0, z: 0}
   AttackMoveSpeed: 0.1
+  AttackingTime: 180
+  enemy_alive: 0
 --- !u!50 &1050592509
 Rigidbody2D:
   serializedVersion: 4

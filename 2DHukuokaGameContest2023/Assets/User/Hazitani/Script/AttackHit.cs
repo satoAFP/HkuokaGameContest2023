@@ -6,6 +6,8 @@ public class AttackHit : MonoBehaviour
 {
     private Player_Ver2 player;
 
+    private GameObject enemyObj;
+
     void Start()
     {
         player = transform.root.GetComponent<Player_Ver2>();
@@ -15,9 +17,27 @@ public class AttackHit : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            player.hit_enemy = true;
-            player.hit_enemy_pos = collision.gameObject.transform.position;
-            Debug.Log( "“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
+            enemyObj = collision.gameObject;
+
+            if (enemyObj != null)
+            {
+                player.enemy_alive = true;
+                player.hit_enemy = true;
+                player.hit_enemy_pos = collision.gameObject.transform.position;
+                Debug.Log("“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (collision.gameObject == null)
+            {
+                player.enemy_alive = false;
+                Debug.Log("“G“|‚µ‚½");
+            }
         }
     }
 }
