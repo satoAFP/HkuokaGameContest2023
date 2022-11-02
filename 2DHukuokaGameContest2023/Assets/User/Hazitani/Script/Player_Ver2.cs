@@ -126,7 +126,7 @@ public class Player_Ver2 : BaseStatusClass
 
 			//Enemy‚Æ‚¾‚¯Õ“Ë‚·‚é
 			int layerMask_attack = LayerMask.GetMask(new string[] { "Enemy" });
-			hit_attack = Physics2D.RaycastAll(ray_attack.origin, ray_attack.direction).Last();
+			hit_attack = Physics2D.RaycastAll(ray_attack.origin, ray_attack.direction, ray_attack_distance, layerMask_attack).First();
 
 			//ƒŒƒC‚ğÂF‚Å•\¦‚³‚¹‚é
 			Debug.DrawRay(ray_attack.origin, ray_attack.direction * ray_attack_distance, Color.blue);
