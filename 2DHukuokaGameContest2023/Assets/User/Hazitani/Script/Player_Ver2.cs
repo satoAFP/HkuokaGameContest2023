@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player_Ver2 : BaseStatusClass
 {
@@ -41,6 +42,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵を倒したあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
+	[SerializeField, Header("コンボテキスト")]
+	private Text Combo;
+
 	public enum Direction
 	{
 		LEFT = -1,
@@ -56,6 +60,7 @@ public class Player_Ver2 : BaseStatusClass
 	private bool move_stop = false;     //動きを止めたいとき使用
 	private bool avoiding = false;      //回避中かどうか
 	private float avoid_time = 0;       //回避時間
+	private int combo_count = 0;		//コンボ数
 
 
 	//攻撃関連
@@ -89,6 +94,7 @@ public class Player_Ver2 : BaseStatusClass
 	void Start()
 	{
 		rb2D = GetComponent<Rigidbody2D>();
+		Combo.text = combo_count.ToString();
 	}
 
 	void Update()
@@ -298,12 +304,17 @@ public class Player_Ver2 : BaseStatusClass
         {
 			ground_hit = true;
 			move_stop = false;
+			combo_count = 0;
+			Combo.text = combo_count.ToString();
 		}
 
 		//主人公と衝突時のノックバック
 		if (collision.gameObject.tag == "Enemy")
 		{
 			jump_count = 0;
+
+			combo_count++;
+			Combo.text = combo_count.ToString();
 
 			//if (player_frip)
 			//{
