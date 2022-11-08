@@ -36,7 +36,10 @@ public class BaseEnemyFly : BaseStatusClass
     private Vector2 KnockbackPow;
 
 
-    [SerializeField, Header("アイテムドロップ率"), Range(0, 100), Space(50)]
+    [SerializeField, Header("死んでから消えるまでのフレーム"), Range(0, 100), Space(50)]
+    public int DethFrame;
+
+    [SerializeField, Header("アイテムドロップ率"), Range(0, 100)]
     private int dropRate;
 
 
@@ -60,6 +63,9 @@ public class BaseEnemyFly : BaseStatusClass
     [SerializeField, Header("攻撃されたときのエフェクト")]
     private GameObject RecEffct;
 
+    [SerializeField, Header("死ぬときのエフェクト")]
+    private GameObject DethEffct;
+
 
 
 
@@ -73,7 +79,7 @@ public class BaseEnemyFly : BaseStatusClass
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
     private DropItemList dropItemList;          //ドロップアイテム管理用
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
-    public int stopCount = 0;                   //移動停止までのカウント
+    private int DethFrameCount = 0;
 
     private bool first1 = true;
 
@@ -81,6 +87,8 @@ public class BaseEnemyFly : BaseStatusClass
 
     [System.NonSerialized]
     public bool deth = false;                   //主人公受け渡し用死亡判定
+    [System.NonSerialized]
+    public int stopCount = 0;                   //移動停止までのカウント
 
 
 
@@ -198,17 +206,28 @@ public class BaseEnemyFly : BaseStatusClass
     {
         if (HP <= 0)
         {
-            //アイテムドロップ処理
-            if (dropRate >= Random.Range(0, 100))
-            {
-                Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
-            }
+            DethFrameCount++;
+            gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
+
 
             //死亡判定受け渡し用
             deth = true;
 
-            //削除
-            Destroy(gameObject);
+            if (DethFrame == DethFrameCount)
+            {
+                //アイテムドロップ処理
+                if (dropRate >= Random.Range(0, 100))
+                {
+                    Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
+                }
+
+
+                //死亡時のエフェクト
+                Instantiate(DethEffct, transform.position, Quaternion.identity);
+
+                //削除
+                Destroy(gameObject);
+            }
         }
     }
 

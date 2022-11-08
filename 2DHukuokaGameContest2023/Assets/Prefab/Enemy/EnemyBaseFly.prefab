@@ -145,6 +145,7 @@ MonoBehaviour:
   raydistance: 5
   StopDistance: 0
   KnockbackPow: {x: 0, y: 0}
+  DethFrame: 10
   dropRate: 0
   RLMoveFrag: 0
   RMoveFrag: 0
@@ -153,4 +154,4 @@ MonoBehaviour:
   StandImage: {fileID: 21300000, guid: 8c9bf8d4c8d579e43b497105b5035a29, type: 3}
   AttackImage: {fileID: 21300000, guid: d772e85b95fefea4d9b60ffe0379b902, type: 3}
   RecEffct: {fileID: 1094666327152733925, guid: cc3f8e23f64025d439e80ff9b757222d, type: 3}
-  stopCount: 0
+  DethEffct: {fileID: 5435948412440824238, guid: 101f631809614054ba15de9cbe1b6d83, type: 3}
