@@ -303,6 +303,8 @@ public class Player_Ver2 : BaseStatusClass
 		//主人公と衝突時のノックバック
 		if (collision.gameObject.tag == "Enemy")
 		{
+			jump_count = 0;
+
 			//if (player_frip)
 			//{
 			//	rb2D.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
