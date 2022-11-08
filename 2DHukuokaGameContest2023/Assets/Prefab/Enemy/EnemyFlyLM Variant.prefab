@@ -59,5 +59,9 @@ PrefabInstance:
       propertyPath: LMoveFrag
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8302650788882026458, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
+      propertyPath: StopCount
+      value: 150
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
