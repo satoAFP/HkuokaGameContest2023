@@ -1018,7 +1018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[0].EnemySet
@@ -1082,7 +1082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[0].SpawnFrame
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[0].spawnPos.x
