@@ -175,6 +175,8 @@ public class BaseEnemyFly : BaseStatusClass
             //    rigidbody2d.AddForce(KnockbackPow, ForceMode2D.Force);
             //}
             //MoveStop = true;
+
+            HP -= collision.gameObject.transform.root.gameObject.GetComponent<Player_Ver2>().ATK;
         }
 
 
