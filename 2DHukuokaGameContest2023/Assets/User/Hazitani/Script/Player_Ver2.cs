@@ -63,7 +63,8 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attacking = false;			//攻撃中かどうか
-	private int attacking_time = 0;			//攻撃中に浮遊できる時間
+	private int attacking_time = 0;         //攻撃中に浮遊できる時間
+	private bool dont_move = false;
 	private GameObject attack = null;		//攻撃オブジェクト
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
@@ -156,58 +157,26 @@ public class Player_Ver2 : BaseStatusClass
 
 			if (transform.position.x < hit_enemy_pos.x)
 			{
-				hit_enemy_frip = true;
+				if (!dont_move)
+				{
+					dont_move = true;
+					hit_enemy_frip = true;
+				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
 			}
 			else
 			{
-				hit_enemy_frip = false;
+				if (!dont_move)
+				{
+					dont_move = true;
+					hit_enemy_frip = false;
+				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
 			}
 
 			if (transform.position == hit_enemy_pos + AttackMovePos || transform.position == hit_enemy_pos - AttackMovePos)
 			{
 				attacking = true;
-			}
-		}
-
-		//攻撃中
-		if (attacking)
-        {
-			//敵が死んだ
-			if (!enemy_alive)
-			{
-				Debug.Log("あっ度フォース");
-				move_stop = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-				if (hit_enemy_frip)
-				{
-					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
-				}
-				else
-				{
-					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
-				}
-			}
-
-			attacking_time++;
-			Debug.Log("あたっキングなう");
-
-			if (attacking_time >= AttackingTime)
-			{
-				Debug.Log("あたっキング終わり");
-				attacking_time = 0;
-				attacking = false;
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			}
-
-			if(!enemy_alive)
-            {
-				attacking_time = 0;
-				attacking = false;
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 		}
 
@@ -287,6 +256,39 @@ public class Player_Ver2 : BaseStatusClass
 				}
 			}
 		}
+
+		//攻撃中
+		if (attacking)
+		{
+			attacking_time++;
+
+			if (attacking_time >= AttackingTime)
+			{
+				attacking_time = 0;
+				attacking = false;
+				hit_enemy = false;
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+			}
+
+			//敵が死んだ
+			if (!enemy_alive)
+			{
+				move_stop = false;
+				attacking_time = 0;
+				attacking = false;
+				hit_enemy = false;
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+				if (hit_enemy_frip)
+				{
+					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
+				}
+				else
+				{
+					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
+				}
+				dont_move = false;
+			}
+		}
 	}
 
 	//コライダーに触れた時
@@ -301,6 +303,8 @@ public class Player_Ver2 : BaseStatusClass
 		//主人公と衝突時のノックバック
 		if (collision.gameObject.tag == "Enemy")
 		{
+			jump_count = 0;
+
 			//if (player_frip)
 			//{
 			//	rb2D.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
@@ -319,6 +323,19 @@ public class Player_Ver2 : BaseStatusClass
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			ground_hit = false;
+		}
+
+		//主人公と衝突時のノックバック
+		if (collision.gameObject.tag == "Enemy")
+		{
+			if (collision.gameObject.GetComponent<BaseEnemyFly>().deth)
+			{
+				enemy_alive = false;
+			}
+			else
+			{
+				enemy_alive = true;
+			}
 		}
 	}
 
