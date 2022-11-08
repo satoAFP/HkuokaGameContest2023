@@ -176,7 +176,7 @@ public class BaseEnemyFly : BaseStatusClass
             //}
             //MoveStop = true;
 
-            HP -= collision.gameObject.transform.root.gameObject.GetComponent<Player_Ver2>().ATK;
+            HP -= collision.gameObject.GetComponent<Player_Ver2>().ATK;
         }
 
 
