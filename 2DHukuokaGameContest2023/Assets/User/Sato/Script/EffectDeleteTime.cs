@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class EffectDeleteTime : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField, Header("è¡Ç¶ÇÈÇ‹Ç≈ÇÃéûä‘")]
+    private int DeleteTime;
+
+    private int frameCount = 0;
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (frameCount == DeleteTime)
+        {
+            Destroy(gameObject);
+        }
+
+        frameCount++;
     }
 }
