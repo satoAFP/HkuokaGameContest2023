@@ -104,6 +104,11 @@ public class SpawnEnemy : MonoBehaviour
             //Žg—p‚µ‚Ä‚¢‚é”z—ñ•ª‰ÁŽZ‚³‚ê‚é
             if (GF.Length - 1 > NowArrangement)
                 NowArrangement++;
+            else
+            {
+                NowArrangement = 0;
+                FrameCount = 0;
+            }
         }
 
         FrameCount++;
