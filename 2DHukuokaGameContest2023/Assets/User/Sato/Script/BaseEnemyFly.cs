@@ -17,7 +17,7 @@ public class BaseEnemyFly : BaseStatusClass
     private float LimitSpeed;
 
     [SerializeField, Header("停止までのフレーム"), Range(0, 500)]
-    private int StopCount;
+    public int StopCount;
 
 
 
@@ -56,6 +56,9 @@ public class BaseEnemyFly : BaseStatusClass
 
     [SerializeField, Header("攻撃時の画像")]
     private Sprite AttackImage;
+
+    [SerializeField, Header("攻撃されたときのエフェクト")]
+    private GameObject RecEffct;
 
 
 
@@ -166,15 +169,7 @@ public class BaseEnemyFly : BaseStatusClass
         //主人公と衝突時のノックバック
         if (collision.gameObject.tag == "Player")
         {
-            //if (AttckDirection == 1)
-            //{
-            //    rigidbody2d.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
-            //}
-            //if (AttckDirection == 2)
-            //{
-            //    rigidbody2d.AddForce(KnockbackPow, ForceMode2D.Force);
-            //}
-            //MoveStop = true;
+            Instantiate(RecEffct, transform.position, Quaternion.identity);
 
             HP -= collision.gameObject.GetComponent<Player_Ver2>().ATK;
         }

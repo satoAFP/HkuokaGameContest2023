@@ -31,15 +31,16 @@ public class SpawnEnemy : MonoBehaviour
         [SerializeField]
         public GameObject EnemySet;
         [SerializeField]
+        public Vector3 spawnPos;
+        [SerializeField]
         public int SpawnFrame;
         [SerializeField]
-        public Vector3 spawnPos;
+        public int StopFrame;
     }
+
 
     [SerializeField, Header("敵出現フロー作成用")]
     private GameFlow[] GF;
-
-
 
     private int FrequencyCount = 0;     //出現頻度カウント用
     private int spawnCount = 0;         //スポーン数カウント用
@@ -52,7 +53,7 @@ public class SpawnEnemy : MonoBehaviour
     {
         FluctuationSpawn();
 
-
+        
 
 
     }
@@ -98,6 +99,7 @@ public class SpawnEnemy : MonoBehaviour
             //敵生成
             Vector3 MyPos = transform.localPosition;
             GameObject clone = Instantiate(GF[NowArrangement].EnemySet, MyPos + GF[NowArrangement].spawnPos, Quaternion.identity);
+            clone.gameObject.GetComponent<BaseEnemyFly>().stopCount = GF[NowArrangement].StopFrame;
 
             //使用している配列分加算される
             if (GF.Length - 1 > NowArrangement)
