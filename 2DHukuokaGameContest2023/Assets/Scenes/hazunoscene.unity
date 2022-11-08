@@ -205,11 +205,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.17
+      value: 6.3
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.06
+      value: 28.2
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -673,7 +673,7 @@ MonoBehaviour:
   AttackCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
   AttackMovePos: {x: 0, y: 0, z: 0}
   AttackMoveSpeed: 0.1
-  AttackingTime: 180
+  AttackingTime: 30
   SubjugationKnockback: {x: 500, y: 1000}
 --- !u!50 &1050592509
 Rigidbody2D:
@@ -1025,11 +1025,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.06
+      value: -5.6
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.09
+      value: 2.9
       objectReference: {fileID: 0}
     - target: {fileID: 304318466637153434, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
       propertyPath: m_LocalPosition.z

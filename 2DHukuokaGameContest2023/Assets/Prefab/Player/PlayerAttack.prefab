@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 954671667257893926}
   m_Layer: 0
   m_Name: PlayerAttackCollision
-  m_TagString: PlayerAttack
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 96395570328973654}
   m_Layer: 0
   m_Name: PlayerAttack
-  m_TagString: PlayerAttack
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
