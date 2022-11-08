@@ -31,7 +31,7 @@ public class SpawnEnemy : MonoBehaviour
         [SerializeField]
         public GameObject EnemySet;
         [SerializeField]
-        public int NextFrame;
+        public int SpawnFrame;
         [SerializeField]
         public Vector3 spawnPos;
     }
@@ -87,15 +87,21 @@ public class SpawnEnemy : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 敵設定手動関数
+    /// </summary>
     private void FluctuationSpawn()
     {
-        if (NextSpawnNum == FrameCount)
+        //設定しているフレーム毎に召喚
+        if (GF[NowArrangement].SpawnFrame == FrameCount)
         {
+            //敵生成
             Vector3 MyPos = transform.localPosition;
             GameObject clone = Instantiate(GF[NowArrangement].EnemySet, MyPos + GF[NowArrangement].spawnPos, Quaternion.identity);
 
-            NextSpawnNum += GF[NowArrangement].NextFrame;
-            NowArrangement++;
+            //使用している配列分加算される
+            if (GF.Length - 1 > NowArrangement)
+                NowArrangement++;
         }
 
         FrameCount++;
