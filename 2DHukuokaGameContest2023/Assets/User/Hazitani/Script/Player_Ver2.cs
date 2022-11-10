@@ -156,9 +156,6 @@ public class Player_Ver2 : BaseStatusClass
 		//UŒ‚‚ª“G‚É“–‚½‚Á‚½ê‡
 		if (hit_enemy)
         {
-			//ˆÚ“®ƒL[ó‚¯‚È‚¢
-			move_stop = true;
-
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
 			if (transform.position.x < hit_enemy_pos.x)
