@@ -1338,7 +1338,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
-  FADE_COLOR_TIME: 10
+  FADE_COLOR_TIME: 180
 --- !u!212 &668667654
 SpriteRenderer:
   m_ObjectHideFlags: 0
