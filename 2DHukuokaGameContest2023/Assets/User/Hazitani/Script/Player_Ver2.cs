@@ -96,24 +96,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	void Update()
     {
-		//レイを発射する位置の調整
-		rayPosition1 = transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
-		rayPosition2 = transform.position + new Vector3( 0.5f, -transform.localScale.y / 2, 0.0f);
-
-		//レイの接地判定
-		RayGround(ray_left, hit_left, rayPosition1);
-		RayGround(ray_right, hit_right, rayPosition2);
-
-        //ジャンプ処理
-        if (Input.GetKeyDown(KeyCode.Space) && jump_count < 1)
-		{
-			Debug.Log("ジャンプ入力された");
-			rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
-
-			//カウント増加
-			jump_count++;
-		}
-
 		//攻撃の向き設定
 		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
 
@@ -131,31 +113,6 @@ public class Player_Ver2 : BaseStatusClass
 
 				//コライダーを生成
 				PlayerAttack(attack, AttackCollider, attackpos);
-			}
-		}
-
-		//攻撃が敵に当たった場合
-		if (hit_enemy)
-        {
-			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
-			if (transform.position.x < hit_enemy_pos.x)
-			{
-				if (!dont_move)
-				{
-					dont_move = true;
-					hit_enemy_frip = true;
-				}
-				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
-			}
-			else if(transform.position.x > hit_enemy_pos.x)
-			{
-				if (!dont_move)
-				{
-					dont_move = true;
-					hit_enemy_frip = false;
-				}
-				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
 			}
 		}
 	}
@@ -205,7 +162,7 @@ public class Player_Ver2 : BaseStatusClass
 		}
 
 		//ジャンプ処理
-		if (Input.GetKey(KeyCode.Space) && jump_count < 2)
+		if (Input.GetKey(KeyCode.Space) && jump_count < 1)
 		{
 			if(!jump_key_flag)
             {
@@ -220,34 +177,6 @@ public class Player_Ver2 : BaseStatusClass
 		else
         {
 			jump_key_flag = false;
-		}
-
-		//攻撃の向き設定
-		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
-
-		//攻撃
-		if (Input.GetMouseButton(0))
-		{
-			if (!attack_key_flag)
-			{
-				attack_key_flag = true;
-				if (attack_ok)
-				{
-					attack_ok = false;
-
-					//角度設定
-					mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-					target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
-					atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
-
-					//コライダーを生成
-					PlayerAttack(attack, AttackCollider, attackpos);
-				}
-			}
-		}
-		else
-        {
-			attack_key_flag = false;
 		}
 
 		//攻撃が敵に当たった場合
