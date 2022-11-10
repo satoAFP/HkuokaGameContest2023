@@ -206,12 +206,13 @@ public class BaseEnemyFly : BaseStatusClass
     {
         if (HP <= 0)
         {
-            DethFrameCount++;
-            gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
-
 
             //Ž€–S”»’èŽó‚¯“n‚µ—p
             deth = true;
+
+            DethFrameCount++;
+            gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
+
 
             if (DethFrame == DethFrameCount)
             {
