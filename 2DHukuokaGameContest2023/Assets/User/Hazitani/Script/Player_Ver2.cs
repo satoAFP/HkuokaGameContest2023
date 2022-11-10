@@ -52,15 +52,17 @@ public class Player_Ver2 : BaseStatusClass
 		RIGHT,
 	}
 
-	private Rigidbody2D rb2D;			//主人公のリジットボディ
-	private int jump_count = 0;			//ジャンプ回数
-	private bool ground_hit = false;	//地面に立っているか
-	private int now_move = 0;			//左:-1・停止:0・右:1
-	private bool player_frip = false;   //プレイヤーの向きtrue右false左
-	private bool move_stop = false;     //動きを止めたいとき使用
-	private bool avoiding = false;      //回避中かどうか
-	private float avoid_time = 0;       //回避時間
-	private int combo_count = 0;		//コンボ数
+	private Rigidbody2D rb2D;				//主人公のリジットボディ
+	private int jump_count = 0;				//ジャンプ回数
+	private bool jump_key_flag = false;		//ジャンプキー連続判定制御用
+	private bool attack_key_flag = false;	//アタックキー連続判定制御用
+	private bool ground_hit = false;		//地面に立っているか
+	private int now_move = 0;				//左:-1・停止:0・右:1
+	private bool player_frip = false;		//プレイヤーの向きtrue右false左
+	private bool move_stop = false;			//動きを止めたいとき使用
+	private bool avoiding = false;			//回避中かどうか
+	private float avoid_time = 0;			//回避時間
+	private int combo_count = 0;			//コンボ数
 
 
 	//攻撃関連
@@ -76,8 +78,6 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public bool hit_enemy = false;			//攻撃が敵に当たったかどうか
 	private bool hit_enemy_frip = false;	//攻撃した敵の方向true右false左
-	[System.NonSerialized]
-	public bool enemy_alive = true;			//攻撃した敵が生きているか
 
 
 	//接地関連
@@ -165,6 +165,14 @@ public class Player_Ver2 : BaseStatusClass
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
+		//レイを発射する位置の調整
+		rayPosition1 = transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
+		rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
+
+		//レイの接地判定
+		RayGround(ray_left, hit_left, rayPosition1);
+		RayGround(ray_right, hit_right, rayPosition2);
+
 		//移動処理
 		if (!move_stop)
 		{
@@ -196,8 +204,79 @@ public class Player_Ver2 : BaseStatusClass
 			}
 		}
 
+		//ジャンプ処理
+		if (Input.GetKey(KeyCode.Space) && jump_count < 2)
+		{
+			if(!jump_key_flag)
+            {
+				jump_key_flag = true;
+				Debug.Log("ジャンプ入力された");
+				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
+
+				//カウント増加
+				jump_count++;
+			}
+		}
+		else
+        {
+			jump_key_flag = false;
+		}
+
+		//攻撃の向き設定
+		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
+
+		//攻撃
+		if (Input.GetMouseButton(0))
+		{
+			if (!attack_key_flag)
+			{
+				attack_key_flag = true;
+				if (attack_ok)
+				{
+					attack_ok = false;
+
+					//角度設定
+					mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
+					atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
+
+					//コライダーを生成
+					PlayerAttack(attack, AttackCollider, attackpos);
+				}
+			}
+		}
+		else
+        {
+			attack_key_flag = false;
+		}
+
+		//攻撃が敵に当たった場合
+		if (hit_enemy)
+		{
+			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+			if (transform.position.x < hit_enemy_pos.x)
+			{
+				if (!dont_move)
+				{
+					dont_move = true;
+					hit_enemy_frip = true;
+				}
+				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
+			}
+			else if (transform.position.x > hit_enemy_pos.x)
+			{
+				if (!dont_move)
+				{
+					dont_move = true;
+					hit_enemy_frip = false;
+				}
+				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
+			}
+		}
+
 		//攻撃クールタイム
-		if(!attack_ok)
+		if (!attack_ok)
         {
 			attack_cooltime++;
 
