@@ -4,37 +4,41 @@ using UnityEngine;
 
 public class AttackHit : MonoBehaviour
 {
-    private Player_Ver2 player;
+    private Player_Ver2 player = null;
+    private BaseEnemyFly baseEnemyFly = null;//UŒ‚‚ª“–‚½‚Á‚½“G‚ÌƒIƒuƒWƒFƒNƒg‚ğ“ü‚ê‚é
 
-    void Start()
+    private void Start()
     {
         player = transform.root.GetComponent<Player_Ver2>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Update()
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (baseEnemyFly != null)
         {
-            player.enemy_alive = true;
-            player.hit_enemy = true;
-            player.hit_enemy_pos = collision.gameObject.transform.position;
-            //Debug.Log("“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Enemy")
-        {
-            if (collision.gameObject.GetComponent<BaseEnemyFly>().deth)
+            if (baseEnemyFly.deth)
             {
                 player.enemy_alive = false;
+                player.hit_enemy = false;
                 Debug.Log("“G€‚É‚Ü‚µ‚½");
             }
             else
             {
                 player.enemy_alive = true;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            baseEnemyFly = collision.gameObject.GetComponent<BaseEnemyFly>();
+
+            player.enemy_alive = true;
+            player.hit_enemy = true;
+            player.hit_enemy_pos = collision.gameObject.transform.position;
+            //Debug.Log("“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
         }
     }
 }

@@ -24,11 +24,11 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("回避時間"), Range(0, 100)]
 	private int AvoidTime;
 
-	[SerializeField, Header("敵と衝突した時のノックバック")]
-	private Vector2 KnockbackPow;
-
 	[SerializeField, Header("攻撃当たり判定")]
 	private GameObject AttackCollider;
+
+	[SerializeField, Header("攻撃のクールタイム")]
+	private int AttackCoolTime;
 
 	[SerializeField, Header("攻撃を当てた時の移送位置")]
 	private Vector3 AttackMovePos;
@@ -67,10 +67,10 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 mousePos;				//マウスの位置取得用
 	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
-	private bool attacking = false;			//攻撃中かどうか
-	private int attacking_time = 0;         //攻撃中に浮遊できる時間
-	private bool dont_move = false;
-	private GameObject attack = null;		//攻撃オブジェクト
+	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
+	private bool dont_move = false;			//敵にめり込んだ時に敵の向きを1回取る用
+	private GameObject attack = null;       //攻撃オブジェクト
+	private int attack_cooltime = 0;		//攻撃クールタイム
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
@@ -78,9 +78,6 @@ public class Player_Ver2 : BaseStatusClass
 	private bool hit_enemy_frip = false;	//攻撃した敵の方向true右false左
 	[System.NonSerialized]
 	public bool enemy_alive = true;			//攻撃した敵が生きているか
-	private Ray2D ray_attack;				//攻撃時に飛ばすレイ
-	private float ray_attack_distance = 10;	//攻撃レイの距離
-	private RaycastHit2D hit_attack;		//攻撃レイが何かに当たった時の情報
 
 
 	//接地関連
@@ -123,34 +120,18 @@ public class Player_Ver2 : BaseStatusClass
 		//攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
-			//角度設定
-			mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
-			atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
+			if (attack_ok)
+			{
+				attack_ok = false;
 
-			////レイをマウス方向に飛ばす
-			//ray_attack = new Ray2D(transform.position, target);
+				//角度設定
+				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
+				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
-			////Enemyとだけ衝突する
-			//int layerMask_attack = LayerMask.GetMask(new string[] { "Enemy" });
-			//hit_attack = Physics2D.Raycast(ray_attack.origin, ray_attack.direction, ray_attack_distance, layerMask_attack);
-
-			////レイを青色で表示させる
-			//Debug.DrawRay(ray_attack.origin, ray_attack.direction * ray_attack_distance, Color.blue);
-
-			////コライダーとレイが接触
-			//if (hit_attack.collider)
-			//{
-			//	SearchGameObject = hit_attack.collider.gameObject;
-
-			//	if (SearchGameObject.tag == "Enemy")
-			//	{
-			//		Debug.Log(SearchGameObject.name.ToString());
-			//	}
-			//}
-
-			//コライダーを生成
-			PlayerAttack(attack, AttackCollider, attackpos);
+				//コライダーを生成
+				PlayerAttack(attack, AttackCollider, attackpos);
+			}
 		}
 
 		//攻撃が敵に当たった場合
@@ -167,7 +148,7 @@ public class Player_Ver2 : BaseStatusClass
 				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
 			}
-			else
+			else if(transform.position.x > hit_enemy_pos.x)
 			{
 				if (!dont_move)
 				{
@@ -176,110 +157,87 @@ public class Player_Ver2 : BaseStatusClass
 				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
 			}
-
-			if (transform.position == hit_enemy_pos + AttackMovePos || transform.position == hit_enemy_pos - AttackMovePos)
-			{
-				attacking = true;
-			}
 		}
-
-		//回避
-		//if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl))
-  //      {
-		//	//回避中ではない
-		//	if (!avoiding)
-		//	{
-		//		avoiding = true;
-		//		if (Input.GetKey(KeyCode.A))
-		//		{
-		//			Debug.Log("左回避");
-		//			rb2D.velocity = -transform.right * AvoidDis;
-		//		}
-		//		else if (Input.GetKey(KeyCode.D))
-		//		{
-		//			Debug.Log("右回避");
-		//			rb2D.velocity = transform.right * AvoidDis;
-		//		}
-		//		else
-		//		{
-		//			Debug.Log("その場回避");
-		//		}
-		//	}
-  //      }
 	}
 
 	void FixedUpdate()
 	{
-		if (!attacking)
-		{
-			//重力設定
-			Physics2D.gravity = new Vector3(0, -Gravity, 0);
-		}
+		//重力設定
+		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//移動処理
 		if (!move_stop)
 		{
-			//回避中ではないとき
-			if (!avoiding)
+			if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
 			{
-				if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+				now_move = (int)Direction.LEFT;
+				player_frip = false;//左向き
+				
+				//最高速度になるとそれ以上加速しない
+				if (rb2D.velocity.x > -LimitSpeed)
 				{
-					now_move = (int)Direction.LEFT;
-					player_frip = false;//左向き
-					//最高速度になるとそれ以上加速しない
-					if (rb2D.velocity.x > -LimitSpeed)
-					{
-						rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
-					}
-				}
-				if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
-				{
-					now_move = (int)Direction.RIGHT;
-					player_frip = true;//右向き
-					//最高速度になるとそれ以上加速しない
-					if (rb2D.velocity.x < LimitSpeed)
-					{
-						rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-					}
-				}
-				if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-				{
-					now_move = (int)Direction.STOP;
+					rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
 				}
 			}
-			else
+			if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
 			{
-				//回避時間
-				avoid_time++;
-
-				if (avoid_time >= AvoidTime)
+				now_move = (int)Direction.RIGHT;
+				player_frip = true;//右向き
+				
+				//最高速度になるとそれ以上加速しない
+				if (rb2D.velocity.x < LimitSpeed)
 				{
-					avoiding = false;
-					avoid_time = 0;
+					rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
 				}
+			}
+			if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+			{
+				now_move = (int)Direction.STOP;
 			}
 		}
 
-		//攻撃中
-		if (attacking)
+		//攻撃クールタイム
+		if(!attack_ok)
+        {
+			attack_cooltime++;
+
+			if(attack_cooltime >= AttackCoolTime)
+            {
+				attack_cooltime = 0;
+				attack_ok = true;
+            }
+        }
+	}
+
+	//コライダーに触れた時
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+		//地面に触れた時
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+			ground_hit = true;
+			move_stop = false;
+
+			//コンボリセットして反映
+			combo_count = 0;
+			Combo.text = combo_count.ToString();
+		}
+
+		//攻撃のノックバック
+		if (collision.gameObject.tag == "Enemy")
 		{
-			attacking_time++;
+			//ジャンプ回数リセット
+			jump_count = 0;
 
-			if (attacking_time >= AttackingTime)
-			{
-				attacking_time = 0;
-				attacking = false;
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			}
+			//コンボ増やして反映
+			combo_count++;
+			Combo.text = combo_count.ToString();
 
-			//敵が死んだ
-			if (!enemy_alive)
+			//敵に攻撃当たってるとき
+			if (hit_enemy)
 			{
-				move_stop = false;
-				attacking_time = 0;
-				attacking = false;
 				hit_enemy = false;
+				dont_move = false;
 				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 				if (hit_enemy_frip)
 				{
@@ -289,61 +247,31 @@ public class Player_Ver2 : BaseStatusClass
 				{
 					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
 				}
-				dont_move = false;
 			}
 		}
 	}
 
-	//コライダーに触れた時
-    private void OnCollisionEnter2D(Collision2D collision)
+    //コライダーに触れている間
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
+		//地面に触れた時
+		if (collision.gameObject.CompareTag("Ground"))
+		{
 			ground_hit = true;
 			move_stop = false;
+
+			//コンボリセットして反映
 			combo_count = 0;
 			Combo.text = combo_count.ToString();
 		}
-
-		//主人公と衝突時のノックバック
-		if (collision.gameObject.tag == "Enemy")
-		{
-			jump_count = 0;
-
-			combo_count++;
-			Combo.text = combo_count.ToString();
-
-			//if (player_frip)
-			//{
-			//	rb2D.AddForce(new Vector2(-KnockbackPow.x, KnockbackPow.y), ForceMode2D.Force);
-			//}
-			//else
-			//{
-			//	rb2D.AddForce(KnockbackPow, ForceMode2D.Force);
-			//}
-			//move_stop = true;
-		}
 	}
 
-	//コライダーから離れた時
+    //コライダーから離れた時
     private void OnCollisionExit2D(Collision2D collision)
     {
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			ground_hit = false;
-		}
-
-		//主人公と衝突時のノックバック
-		if (collision.gameObject.tag == "Enemy")
-		{
-			if (collision.gameObject.GetComponent<BaseEnemyFly>().deth)
-			{
-				enemy_alive = false;
-			}
-			else
-			{
-				enemy_alive = true;
-			}
 		}
 	}
 
