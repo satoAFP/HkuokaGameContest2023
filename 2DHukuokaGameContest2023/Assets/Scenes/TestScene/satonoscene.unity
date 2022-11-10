@@ -1946,6 +1946,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: Combo
+      value: 
+      objectReference: {fileID: 485222526}
     - target: {fileID: 6280172676603095064, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: Combo
       value: 
