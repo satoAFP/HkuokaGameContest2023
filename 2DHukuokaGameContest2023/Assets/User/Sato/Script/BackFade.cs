@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BackFade : MonoBehaviour
 {
+    [SerializeField, Header("”wŒi‚Ì‰æ‘œ")]
+    private SpriteRenderer[] image;
+
     [SerializeField, Header("”wŒi‚ÌƒOƒ‰ƒf[ƒVƒ‡ƒ“")]
     private Gradient Gradation = default;
 
@@ -16,11 +19,19 @@ public class BackFade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        image[1].color = new Color(1, 1, 1, 0f);
     }
 
     // Update is called once per frame
     void Update()
+    {
+
+        image[0].color -= new Color(0, 0, 0, 0.001f);
+        image[1].color += new Color(0, 0, 0, 0.001f);
+    }
+
+
+    private void GRADATION()
     {
         //ŠÔ‚ği‚ß‚é
         _currentTime += Time.deltaTime;
