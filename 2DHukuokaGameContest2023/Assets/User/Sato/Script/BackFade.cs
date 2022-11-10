@@ -15,23 +15,38 @@ public class BackFade : MonoBehaviour
 
 
     private float _currentTime = 0;
+    private float MoveAlpha = 0.0f;
+    private int NowImage = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        image[1].color = new Color(1, 1, 1, 0f);
+        for (int i = 1; i < image.Length; i++)
+            image[i].color = new Color(1, 1, 1, 0f);
+        MoveAlpha = 1.0f / (50 * FADE_COLOR_TIME);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        ImageGradation();
 
-        image[0].color -= new Color(0, 0, 0, 0.001f);
-        image[1].color += new Color(0, 0, 0, 0.001f);
+    }
+
+    private void ImageGradation()
+    {
+        if ((image.Length - 1) > NowImage) 
+        {
+            image[NowImage].color -= new Color(0, 0, 0, MoveAlpha);
+            image[NowImage + 1].color += new Color(0, 0, 0, MoveAlpha);
+
+            if (image[NowImage].color.a <= 0.0f)
+                NowImage++;
+        }
     }
 
 
-    private void GRADATION()
+    private void ColorGradation()
     {
         //ŽžŠÔ‚ði‚ß‚é
         _currentTime += Time.deltaTime;
