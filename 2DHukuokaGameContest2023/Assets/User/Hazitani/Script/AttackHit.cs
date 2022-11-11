@@ -5,7 +5,6 @@ using UnityEngine;
 public class AttackHit : MonoBehaviour
 {
     private Player_Ver2 player = null;
-    private BaseEnemyFly enemyObj = null;
 
     private void Start()
     {
@@ -14,9 +13,9 @@ public class AttackHit : MonoBehaviour
 
     private void Update()
     {
-        if(enemyObj != null)
+        if(player.enemyObj != null)
         {
-            if(enemyObj.deth)
+            if(player.enemyObj.deth)
             {
                 player.hit_enemy = false;
             }
@@ -27,7 +26,7 @@ public class AttackHit : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            enemyObj = collision.GetComponent<BaseEnemyFly>();
+            player.enemyObj = collision.GetComponent<BaseEnemyFly>();
 
             player.hit_enemy = true;
             player.hit_enemy_pos = collision.gameObject.transform.position;
