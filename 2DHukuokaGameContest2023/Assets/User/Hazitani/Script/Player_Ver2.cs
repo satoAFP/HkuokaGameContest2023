@@ -55,13 +55,10 @@ public class Player_Ver2 : BaseStatusClass
 	private Rigidbody2D rb2D;				//主人公のリジットボディ
 	private int jump_count = 0;				//ジャンプ回数
 	private bool jump_key_flag = false;		//ジャンプキー連続判定制御用
-	private bool attack_key_flag = false;	//アタックキー連続判定制御用
 	private bool ground_hit = false;		//地面に立っているか
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;			//動きを止めたいとき使用
-	private bool avoiding = false;			//回避中かどうか
-	private float avoid_time = 0;			//回避時間
 	private int combo_count = 0;			//コンボ数
 
 
@@ -70,6 +67,7 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
+	private bool attacking = false;			//攻撃中true
 	private bool dont_move = false;			//敵にめり込んだ時に敵の向きを1回取る用
 	private GameObject attack = null;       //攻撃オブジェクト
 	private int attack_cooltime = 0;		//攻撃クールタイム
@@ -105,10 +103,11 @@ public class Player_Ver2 : BaseStatusClass
 			if (attack_ok)
 			{
 				attack_ok = false;
+				attacking = true;
 
 				//角度設定
 				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				target = Vector3.Scale((mousePos - transform.position), new Vector3(1, 1, 0)).normalized;
+				target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
 				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 				//コライダーを生成
@@ -240,13 +239,14 @@ public class Player_Ver2 : BaseStatusClass
 			//コンボ増やして反映
 			combo_count++;
 			Combo.text = combo_count.ToString();
+			hit_enemy = false;
+			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-			//敵に攻撃当たってるとき
-			if (hit_enemy)
+			//攻撃しているとき
+			if (attacking)
 			{
-				hit_enemy = false;
 				dont_move = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+				attacking = false;
 				if (hit_enemy_frip)
 				{
 					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
@@ -271,6 +271,15 @@ public class Player_Ver2 : BaseStatusClass
 			//コンボリセットして反映
 			combo_count = 0;
 			Combo.text = combo_count.ToString();
+		}
+
+		if (collision.gameObject.tag == "Enemy")
+		{
+			if (hit_enemy)
+			{
+				hit_enemy = false;
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+			}
 		}
 	}
 
