@@ -999,9 +999,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 038e26947332ef64f82e70cea4a8c3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveWidth: 0.1
-  MoveNum: 6
-  StopFrame: 7
+  MoveWidth: 0.07
+  MoveNum: 4
+  StopFrame: 4
   OnHitStop: 0
 --- !u!1 &532245999
 GameObject:
@@ -3065,6 +3065,10 @@ PrefabInstance:
     - target: {fileID: 8472068412912387074, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: m_Name
       value: SpawnEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: Wave
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.size

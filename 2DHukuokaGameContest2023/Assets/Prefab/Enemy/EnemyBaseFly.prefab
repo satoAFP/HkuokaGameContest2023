@@ -141,6 +141,8 @@ MonoBehaviour:
   MoveSpeed: 100
   LimitSpeed: 5
   StopCount: 100
+  EffectNum: 5
+  EffectInterval: 2
   RaySpeed: 1
   raydistance: 5
   StopDistance: 0

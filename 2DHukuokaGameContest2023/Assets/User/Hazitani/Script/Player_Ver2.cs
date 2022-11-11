@@ -59,7 +59,8 @@ public class Player_Ver2 : BaseStatusClass
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;			//動きを止めたいとき使用
-	private int combo_count = 0;			//コンボ数
+	private int combo_count = 0;            //コンボ数
+	private int score = 0;					//スコア
 
 
 	//攻撃関連
@@ -75,7 +76,8 @@ public class Player_Ver2 : BaseStatusClass
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
 	public bool hit_enemy = false;			//攻撃が敵に当たったかどうか
-	private bool hit_enemy_frip = false;	//攻撃した敵の方向true右false左
+	private bool hit_enemy_frip = false;    //攻撃した敵の方向true右false左
+	public BaseEnemyFly enemyObj = null;
 
 
 	//接地関連
@@ -239,23 +241,20 @@ public class Player_Ver2 : BaseStatusClass
 			//コンボ増やして反映
 			combo_count++;
 			Combo.text = combo_count.ToString();
-			hit_enemy = false;
-			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-			//攻撃しているとき
-			if (attacking)
-			{
-				dont_move = false;
-				attacking = false;
-				if (hit_enemy_frip)
-				{
-					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
-				}
-				else
-				{
-					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
-				}
+			//敵のHP減らす
+			enemyObj.HP -= ATK;
+
+			//HPが0の時
+			if(enemyObj.HP <= 0)
+            {
+				//スコア加算
+				score++;
+
+				//ヒットストップの処理
 			}
+
+			AttackFin();
 		}
 	}
 
@@ -275,11 +274,7 @@ public class Player_Ver2 : BaseStatusClass
 
 		if (collision.gameObject.tag == "Enemy")
 		{
-			if (hit_enemy)
-			{
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			}
+			AttackFin();
 		}
 	}
 
@@ -289,6 +284,11 @@ public class Player_Ver2 : BaseStatusClass
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			ground_hit = false;
+		}
+
+		if (collision.gameObject.tag == "Enemy")
+		{
+			AttackFin();
 		}
 	}
 
@@ -324,6 +324,26 @@ public class Player_Ver2 : BaseStatusClass
 		attack = Instantiate(prefab, attackpos += target, atkQuaternion);
 		attack.transform.parent = gameObject.transform;
 		attack.GetComponentInChildren<AttckCollision>().Damage = ATK;
+	}
+
+	//攻撃解除
+	private void AttackFin()
+    {
+		if (attacking)
+		{
+			hit_enemy = false;
+			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+			dont_move = false;
+			attacking = false;
+			if (hit_enemy_frip)
+			{
+				rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
+			}
+			else
+			{
+				rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
+			}
+		}
 	}
 
 	//二点間の角度を求める関数

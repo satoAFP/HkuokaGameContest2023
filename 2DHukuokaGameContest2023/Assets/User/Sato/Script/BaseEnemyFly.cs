@@ -21,6 +21,14 @@ public class BaseEnemyFly : BaseStatusClass
 
 
 
+    [SerializeField, Header("出るエフェクトの数"), Range(0, 10), Space(50)]
+    public int EffectNum;
+
+    [SerializeField, Header("エフェクトが連続で出るときのフレーム"), Range(0, 20)]
+    public int EffectInterval;
+
+
+
     [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1), Space(50)]
     private float RaySpeed;
 
@@ -79,7 +87,10 @@ public class BaseEnemyFly : BaseStatusClass
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
     private DropItemList dropItemList;          //ドロップアイテム管理用
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
-    private int DethFrameCount = 0;
+    private int DethFrameCount = 0;             //死ぬまでのカウント
+    private bool OnDamageEffect = false;        //ダメージ受けた時のエフェクト
+    private int EffectIntervalCount = 0;        //エフェクトのインターバルのカウント
+    private int EffectCount = 0;                //エフェクトの回数カウント
 
     private bool first1 = true;
 
@@ -110,6 +121,9 @@ public class BaseEnemyFly : BaseStatusClass
         {
             RayPlayerCheck();
         }
+
+        //エフェクト呼び出し
+        DamageEffect();
 
         //行動処理>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if (!MoveStop)
@@ -177,25 +191,41 @@ public class BaseEnemyFly : BaseStatusClass
         //主人公と衝突時のノックバック
         if (collision.gameObject.tag == "Player")
         {
-            Instantiate(RecEffct, transform.position, Quaternion.identity);
-
-            HP -= collision.gameObject.GetComponent<Player_Ver2>().ATK;
+            //エフェクト呼び出し
+            OnDamageEffect = true;
         }
-
-
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    /// <summary>
+    /// ダメージを受けた時のエフェクト処理
+    /// </summary>
+    private void DamageEffect()
     {
-        //主人公の攻撃に当たった時
-        if (collision.tag == "PlayerAttack")
+        //エフェクト再生開始
+        if(OnDamageEffect)
         {
-            HP -= collision.gameObject.transform.root.gameObject.GetComponent<Player_Ver2>().ATK;
-
-
+            //エフェクトの数
+            if (EffectCount < EffectNum) 
+            {
+                //次エフェクトを出すまでのフレーム
+                if (EffectIntervalCount % EffectInterval == 0) 
+                {
+                    //生成しランダムな方向を向く
+                    GameObject clone = Instantiate(RecEffct, transform.position, Quaternion.identity);
+                    clone.transform.localEulerAngles = new Vector3(0, 0, Random.Range(0, 180));
+                    EffectCount++;
+                }
+            }
+            else 
+            {
+                //エフェクト終了
+                EffectCount = 0;
+                OnDamageEffect = false;
+            }
+            EffectIntervalCount++;
         }
-
     }
+
 
 
 
@@ -222,6 +252,7 @@ public class BaseEnemyFly : BaseStatusClass
                     Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
                 }
 
+                
 
                 //死亡時のエフェクト
                 Instantiate(DethEffct, transform.position, Quaternion.identity);

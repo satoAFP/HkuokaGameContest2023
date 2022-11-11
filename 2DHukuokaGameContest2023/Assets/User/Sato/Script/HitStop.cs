@@ -14,7 +14,7 @@ public class HitStop : MonoBehaviour
     private int StopFrame;
 
     [SerializeField, Header("ヒットストップ発動")]
-    private bool OnHitStop;
+    public bool OnHitStop;
 
 
     private Vector3 FirstPos;       //初期位置記憶用
