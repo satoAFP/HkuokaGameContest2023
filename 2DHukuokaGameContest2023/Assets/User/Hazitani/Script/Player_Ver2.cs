@@ -59,7 +59,8 @@ public class Player_Ver2 : BaseStatusClass
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;			//動きを止めたいとき使用
-	private int combo_count = 0;			//コンボ数
+	private int combo_count = 0;            //コンボ数
+	private int score = 0;					//スコア
 
 
 	//攻撃関連
@@ -75,7 +76,8 @@ public class Player_Ver2 : BaseStatusClass
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
 	public bool hit_enemy = false;			//攻撃が敵に当たったかどうか
-	private bool hit_enemy_frip = false;	//攻撃した敵の方向true右false左
+	private bool hit_enemy_frip = false;    //攻撃した敵の方向true右false左
+	public BaseEnemyFly enemyObj = null;
 
 
 	//接地関連
@@ -239,6 +241,18 @@ public class Player_Ver2 : BaseStatusClass
 			//コンボ増やして反映
 			combo_count++;
 			Combo.text = combo_count.ToString();
+
+			//敵のHP減らす
+			enemyObj.HP -= ATK;
+
+			//HPが0の時
+			if(enemyObj.HP <= 0)
+            {
+				//スコア加算
+				score++;
+
+				//ヒットストップの処理
+			}
 
 			AttackFin();
 		}
