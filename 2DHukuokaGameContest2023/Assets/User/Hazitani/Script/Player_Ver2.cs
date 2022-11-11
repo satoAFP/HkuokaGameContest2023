@@ -239,23 +239,8 @@ public class Player_Ver2 : BaseStatusClass
 			//ƒRƒ“ƒ{‘‚â‚µ‚Ä”½‰f
 			combo_count++;
 			Combo.text = combo_count.ToString();
-			hit_enemy = false;
-			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-			//UŒ‚‚µ‚Ä‚¢‚é‚Æ‚«
-			if (attacking)
-			{
-				dont_move = false;
-				attacking = false;
-				if (hit_enemy_frip)
-				{
-					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
-				}
-				else
-				{
-					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
-				}
-			}
+			AttackFin();
 		}
 	}
 
@@ -275,11 +260,7 @@ public class Player_Ver2 : BaseStatusClass
 
 		if (collision.gameObject.tag == "Enemy")
 		{
-			if (hit_enemy)
-			{
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			}
+			AttackFin();
 		}
 	}
 
@@ -289,6 +270,11 @@ public class Player_Ver2 : BaseStatusClass
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			ground_hit = false;
+		}
+
+		if (collision.gameObject.tag == "Enemy")
+		{
+			AttackFin();
 		}
 	}
 
@@ -324,6 +310,26 @@ public class Player_Ver2 : BaseStatusClass
 		attack = Instantiate(prefab, attackpos += target, atkQuaternion);
 		attack.transform.parent = gameObject.transform;
 		attack.GetComponentInChildren<AttckCollision>().Damage = ATK;
+	}
+
+	//UŒ‚‰ğœ
+	private void AttackFin()
+    {
+		if (attacking)
+		{
+			hit_enemy = false;
+			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+			dont_move = false;
+			attacking = false;
+			if (hit_enemy_frip)
+			{
+				rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
+			}
+			else
+			{
+				rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
+			}
+		}
 	}
 
 	//“ñ“_ŠÔ‚ÌŠp“x‚ğ‹‚ß‚éŠÖ”
