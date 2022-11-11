@@ -242,16 +242,19 @@ public class Player_Ver2 : BaseStatusClass
 			combo_count++;
 			Combo.text = combo_count.ToString();
 
-			//敵のHP減らす
-			enemyObj.HP -= ATK;
+			if (enemyObj != null)
+			{
+				//敵のHP減らす
+				enemyObj.HP -= ATK;
 
-			//HPが0の時
-			if(enemyObj.HP <= 0)
-            {
-				//スコア加算
-				score++;
+				//HPが0の時
+				if (enemyObj.HP <= 0)
+				{
+					//スコア加算
+					score++;
 
-				//ヒットストップの処理
+					//ヒットストップの処理
+				}
 			}
 
 			AttackFin();
