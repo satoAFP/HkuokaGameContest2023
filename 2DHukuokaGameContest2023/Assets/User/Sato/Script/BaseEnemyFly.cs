@@ -182,15 +182,7 @@ public class BaseEnemyFly : BaseStatusClass
 
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //主人公と衝突時のノックバック
-        if (collision.gameObject.tag == "Player")
-        {
-            //エフェクト呼び出し
-            OnDamageEffect = true;
-        }
-    }
+    
 
     /// <summary>
     /// ダメージを受けた時のエフェクト処理
@@ -236,6 +228,7 @@ public class BaseEnemyFly : BaseStatusClass
             //死亡判定受け渡し用
             deth = true;
 
+            OnDamageEffect = true;
             DethFrameCount++;
             gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
 
