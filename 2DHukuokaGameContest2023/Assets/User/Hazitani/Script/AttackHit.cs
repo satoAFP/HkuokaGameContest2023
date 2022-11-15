@@ -29,8 +29,6 @@ public class AttackHit : MonoBehaviour
             player.enemyObj = collision.GetComponent<BaseEnemyFly>();
 
             player.hit_enemy = true;
-            player.hit_enemy_pos = collision.gameObject.transform.position;
-            //Debug.Log("“G‚ÌˆÊ’u:" + player.hit_enemy_pos);
         }
     }
 }

@@ -77,7 +77,8 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public bool hit_enemy = false;			//UŒ‚‚ª“G‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
 	private bool hit_enemy_frip = false;    //UŒ‚‚µ‚½“G‚Ì•ûŒütrue‰Efalse¶
-	public BaseEnemyFly enemyObj = null;
+	[System.NonSerialized]
+	public BaseEnemyFly enemyObj = null;	//UŒ‚‚É“–‚½‚Á‚½“G‚ÌƒIƒuƒWƒFƒNƒg
 
 
 	//Ú’nŠÖ˜A
@@ -168,6 +169,7 @@ public class Player_Ver2 : BaseStatusClass
 			if(!jump_key_flag)
             {
 				jump_key_flag = true;
+				move_stop = false;
 				Debug.Log("ƒWƒƒƒ“ƒv“ü—Í‚³‚ê‚½");
 				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
@@ -183,7 +185,10 @@ public class Player_Ver2 : BaseStatusClass
 		//UŒ‚‚ª“G‚É“–‚½‚Á‚½ê‡
 		if (hit_enemy)
 		{
+			move_stop = true;
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+			hit_enemy_pos = enemyObj.transform.position;
 
 			if (transform.position.x < hit_enemy_pos.x)
 			{
