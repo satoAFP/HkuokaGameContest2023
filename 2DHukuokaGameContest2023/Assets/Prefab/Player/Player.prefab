@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 0
   ATK: 100
-  JumpPower: 20
+  JumpPower: 21.5
   MoveSpeed: 80
   LimitSpeed: 8
   Gravity: 50
@@ -155,7 +155,7 @@ MonoBehaviour:
   AttackCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
   AttackCoolTime: 10
   AttackMovePos: {x: 0.5, y: 0, z: 0}
-  AttackMoveSpeed: 1
-  AttackingTime: 30
-  SubjugationKnockback: {x: 500, y: 1000}
+  AttackMoveSpeed: 0.7
+  SubjugationKnockback: {x: 9, y: 20}
   Combo: {fileID: 0}
+  ComboMax: {fileID: 0}

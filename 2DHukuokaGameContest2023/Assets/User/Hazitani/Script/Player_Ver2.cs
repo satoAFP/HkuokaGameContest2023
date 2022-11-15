@@ -36,14 +36,14 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃を当てた時の移送速度")]
 	private float AttackMoveSpeed;
 
-	[SerializeField, Header("攻撃を当てた時の浮遊時間")]
-	private int AttackingTime;
-
-	[SerializeField, Header("敵を倒したあとの飛ぶ力")]
+	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
 	[SerializeField, Header("コンボテキスト")]
 	private Text Combo;
+
+	[SerializeField, Header("最大コンボテキスト")]
+	private Text ComboMax;
 
 	public enum Direction
 	{
@@ -53,13 +53,14 @@ public class Player_Ver2 : BaseStatusClass
 	}
 
 	private Rigidbody2D rb2D;				//主人公のリジットボディ
-	private int jump_count = 0;				//ジャンプ回数
-	private bool jump_key_flag = false;		//ジャンプキー連続判定制御用
+	private int jump_count = 0;             //ジャンプ回数
+	private bool jump_key_flag = false;     //ジャンプキー連続判定制御用
 	private bool ground_hit = false;		//地面に立っているか
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;			//動きを止めたいとき使用
 	private int combo_count = 0;            //コンボ数
+	private int combo_max= 0;				//最大コンボ数
 	private int score = 0;					//スコア
 
 
@@ -93,6 +94,7 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		rb2D = GetComponent<Rigidbody2D>();
 		Combo.text = combo_count.ToString();
+		ComboMax.text = combo_max.ToString();
 	}
 
 	void Update()
@@ -123,7 +125,6 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
-
 		//レイを発射する位置の調整
 		rayPosition1 = transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
 		rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
@@ -166,11 +167,12 @@ public class Player_Ver2 : BaseStatusClass
 		//ジャンプ処理
 		if (Input.GetKey(KeyCode.Space) && jump_count < 1)
 		{
-			if(!jump_key_flag)
-            {
+			if (!jump_key_flag)
+			{
 				jump_key_flag = true;
 				move_stop = false;
 				Debug.Log("ジャンプ入力された");
+
 				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
 				//カウント増加
@@ -178,7 +180,7 @@ public class Player_Ver2 : BaseStatusClass
 			}
 		}
 		else
-        {
+		{
 			jump_key_flag = false;
 		}
 
@@ -188,7 +190,10 @@ public class Player_Ver2 : BaseStatusClass
 			move_stop = true;
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-			hit_enemy_pos = enemyObj.transform.position;
+			if (enemyObj != null)
+			{
+				hit_enemy_pos = enemyObj.transform.position;
+			}
 
 			if (transform.position.x < hit_enemy_pos.x)
 			{
@@ -240,29 +245,38 @@ public class Player_Ver2 : BaseStatusClass
 		//攻撃のノックバック
 		if (collision.gameObject.tag == "Enemy")
 		{
-			//ジャンプ回数リセット
-			jump_count = 0;
-
-			//コンボ増やして反映
-			combo_count++;
-			Combo.text = combo_count.ToString();
-
-			if (enemyObj != null)
+			if (attacking)
 			{
-				//敵のHP減らす
-				enemyObj.HP -= ATK;
+				//ジャンプ回数リセット
+				jump_count = 0;
 
-				//HPが0の時
-				if (enemyObj.HP <= 0)
+				//コンボ増やして反映
+				combo_count++;
+				Combo.text = combo_count.ToString();
+
+				if (combo_max < combo_count)
 				{
-					//スコア加算
-					score++;
-
-					//ヒットストップの処理
+					combo_max = combo_count;
+					ComboMax.text = combo_max.ToString();
 				}
-			}
 
-			AttackFin();
+				if (enemyObj != null)
+				{
+					//敵のHP減らす
+					enemyObj.HP -= ATK;
+
+					//HPが0の時
+					if (enemyObj.HP <= 0)
+					{
+						//スコア加算
+						score++;
+
+						//ヒットストップの処理
+					}
+				}
+
+				AttackFin();
+			}
 		}
 	}
 
@@ -282,7 +296,8 @@ public class Player_Ver2 : BaseStatusClass
 
 		if (collision.gameObject.tag == "Enemy")
 		{
-			AttackFin();
+			if(attacking)
+				AttackFin();
 		}
 	}
 
@@ -292,11 +307,6 @@ public class Player_Ver2 : BaseStatusClass
 		if (collision.gameObject.CompareTag("Ground"))
 		{
 			ground_hit = false;
-		}
-
-		if (collision.gameObject.tag == "Enemy")
-		{
-			AttackFin();
 		}
 	}
 
@@ -336,21 +346,20 @@ public class Player_Ver2 : BaseStatusClass
 
 	//攻撃解除
 	private void AttackFin()
-    {
-		if (attacking)
+	{
+		hit_enemy = false;
+		rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+		dont_move = false;
+		attacking = false;
+
+		//攻撃後跳ね返り
+		if (hit_enemy_frip)
 		{
-			hit_enemy = false;
-			rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			dont_move = false;
-			attacking = false;
-			if (hit_enemy_frip)
-			{
-				rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
-			}
-			else
-			{
-				rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
-			}
+			rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+		}
+		else
+		{
+			rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
 		}
 	}
 

@@ -27,7 +27,6 @@ public class AttackHit : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             player.enemyObj = collision.GetComponent<BaseEnemyFly>();
-
             player.hit_enemy = true;
         }
     }
