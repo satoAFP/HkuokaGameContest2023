@@ -47,8 +47,6 @@ public class BaseEnemyFly : BaseStatusClass
     [SerializeField, Header("死んでから消えるまでのフレーム"), Range(0, 100), Space(50)]
     public int DethFrame;
 
-    [SerializeField, Header("アイテムドロップ率"), Range(0, 100)]
-    private int dropRate;
 
 
     [SerializeField, Header("左右移動"), Space(50)]
@@ -85,7 +83,6 @@ public class BaseEnemyFly : BaseStatusClass
     private float rotato = 0;                   //回転量
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
-    private DropItemList dropItemList;          //ドロップアイテム管理用
     private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
     private int DethFrameCount = 0;             //死ぬまでのカウント
     private bool OnDamageEffect = false;        //ダメージ受けた時のエフェクト
@@ -106,7 +103,6 @@ public class BaseEnemyFly : BaseStatusClass
     void Start()
     {
         rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
-        dropItemList = GameObject.Find("DropItemList").GetComponent<DropItemList>();
     }
 
 
@@ -246,14 +242,6 @@ public class BaseEnemyFly : BaseStatusClass
 
             if (DethFrame == DethFrameCount)
             {
-                //アイテムドロップ処理
-                if (dropRate >= Random.Range(0, 100))
-                {
-                    Instantiate(dropItemList.DropItem[Random.Range(0, dropItemList.DropItem.Length)], transform.localPosition, Quaternion.identity);
-                }
-
-                
-
                 //死亡時のエフェクト
                 Instantiate(DethEffct, transform.position, Quaternion.identity);
 
