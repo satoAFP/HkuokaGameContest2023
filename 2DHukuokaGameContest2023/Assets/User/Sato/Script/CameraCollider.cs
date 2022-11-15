@@ -24,6 +24,11 @@ public class CameraCollider : MonoBehaviour
             pos.y = player.transform.localPosition.y;
         }
 
+        if (player.transform.localPosition.y > 0)
+        {
+            pos.y = player.transform.localPosition.y;
+        }
+
         transform.localPosition = pos;
     }
 }
