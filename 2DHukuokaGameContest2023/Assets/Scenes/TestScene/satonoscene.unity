@@ -3072,7 +3072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GFF.Array.size
