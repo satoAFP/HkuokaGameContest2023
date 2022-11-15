@@ -36,10 +36,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃を当てた時の移送速度")]
 	private float AttackMoveSpeed;
 
-	[SerializeField, Header("攻撃を当てた時の浮遊時間")]
-	private int AttackingTime;
-
-	[SerializeField, Header("敵を倒したあとの飛ぶ力")]
+	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
 	[SerializeField, Header("コンボテキスト")]
@@ -57,7 +54,7 @@ public class Player_Ver2 : BaseStatusClass
 
 	private Rigidbody2D rb2D;				//主人公のリジットボディ
 	private int jump_count = 0;             //ジャンプ回数
-	private bool jump_key_flag = false;		//ジャンプキー連続判定制御用
+	private bool jump_key_flag = false;     //ジャンプキー連続判定制御用
 	private bool ground_hit = false;		//地面に立っているか
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
@@ -175,6 +172,7 @@ public class Player_Ver2 : BaseStatusClass
 				jump_key_flag = true;
 				move_stop = false;
 				Debug.Log("ジャンプ入力された");
+
 				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
 				//カウント増加
@@ -357,11 +355,11 @@ public class Player_Ver2 : BaseStatusClass
 		//攻撃後跳ね返り
 		if (hit_enemy_frip)
 		{
-			rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Force);
+			rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
 		}
 		else
 		{
-			rb2D.AddForce(SubjugationKnockback, ForceMode2D.Force);
+			rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
 		}
 	}
 
