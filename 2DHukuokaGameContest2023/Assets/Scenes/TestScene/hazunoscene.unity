@@ -425,6 +425,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[0].GFbase.Array.data[0].EnemySet
       value: 
       objectReference: {fileID: 304318466637153439, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
@@ -453,6 +457,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 304318466637153439, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[0].EnemySet
+      value: 
+      objectReference: {fileID: 304318466637153439, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[1].EnemySet
+      value: 
+      objectReference: {fileID: 5237837681617532537, guid: a8413af74e01a034f90ecb9f470ad145, type: 3}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[2].EnemySet
+      value: 
+      objectReference: {fileID: 304318466637153439, guid: 3d336e8c381812042afdb36feb66a4da, type: 3}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[0].GFbase.Array.data[0].StopFrame
       value: 20
       objectReference: {fileID: 0}
@@ -478,6 +494,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[1].GFbase.Array.data[3].StopFrame
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[0].StopFrame
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[1].StopFrame
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[2].StopFrame
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
@@ -539,6 +567,18 @@ PrefabInstance:
     - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: GF.Array.data[1].GFbase.Array.data[3].spawnPos.y
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[0].SpawnFrame
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[1].SpawnFrame
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472068412912387075, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
+      propertyPath: GF.Array.data[2].GFbase.Array.data[2].SpawnFrame
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387076, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: m_RootOrder
