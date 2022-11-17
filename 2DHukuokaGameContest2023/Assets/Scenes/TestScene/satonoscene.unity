@@ -2025,6 +2025,10 @@ PrefabInstance:
       propertyPath: Combo
       value: 
       objectReference: {fileID: 485222526}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: ComboMax
+      value: 
+      objectReference: {fileID: 329660271}
     - target: {fileID: 347360261909828950, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalPosition.y
       value: -6

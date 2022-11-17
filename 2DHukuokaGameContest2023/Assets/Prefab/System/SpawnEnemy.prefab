@@ -43,10 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4635708c9b352114a98f19797bd2ec38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrequencyAppearance: 100
-  spawnMax: 100
-  spawnUnderLine: 0
-  spawnOverLine: 20
-  spawnXpos: 20
-  spawnLeftEnemy: []
-  spawnRightEnemy: []
+  NeedCombo: 10
+  NeedScore: 1000
+  GF: []
