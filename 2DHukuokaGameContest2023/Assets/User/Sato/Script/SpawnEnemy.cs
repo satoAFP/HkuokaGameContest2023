@@ -42,6 +42,8 @@ public class SpawnEnemy : MonoBehaviour
     public struct GameFlow
     {
         public Base[] GFbase;
+        [System.NonSerialized]
+        public GameObject[] GFObj;
     }
 
 
@@ -53,6 +55,16 @@ public class SpawnEnemy : MonoBehaviour
     private int FrameCount = 0;         //フレームカウント用
     private int NextSpawnNum = 0;       //次敵が出現するフレーム
     private int NowArrangement = 0;     //現在の配列番号
+    private GameFlow[] ObjGroup;
+
+    private void Start()
+    {
+        ObjGroup = new GameFlow[GF.Length];
+        for (int i = 0; i < GF.Length; i++)
+        {
+            ObjGroup[i].GFObj = new GameObject[GF[i].GFbase.Length];
+        }
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -72,13 +84,17 @@ public class SpawnEnemy : MonoBehaviour
         //設定しているフレーム毎に召喚
         if (GF[Wave].GFbase[NowArrangement].SpawnFrame == FrameCount)
         {
-            //敵生成
-            Vector3 MyPos = transform.localPosition;
-            GameObject clone = Instantiate(GF[Wave].GFbase[NowArrangement].EnemySet, MyPos + GF[Wave].GFbase[NowArrangement].spawnPos, Quaternion.identity);
-            clone.gameObject.GetComponent<BaseEnemyFly>().stopCount = GF[Wave].GFbase[NowArrangement].StopFrame;
+            if (ObjGroup[Wave].GFObj[NowArrangement] == null)
+            {
+                //敵生成
+                Vector3 MyPos = transform.localPosition;
+                GameObject clone = Instantiate(GF[Wave].GFbase[NowArrangement].EnemySet, MyPos + GF[Wave].GFbase[NowArrangement].spawnPos, Quaternion.identity);
+                clone.gameObject.GetComponent<BaseEnemyFly>().stopCount = GF[Wave].GFbase[NowArrangement].StopFrame;
+                ObjGroup[Wave].GFObj[NowArrangement] = clone;
+            }
 
             //使用している配列分加算される
-            if (GF.Length - 1 > NowArrangement)
+            if (GF[Wave].GFbase.Length - 1 > NowArrangement)
                 NowArrangement++;
             else
             {
