@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NeedCombo: 10
-  NeedScore: 1000
+  NeedScore: 10000
   GF: []
