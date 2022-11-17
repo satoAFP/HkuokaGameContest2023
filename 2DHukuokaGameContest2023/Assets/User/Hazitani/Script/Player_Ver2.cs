@@ -45,6 +45,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("最大コンボテキスト")]
 	private Text ComboMax;
 
+	[SerializeField, Header("スコアテキスト")]
+	private Text Score;
+
 	public enum Direction
 	{
 		LEFT = -1,
@@ -95,6 +98,7 @@ public class Player_Ver2 : BaseStatusClass
 		rb2D = GetComponent<Rigidbody2D>();
 		Combo.text = combo_count.ToString();
 		ComboMax.text = combo_max.ToString();
+		Score.text = score.ToString();
 	}
 
 	void Update()
@@ -126,12 +130,12 @@ public class Player_Ver2 : BaseStatusClass
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 		//レイを発射する位置の調整
-		rayPosition1 = transform.position + new Vector3(-0.5f, -transform.localScale.y / 2, 0.0f);
-		rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
+		rayPosition1 = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
+		//rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
 		RayGround(ray_left, hit_left, rayPosition1);
-		RayGround(ray_right, hit_right, rayPosition2);
+		//RayGround(ray_right, hit_right, rayPosition2);
 
 		//移動処理
 		if (!move_stop)
@@ -269,9 +273,11 @@ public class Player_Ver2 : BaseStatusClass
 					if (enemyObj.HP <= 0)
 					{
 						//スコア加算
-						score++;
+						score+= 100;
+						Score.text = score.ToString();
 
 						//ヒットストップの処理
+
 					}
 				}
 
