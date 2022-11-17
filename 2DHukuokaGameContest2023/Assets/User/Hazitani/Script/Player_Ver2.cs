@@ -64,7 +64,9 @@ public class Player_Ver2 : BaseStatusClass
 	private bool move_stop = false;			//動きを止めたいとき使用
 	private int combo_count = 0;            //コンボ数
 	private int combo_max = 0;              //最大コンボ数
-	private int score = 0;					//スコア
+	private int score = 0;                  //スコア
+	private int score_add = 0;              //これから加算されるスコア
+	private SpawnEnemy spawn_enemy;			//スポーンエネミー取得用
 
 
 	//攻撃関連
@@ -99,6 +101,8 @@ public class Player_Ver2 : BaseStatusClass
 		Combo.text = combo_count.ToString();
 		ComboMax.text = combo_max.ToString();
 		Score.text = score.ToString();
+
+		spawn_enemy = GameObject.Find("SpawnEnemy").GetComponent<SpawnEnemy>();
 	}
 
 	void Update()
@@ -258,10 +262,20 @@ public class Player_Ver2 : BaseStatusClass
 				combo_count++;
 				Combo.text = combo_count.ToString();
 
+				//マックスコンボ変更
 				if (combo_max < combo_count)
 				{
 					combo_max = combo_count;
 					ComboMax.text = combo_max.ToString();
+				}
+
+				//現在のウェーブが通常ウェーブのとき
+				if(spawn_enemy.NowWave == 0)
+                {
+					spawn_enemy.WaveCombo++;
+					//これから加算されるスコアを決める
+					score_add = ScoreSetting(score_add, combo_count);
+					spawn_enemy.WaveScore += score_add;
 				}
 
 				if (enemyObj != null)
@@ -269,33 +283,8 @@ public class Player_Ver2 : BaseStatusClass
 					//敵のHP減らす
 					enemyObj.HP -= ATK;
 
-                    //コンボによってスコア加算
-                    if(combo_count >= 1 && combo_count < 50)
-						score += 1000;
-					else if(combo_count >= 50 && combo_count < 100)
-						score += 5000;
-					else if(combo_count >= 100)
-						score += 10000;
-
-					/*
-					コンボボーナス
-						 10コンボごとに  5000点
-						 50コンボごとに 10000点
-						100コンボごとに100000点
-					*/
-					if (combo_count % 100 == 0)
-					{
-						score += 100000;
-					}
-					else if (combo_count % 50 == 0)
-                    {
-						score += 10000;
-                    }
-					else if(combo_count % 10 == 0)
-                    {
-						score += 5000;
-                    }
-
+					//表示用のスコア決める
+					score = ScoreSetting(score, combo_count);
 					Score.text = score.ToString();
 
                     //HPが0の時
@@ -305,6 +294,7 @@ public class Player_Ver2 : BaseStatusClass
                     //}
                 }
 
+				score_add = 0;
 				AttackFin();
 			}
 		}
@@ -391,6 +381,39 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
 		}
+	}
+
+	//スコア加算
+	private int ScoreSetting(int score, int combo)
+    {
+		//コンボによってスコア加算
+		if (combo >= 1 && combo < 50)
+			score += 1000;
+		else if (combo >= 50 && combo < 100)
+			score += 5000;
+		else if (combo >= 100)
+			score += 10000;
+
+		/*
+		コンボボーナス
+			 10コンボごとに  5000点
+			 50コンボごとに 10000点
+			100コンボごとに100000点
+		*/
+		if (combo % 100 == 0)
+		{
+			score += 100000;
+		}
+		else if (combo % 50 == 0)
+		{
+			score += 10000;
+		}
+		else if (combo % 10 == 0)
+		{
+			score += 5000;
+		}
+
+		return score;
 	}
 
 	//二点間の角度を求める関数
