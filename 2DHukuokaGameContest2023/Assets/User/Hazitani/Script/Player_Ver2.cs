@@ -63,7 +63,7 @@ public class Player_Ver2 : BaseStatusClass
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;			//動きを止めたいとき使用
 	private int combo_count = 0;            //コンボ数
-	private int combo_max= 0;				//最大コンボ数
+	private int combo_max = 0;              //最大コンボ数
 	private int score = 0;					//スコア
 
 
@@ -269,17 +269,41 @@ public class Player_Ver2 : BaseStatusClass
 					//敵のHP減らす
 					enemyObj.HP -= ATK;
 
-					//HPが0の時
-					if (enemyObj.HP <= 0)
+                    //コンボによってスコア加算
+                    if(combo_count >= 1 && combo_count < 50)
+						score += 1000;
+					else if(combo_count >= 50 && combo_count < 100)
+						score += 5000;
+					else if(combo_count >= 100)
+						score += 10000;
+
+					/*
+					コンボボーナス
+						 10コンボごとに  5000点
+						 50コンボごとに 10000点
+						100コンボごとに100000点
+					*/
+					if (combo_count % 100 == 0)
 					{
-						//スコア加算
-						score+= 100;
-						Score.text = score.ToString();
-
-						//ヒットストップの処理
-
+						score += 100000;
 					}
-				}
+					else if (combo_count % 50 == 0)
+                    {
+						score += 10000;
+                    }
+					else if(combo_count % 10 == 0)
+                    {
+						score += 5000;
+                    }
+
+					Score.text = score.ToString();
+
+                    //HPが0の時
+                    //if (enemyObj.HP <= 0)
+                    //{
+                    //    //ヒットストップの処理
+                    //}
+                }
 
 				AttackFin();
 			}
