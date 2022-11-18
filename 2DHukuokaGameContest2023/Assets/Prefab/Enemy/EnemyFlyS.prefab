@@ -121,7 +121,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 6
+  m_Constraints: 7
 --- !u!114 &9062716481110677456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,12 +141,13 @@ MonoBehaviour:
   MoveSpeed: 100
   LimitSpeed: 5
   StopCount: 100
+  EffectNum: 0
+  EffectInterval: 0
   RaySpeed: 1
   raydistance: 5
   StopDistance: 0
   KnockbackPow: {x: 0, y: 0}
   DethFrame: 10
-  dropRate: 0
   RLMoveFrag: 0
   RMoveFrag: 0
   LMoveFrag: 0
