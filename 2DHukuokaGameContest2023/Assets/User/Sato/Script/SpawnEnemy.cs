@@ -144,11 +144,15 @@ public class SpawnEnemy : MonoBehaviour
         {
             NowWave = (int)Wave.COMBO;
             WaveCombo = 0;
+            NowArrangement = 0;
+            FrameCount = 0;
         }
         else if (WaveScore >= NeedScore) 
         {
             NowWave = (int)Wave.SCORE;
             WaveScore = 0;
+            NowArrangement = 0;
+            FrameCount = 0;
         }
 
 
