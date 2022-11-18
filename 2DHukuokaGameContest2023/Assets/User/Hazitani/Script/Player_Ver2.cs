@@ -110,6 +110,11 @@ public class Player_Ver2 : BaseStatusClass
 		//攻撃の向き設定
 		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
 
+		//角度設定
+		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
+		atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
+
 		//攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -117,11 +122,6 @@ public class Player_Ver2 : BaseStatusClass
 			{
 				attack_ok = false;
 				attacking = true;
-
-				//角度設定
-				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
-				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 				//コライダーを生成
 				PlayerAttack(attack, AttackCollider, attackpos);
@@ -140,6 +140,8 @@ public class Player_Ver2 : BaseStatusClass
 		//レイの接地判定
 		RayGround(ray_left, hit_left, rayPosition1);
 		//RayGround(ray_right, hit_right, rayPosition2);
+
+		transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 
 		//移動処理
 		if (!move_stop)
@@ -246,57 +248,18 @@ public class Player_Ver2 : BaseStatusClass
 			move_stop = false;
 
 			//コンボリセットして反映
-			combo_count = 0;
-			Combo.text = combo_count.ToString();
+			if (spawn_enemy.NowWave	!= 1)
+			{
+				combo_count = 0;
+				Combo.text = combo_count.ToString();
+			}
 		}
 
 		//攻撃のノックバック
 		if (collision.gameObject.tag == "Enemy")
 		{
 			if (attacking)
-			{
-				//ジャンプ回数リセット
-				jump_count = 0;
-
-				//コンボ増やして反映
-				combo_count++;
-				Combo.text = combo_count.ToString();
-
-				//マックスコンボ変更
-				if (combo_max < combo_count)
-				{
-					combo_max = combo_count;
-					ComboMax.text = combo_max.ToString();
-				}
-
-				//現在のウェーブが通常ウェーブのとき
-				if(spawn_enemy.NowWave == 0)
-                {
-					spawn_enemy.WaveCombo++;
-					//これから加算されるスコアを決める
-					score_add = ScoreSetting(score_add, combo_count);
-					spawn_enemy.WaveScore += score_add;
-				}
-
-				if (enemyObj != null)
-				{
-					//敵のHP減らす
-					enemyObj.HP -= ATK;
-
-					//表示用のスコア決める
-					score = ScoreSetting(score, combo_count);
-					Score.text = score.ToString();
-
-                    //HPが0の時
-                    //if (enemyObj.HP <= 0)
-                    //{
-                    //    //ヒットストップの処理
-                    //}
-                }
-
-				score_add = 0;
-				AttackFin();
-			}
+				Attack();
 		}
 	}
 
@@ -317,7 +280,7 @@ public class Player_Ver2 : BaseStatusClass
 		if (collision.gameObject.tag == "Enemy")
 		{
 			if(attacking)
-				AttackFin();
+				Attack();
 		}
 	}
 
@@ -414,6 +377,51 @@ public class Player_Ver2 : BaseStatusClass
 		}
 
 		return score;
+	}
+
+	private void Attack()
+    {
+		//ジャンプ回数リセット
+		jump_count = 0;
+
+		//コンボ増やして反映
+		combo_count++;
+		Combo.text = combo_count.ToString();
+
+		//マックスコンボ変更
+		if (combo_max < combo_count)
+		{
+			combo_max = combo_count;
+			ComboMax.text = combo_max.ToString();
+		}
+
+		//現在のウェーブが通常ウェーブのとき
+		if (spawn_enemy.NowWave == 0)
+		{
+			spawn_enemy.WaveCombo++;
+			//これから加算されるスコアを決める
+			score_add = ScoreSetting(score_add, combo_count);
+			spawn_enemy.WaveScore += score_add;
+		}
+
+		if (enemyObj != null)
+		{
+			//敵のHP減らす
+			enemyObj.HP -= ATK;
+
+			//表示用のスコア決める
+			score = ScoreSetting(score, combo_count);
+			Score.text = score.ToString();
+
+			//HPが0の時
+			//if (enemyObj.HP <= 0)
+			//{
+			//    //ヒットストップの処理
+			//}
+		}
+
+		score_add = 0;
+		AttackFin();
 	}
 
 	//二点間の角度を求める関数
