@@ -146,6 +146,7 @@ public class SpawnEnemy : MonoBehaviour
             WaveCombo = 0;
             NowArrangement = 0;
             FrameCount = 0;
+            ActiveFalse();
         }
         else if (WaveScore >= NeedScore) 
         {
@@ -153,6 +154,7 @@ public class SpawnEnemy : MonoBehaviour
             WaveScore = 0;
             NowArrangement = 0;
             FrameCount = 0;
+            ActiveFalse();
         }
 
 
@@ -166,6 +168,7 @@ public class SpawnEnemy : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 if (10 <= elapsedTime)
                 {
+                    ChangeEnemy();
                     NowWave = (int)Wave.GENERALLY;
                     elapsedTime = 0.0f;
                 }
@@ -175,6 +178,7 @@ public class SpawnEnemy : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 if (10 <= elapsedTime)
                 {
+                    ChangeEnemy();
                     NowWave = (int)Wave.GENERALLY;
                     elapsedTime = 0.0f;
                 }
@@ -182,6 +186,37 @@ public class SpawnEnemy : MonoBehaviour
 
             case (int)Wave.BOSS:
                 break;
+        }
+    }
+
+    private void ActiveFalse()
+    {
+        for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
+        {
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[NowArrangement] != null)
+            {
+                ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(false);
+            }
+        }
+    }
+
+
+    private void ChangeEnemy()
+    {
+        for (int i = 0; i < ObjGroup[NowWave].GFObj.Length; i++)
+        {
+            if (ObjGroup[NowWave].GFObj[NowArrangement] != null)
+            {
+                Destroy(ObjGroup[NowWave].GFObj[i]);
+            }
+        }
+
+        for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
+        {
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[NowArrangement] != null)
+            {
+                ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(true);
+            }
         }
     }
 
