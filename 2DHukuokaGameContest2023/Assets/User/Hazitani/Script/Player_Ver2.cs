@@ -39,6 +39,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
+	[SerializeField, Header("攻撃中に剣を回転させる速さ")]
+	private int AttackRotationSpeed;
+
 	[SerializeField, Header("コンボテキスト")]
 	private Text Combo;
 
@@ -77,7 +80,10 @@ public class Player_Ver2 : BaseStatusClass
 	private bool attacking = false;			//攻撃中true
 	private bool dont_move = false;			//敵にめり込んだ時に敵の向きを1回取る用
 	private GameObject attack = null;       //攻撃オブジェクト
-	private int attack_cooltime = 0;		//攻撃クールタイム
+	private int attack_cooltime = 0;        //攻撃クールタイム
+	private int attack_rotation = 0;        //攻撃中の剣回転
+	[System.NonSerialized]
+	public bool attack_col = false;			//アタックコライダー出現中true
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
@@ -141,7 +147,15 @@ public class Player_Ver2 : BaseStatusClass
 		RayGround(ray_left, hit_left, rayPosition1);
 		//RayGround(ray_right, hit_right, rayPosition2);
 
-		transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+		if(attack_col)
+        {
+			//剣の回転
+			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+		}
+		else
+        {
+			transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+		}
 
 		//移動処理
 		if (!move_stop)

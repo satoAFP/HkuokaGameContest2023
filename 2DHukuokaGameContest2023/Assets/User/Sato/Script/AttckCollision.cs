@@ -14,6 +14,8 @@ public class AttckCollision : MonoBehaviour
     private void Start()
     {
         player = transform.root.GetComponent<Player_Ver2>();
+
+        player.attack_col = true;
     }
 
     void FixedUpdate()
@@ -22,6 +24,7 @@ public class AttckCollision : MonoBehaviour
 
         if (DeleteFrame <= count)
         {
+            player.attack_col = false;
             Destroy(gameObject);
         }
     }
