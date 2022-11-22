@@ -112,14 +112,18 @@ public class Player_Ver2 : BaseStatusClass
 
 	void Start()
 	{
+		//リジットボディ登録
 		rb2D = GetComponent<Rigidbody2D>();
 
+		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
 
+		//テキスト初期化
 		Combo.text = combo_count.ToString();
 		ComboMax.text = combo_max.ToString();
 		Score.text = score.ToString();
 
+		//スポーンエネミーを検索して登録
 		spawn_enemy = GameObject.Find("SpawnEnemy").GetComponent<SpawnEnemy>();
 	}
 
@@ -142,32 +146,32 @@ public class Player_Ver2 : BaseStatusClass
 				attacking = true;
 
 				//コライダーを生成
-				//PlayerAttack(attack, AttackCollider, attackpos);
+				PlayerAttack(attack, AttackCollider, attackpos);
 
-				//レイを発射する位置の調整
-				attack_rayPosition = transform.position;
+				////レイを発射する位置の調整
+				//attack_rayPosition = transform.position;
 
-				//レイを飛ばす
-				attack_ray = new Ray2D(attack_rayPosition, atkQuaternion.eulerAngles);
-				Debug.Log(atkQuaternion.eulerAngles.normalized);
+				////レイを飛ばす
+				//attack_ray = new Ray2D(attack_rayPosition, atkQuaternion.eulerAngles);
+				//Debug.Log(atkQuaternion.eulerAngles.normalized);
 
-				//Enemyとだけ衝突する
-				int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
-				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
+				////Enemyとだけ衝突する
+				//int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
+				//attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
 
-				//レイを黄色で表示させる
-				Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
+				////レイを黄色で表示させる
+				//Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
 
-				//コライダーとレイが接触
-				if (attack_hit.collider)
-				{
-					if (attack_hit.collider.tag == "Enemy")
-					{
-						enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
-						hit_enemy_pos = enemyObj.transform.position;
-						hit_enemy = true;
-					}
-				}
+				////コライダーとレイが接触
+				//if (attack_hit.collider)
+				//{
+				//	if (attack_hit.collider.tag == "Enemy")
+				//	{
+				//		enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
+				//		hit_enemy_pos = enemyObj.transform.position;
+				//		hit_enemy = true;
+				//	}
+				//}
 			}
 		}
 	}
@@ -176,9 +180,9 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
+
 		//レイを発射する位置の調整
 		ground_rayPosition = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
-		//rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
 		RayGround(ground_ray, ground_hit, ground_rayPosition);
