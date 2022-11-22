@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManagerAccessor : MonoBehaviour
+public class ManagerAccessor
 {
     //シングルトンパターン
     private static ManagerAccessor instance = null;

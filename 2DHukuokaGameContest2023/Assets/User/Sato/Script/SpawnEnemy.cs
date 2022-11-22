@@ -130,7 +130,6 @@ public class SpawnEnemy : MonoBehaviour
             }
 
 
-            Debug.Log(SpawnCount);
             //Žg—p‚µ‚Ä‚¢‚é”z—ñ•ª‰ÁŽZ‚³‚ê‚é
             if (GF[NowWave].GFbase.Length - 1 > NowArrangement)
             {
