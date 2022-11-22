@@ -113,6 +113,9 @@ public class Player_Ver2 : BaseStatusClass
 	void Start()
 	{
 		rb2D = GetComponent<Rigidbody2D>();
+
+		ManagerAccessor.Instance.player = this;
+
 		Combo.text = combo_count.ToString();
 		ComboMax.text = combo_max.ToString();
 		Score.text = score.ToString();
