@@ -70,6 +70,7 @@ public class SpawnEnemy : MonoBehaviour
 
     private int FrameCount = 0;         //フレームカウント用
     private int NowArrangement = 0;     //現在の配列番号
+    private int SpawnCount = 0;         //そのフレームで出現した敵の数
     private GameFlow[] ObjGroup;        //現在どの敵が出現しているか記憶用
 
 
@@ -111,24 +112,41 @@ public class SpawnEnemy : MonoBehaviour
         //設定しているフレーム毎に召喚
         if (GF[NowWave].GFbase[NowArrangement].SpawnFrame == FrameCount)
         {
-            if (ObjGroup[NowWave].GFObj[NowArrangement] == null)
+            for (int i = 0; i < GF[NowWave].GFbase.Length; i++)
             {
-                //敵生成
-                Vector3 MyPos = transform.localPosition;
-                GameObject clone = Instantiate(GF[NowWave].GFbase[NowArrangement].EnemySet, MyPos + GF[NowWave].GFbase[NowArrangement].spawnPos, Quaternion.identity);
-                clone.gameObject.GetComponent<BaseEnemyFly>().stopCount = GF[NowWave].GFbase[NowArrangement].StopFrame;
-                ObjGroup[NowWave].GFObj[NowArrangement] = clone;
+                if (GF[NowWave].GFbase[NowArrangement].SpawnFrame == GF[NowWave].GFbase[i].SpawnFrame)
+                {
+                    if (ObjGroup[NowWave].GFObj[NowArrangement] == null)
+                    {
+                        //敵生成
+                        Vector3 MyPos = transform.localPosition;
+                        GameObject clone = Instantiate(GF[NowWave].GFbase[i].EnemySet, MyPos + GF[NowWave].GFbase[i].spawnPos, Quaternion.identity);
+                        clone.gameObject.GetComponent<BaseEnemyFly>().stopCount = GF[NowWave].GFbase[i].StopFrame;
+                        ObjGroup[NowWave].GFObj[i] = clone;
+                        FrameCount = GF[NowWave].GFbase[i].SpawnFrame;
+                        SpawnCount++;
+                    }
+                }
             }
 
+
+            Debug.Log(SpawnCount);
             //使用している配列分加算される
             if (GF[NowWave].GFbase.Length - 1 > NowArrangement)
-                NowArrangement++;
+            {
+                NowArrangement += SpawnCount;
+                SpawnCount = 0;
+            }
             else
             {
                 NowArrangement = 0;
                 FrameCount = 0;
             }
+
         }
+
+        if (GF[NowWave].GFbase[GF[NowWave].GFbase.Length - 1].SpawnFrame == FrameCount)
+            FrameCount = 0;
 
         FrameCount++;
     }
@@ -144,11 +162,17 @@ public class SpawnEnemy : MonoBehaviour
         {
             NowWave = (int)Wave.COMBO;
             WaveCombo = 0;
+            NowArrangement = 0;
+            FrameCount = 0;
+            ActiveFalse();
         }
         else if (WaveScore >= NeedScore) 
         {
             NowWave = (int)Wave.SCORE;
             WaveScore = 0;
+            NowArrangement = 0;
+            FrameCount = 0;
+            ActiveFalse();
         }
 
 
@@ -162,6 +186,7 @@ public class SpawnEnemy : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 if (10 <= elapsedTime)
                 {
+                    ChangeEnemy();
                     NowWave = (int)Wave.GENERALLY;
                     elapsedTime = 0.0f;
                 }
@@ -171,6 +196,7 @@ public class SpawnEnemy : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 if (10 <= elapsedTime)
                 {
+                    ChangeEnemy();
                     NowWave = (int)Wave.GENERALLY;
                     elapsedTime = 0.0f;
                 }
@@ -178,6 +204,42 @@ public class SpawnEnemy : MonoBehaviour
 
             case (int)Wave.BOSS:
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 通常ウェーブの敵を一旦しまう処理
+    /// </summary>
+    private void ActiveFalse()
+    {
+        for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
+        {
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[i] != null)
+            {
+                ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 通常ウェーブに戻す処理
+    /// </summary>
+    private void ChangeEnemy()
+    {
+        for (int i = 0; i < ObjGroup[NowWave].GFObj.Length; i++)
+        {
+            if (ObjGroup[NowWave].GFObj[i] != null)
+            {
+                Destroy(ObjGroup[NowWave].GFObj[i]);
+            }
+        }
+
+        for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
+        {
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[i] != null)
+            {
+                ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(true);
+            }
         }
     }
 
