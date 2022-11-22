@@ -4,24 +4,11 @@ using UnityEngine;
 
 public class BaseEnemyFly : BaseStatusClass
 {
-    [SerializeField, Header("最高速度"), Range(0, 1)]
-    private float MaxSpeed;
-
-    [SerializeField, Header("加速減速"), Range(0, 0.1f)]
-    private float Deceleration;
-
-    [SerializeField, Header("一直線の時の移動速度"), Range(0, 100)]
-    private float MoveSpeed;
-
-    [SerializeField, Header("最高速度"), Range(0, 20)]
-    private float LimitSpeed;
-
-    [SerializeField, Header("停止までのフレーム"), Range(0, 500)]
-    public int StopCount;
+    [SerializeField, Header("敵の攻撃時の飛んでいく方向")]
+    private Vector3 MoveDirection;
 
 
-
-    [SerializeField, Header("出るエフェクトの数"), Range(0, 10), Space(50)]
+    [SerializeField, Header("出るエフェクトの数"), Range(0, 10)]
     public int EffectNum;
 
     [SerializeField, Header("エフェクトが連続で出るときのフレーム"), Range(0, 20)]
@@ -29,7 +16,7 @@ public class BaseEnemyFly : BaseStatusClass
 
 
 
-    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1), Space(50)]
+    [SerializeField, Header("主人公感知のレイの速度"), Range(0.01f, 1)]
     private float RaySpeed;
 
     [SerializeField, Header("レイの距離"), Range(1, 10)]
@@ -39,32 +26,16 @@ public class BaseEnemyFly : BaseStatusClass
     [SerializeField, Header("主人公に近づいて止まる距離"), Range(0, 5), Space(50)]
     private float StopDistance;
 
-
-    [SerializeField, Header("主人公と衝突した時のノックバック"), Space(50)]
-    private Vector2 KnockbackPow;
-
-
-    [SerializeField, Header("死んでから消えるまでのフレーム"), Range(0, 100), Space(50)]
+    [SerializeField, Header("死んでから消えるまでのフレーム"), Range(0, 100)]
     public int DethFrame;
 
 
-
-    [SerializeField, Header("左右移動"), Space(50)]
-    private bool RLMoveFrag;
-    [SerializeField, Header("右移動")]
-    private bool RMoveFrag;
-    [SerializeField, Header("左移動")]
-    private bool LMoveFrag;
-    [SerializeField, Header("追尾移動")]
+    [SerializeField, Header("等速移動")]
     private bool TrackingFrag;
+    [SerializeField, Header("等速移動")]
+    private bool ConstantFrag;
 
 
-
-    [SerializeField, Header("待機時の画像"), Space(50)]
-    private Sprite StandImage;
-
-    [SerializeField, Header("攻撃時の画像")]
-    private Sprite AttackImage;
 
     [SerializeField, Header("攻撃されたときのエフェクト")]
     private GameObject RecEffct;
@@ -74,16 +45,10 @@ public class BaseEnemyFly : BaseStatusClass
 
 
 
-
-    private Rigidbody2D rigidbody2d;            //リジットボディ2D取得
-    private float movespeed;                    //移動速度計算用
-    private int MoveCount = 0;                  //左右移動切り替えのタイミング取得用
-    private bool MoveStop = false;              //動きを止めたいとき使用
     private Vector2 RayRotato;                  //レイの回転位置決定変数
     private float rotato = 0;                   //回転量
     private GameObject SearchGameObject;        //レイに触れたオブジェクト
     private bool AttckMode = false;             //主人公を見つけた時の攻撃モード
-    private int AttckDirection = 0;             //1:右に攻撃　2:左に攻撃
     private int DethFrameCount = 0;             //死ぬまでのカウント
     private bool OnDamageEffect = false;        //ダメージ受けた時のエフェクト
     private int EffectIntervalCount = 0;        //エフェクトのインターバルのカウント
@@ -98,12 +63,6 @@ public class BaseEnemyFly : BaseStatusClass
     [System.NonSerialized]
     public int stopCount = 0;                   //移動停止までのカウント
 
-
-
-    void Start()
-    {
-        rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
-    }
 
 
     // Update is called once per frame
@@ -121,62 +80,12 @@ public class BaseEnemyFly : BaseStatusClass
         //エフェクト呼び出し
         DamageEffect();
 
-        //行動処理>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        if (!MoveStop)
+        //行動処理
+        if(ConstantFrag)
         {
-            //攻撃モードに入っていないときの行動---------------------------------------------------
-            if (!AttckMode)
-            {
-                if (StopCount > stopCount)
-                {
-                    //右移動
-                    if (RMoveFrag)
-                    {
-                        RightMove();
-                    }
-                    //左移動
-                    if (LMoveFrag)
-                    {
-                        LeftMove();
-                    }
-                }
-                else
-                    rigidbody2d.velocity = Vector3.zero;
-
-
-                stopCount++;
-            }
-            //------------------------------------------------------------------
-
-
-            //攻撃モードの行動--------------------------------------------------
-            else
-            {
-                //右居る時
-                if (SearchGameObject.transform.localPosition.x < transform.localPosition.x)
-                {
-                    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) <= -StopDistance)
-                    {
-                        LeftMove();
-                    }
-                    //左に攻撃
-                    AttckDirection = 2;
-                    transform.localScale = new Vector3(-1f, 1f, 1f);
-                }
-                //左居る時
-                if (SearchGameObject.transform.localPosition.x > transform.localPosition.x)
-                {
-                    if ((SearchGameObject.transform.localPosition.x - transform.localPosition.x) >= StopDistance)
-                    {
-                        RightMove();
-                    }
-                    //右に攻撃
-                    AttckDirection = 1;
-                    transform.localScale = new Vector3(1f, 1f, 1f);
-                }
-            }
+            transform.position += MoveDirection;
         }
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     }
 
 
@@ -295,40 +204,27 @@ public class BaseEnemyFly : BaseStatusClass
     }
 
 
-    private void RightMove()
-    {
-        //最高速度になるとそれ以上加速しない
-        if (rigidbody2d.velocity.x < LimitSpeed)
-        {
-            rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-        }
-        transform.localScale = new Vector3(1f, 1f, 1f);
-    }
+    //private void RightMove()
+    //{
+    //    //最高速度になるとそれ以上加速しない
+    //    if (rigidbody2d.velocity.x < LimitSpeed)
+    //    {
+    //        rigidbody2d.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
+    //    }
+    //    transform.localScale = new Vector3(1f, 1f, 1f);
+    //}
 
 
-    private void LeftMove()
-    {
-        //止まるフレームまで動く
-        //最高速度になるとそれ以上加速しない
-        if (rigidbody2d.velocity.x > -LimitSpeed)
-        {
-            rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
-        }
-        transform.localScale = new Vector3(-1f, 1f, 1f);
-    }
+    //private void LeftMove()
+    //{
+    //    //止まるフレームまで動く
+    //    //最高速度になるとそれ以上加速しない
+    //    if (rigidbody2d.velocity.x > -LimitSpeed)
+    //    {
+    //        rigidbody2d.AddForce(transform.right * (-MoveSpeed), ForceMode2D.Force);
+    //    }
+    //    transform.localScale = new Vector3(-1f, 1f, 1f);
+    //}
 
 
-
-    /// <summary>
-    /// 移動時の加速減速の折り返し地点計算用
-    /// </summary>
-    /// <param name="near"></param>
-    /// <returns></returns>
-    private bool Near(float near)
-    {
-        if (((MaxSpeed / 2) - Deceleration) < near && ((MaxSpeed / 2) + Deceleration) > near)
-            return true;
-        else
-            return false;
-    }
 }
