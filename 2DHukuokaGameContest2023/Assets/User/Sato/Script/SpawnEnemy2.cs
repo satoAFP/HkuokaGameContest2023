@@ -39,6 +39,7 @@ public class SpawnEnemy2 : MonoBehaviour
         else
         {
             FeverTime = ManagerAccessor.Instance.systemManager.FeverTime;
+            Debug.Log(FeverTime);
             if (FeverTime)
             {
                 if (clone == null)
