@@ -70,10 +70,8 @@ public class Player_Ver2 : BaseStatusClass
 
 
 	//システム関連
-	private int combo_count = 0;            //コンボ数
-	private int combo_max = 0;              //最大コンボ数
-	private int score = 0;                  //スコア
-	private int score_add = 0;              //これから加算されるスコア
+	private int combo_fever_count = 0;		//フィーバータイムに入るために必要なコンボ数
+	private int time_fever = 0;				//フィーバータイムの時間を数える用
 	private SpawnEnemy spawn_enemy;         //スポーンエネミー取得用
 
 
@@ -119,9 +117,9 @@ public class Player_Ver2 : BaseStatusClass
 		ManagerAccessor.Instance.player = this;
 
 		//テキスト初期化
-		Combo.text = combo_count.ToString();
-		ComboMax.text = combo_max.ToString();
-		Score.text = score.ToString();
+		Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+		ComboMax.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
+		Score.text = ManagerAccessor.Instance.systemManager.Score.ToString();
 
 		//スポーンエネミーを検索して登録
 		spawn_enemy = GameObject.Find("SpawnEnemy").GetComponent<SpawnEnemy>();
@@ -307,10 +305,13 @@ public class Player_Ver2 : BaseStatusClass
 			move_stop = false;
 
 			//コンボリセットして反映
-			if (spawn_enemy.NowWave	!= 1)
+			if (!ManagerAccessor.Instance.systemManager.FeverTime)
 			{
-				combo_count = 0;
-				Combo.text = combo_count.ToString();
+				ManagerAccessor.Instance.systemManager.Combo = 0;
+				Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+
+				//フィーバータイムに必要なコンボも初期化
+				combo_fever_count = 0;
 			}
 		}
 
@@ -331,9 +332,12 @@ public class Player_Ver2 : BaseStatusClass
 			ground_on = true;
 			move_stop = false;
 
-			//コンボリセットして反映
-			combo_count = 0;
-			Combo.text = combo_count.ToString();
+			if (!ManagerAccessor.Instance.systemManager.FeverTime)
+			{
+				//コンボリセットして反映
+				ManagerAccessor.Instance.systemManager.Combo = 0;
+				Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+			}
 		}
 
 		if (collision.gameObject.tag == "Enemy")
@@ -441,26 +445,49 @@ public class Player_Ver2 : BaseStatusClass
 		return score;
 	}
 
+	//攻撃処理
 	private void Attack()
     {
 		//コンボ増やして反映
-		combo_count++;
-		Combo.text = combo_count.ToString();
+		ManagerAccessor.Instance.systemManager.Combo++;
+		Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
 
 		//マックスコンボ変更
-		if (combo_max < combo_count)
+		if (ManagerAccessor.Instance.systemManager.MaxCombo < ManagerAccessor.Instance.systemManager.Combo)
 		{
-			combo_max = combo_count;
-			ComboMax.text = combo_max.ToString();
+			ManagerAccessor.Instance.systemManager.MaxCombo = ManagerAccessor.Instance.systemManager.Combo;
+			ComboMax.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
 		}
 
-		//現在のウェーブが通常ウェーブのとき
-		if (spawn_enemy.NowWave == 0)
+		//フィーバータイムではないとき
+		if (!ManagerAccessor.Instance.systemManager.FeverTime)
 		{
-			spawn_enemy.WaveCombo++;
-			//これから加算されるスコアを決める
-			score_add = ScoreSetting(score_add, combo_count);
-			spawn_enemy.WaveScore += score_add;
+			//フィーバータイムまでのコンボをカウント
+			combo_fever_count++;
+
+			//コンボを達成したとき
+			if(combo_fever_count >= 10)
+            {
+				//フィーバータイムに移行
+				ManagerAccessor.Instance.systemManager.FeverTime = true;
+
+				//フィーバー用のコンボを初期化
+				combo_fever_count = 0;
+			}
+		}
+		else
+        {
+			//フィーバータイムをカウント
+			time_fever++;
+
+			//時間経過したら
+			if (time_fever >= 500)
+            {
+				//フィーバータイム終了
+				ManagerAccessor.Instance.systemManager.FeverTime = false;
+				time_fever = 0;
+            }
+
 		}
 
 		if (enemyObj != null)
@@ -469,8 +496,8 @@ public class Player_Ver2 : BaseStatusClass
 			enemyObj.HP -= ATK;
 
 			//表示用のスコア決める
-			score = ScoreSetting(score, combo_count);
-			Score.text = score.ToString();
+			ManagerAccessor.Instance.systemManager.Score = ScoreSetting(ManagerAccessor.Instance.systemManager.Score, ManagerAccessor.Instance.systemManager.Combo);
+			Score.text = ManagerAccessor.Instance.systemManager.Score.ToString();
 
 			//HPが0の時
 			//if (enemyObj.HP <= 0)
@@ -479,7 +506,6 @@ public class Player_Ver2 : BaseStatusClass
 			//}
 		}
 
-		score_add = 0;
 		AttackFin();
 	}
 
