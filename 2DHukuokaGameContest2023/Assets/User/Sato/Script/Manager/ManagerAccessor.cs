@@ -20,4 +20,5 @@ public class ManagerAccessor : MonoBehaviour
 
     //マネージャーの参照
     public Player_Ver2 player;
+    public SystemManager systemManager;
 }
