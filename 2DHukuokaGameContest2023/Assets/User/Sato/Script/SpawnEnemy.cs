@@ -193,7 +193,7 @@ public class SpawnEnemy : MonoBehaviour
     {
         for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
         {
-            if (ObjGroup[(int)Wave.GENERALLY].GFObj[NowArrangement] != null)
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[i] != null)
             {
                 ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(false);
             }
@@ -205,7 +205,7 @@ public class SpawnEnemy : MonoBehaviour
     {
         for (int i = 0; i < ObjGroup[NowWave].GFObj.Length; i++)
         {
-            if (ObjGroup[NowWave].GFObj[NowArrangement] != null)
+            if (ObjGroup[NowWave].GFObj[i] != null)
             {
                 Destroy(ObjGroup[NowWave].GFObj[i]);
             }
@@ -213,7 +213,7 @@ public class SpawnEnemy : MonoBehaviour
 
         for (int i = 0; i < ObjGroup[(int)Wave.GENERALLY].GFObj.Length; i++)
         {
-            if (ObjGroup[(int)Wave.GENERALLY].GFObj[NowArrangement] != null)
+            if (ObjGroup[(int)Wave.GENERALLY].GFObj[i] != null)
             {
                 ObjGroup[(int)Wave.GENERALLY].GFObj[i].SetActive(true);
             }
