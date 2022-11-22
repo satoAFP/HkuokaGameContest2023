@@ -58,18 +58,23 @@ public class Player_Ver2 : BaseStatusClass
 		RIGHT,
 	}
 
+
+	//主人公関連
 	private Rigidbody2D rb2D;				//主人公のリジットボディ
 	private int jump_count = 0;             //ジャンプ回数
 	private bool jump_key_flag = false;     //ジャンプキー連続判定制御用
-	private bool ground_hit = false;		//地面に立っているか
+	private bool ground_on = false;			//地面に立っているか
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
-	private bool move_stop = false;			//動きを止めたいとき使用
+	private bool move_stop = false;         //動きを止めたいとき使用
+
+
+	//システム関連
 	private int combo_count = 0;            //コンボ数
 	private int combo_max = 0;              //最大コンボ数
 	private int score = 0;                  //スコア
 	private int score_add = 0;              //これから加算されるスコア
-	private SpawnEnemy spawn_enemy;			//スポーンエネミー取得用
+	private SpawnEnemy spawn_enemy;         //スポーンエネミー取得用
 
 
 	//攻撃関連
@@ -78,7 +83,11 @@ public class Player_Ver2 : BaseStatusClass
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
 	private bool attacking = false;			//攻撃中true
-	private bool dont_move = false;			//敵にめり込んだ時に敵の向きを1回取る用
+	private bool dont_move = false;         //敵の向きを1回取る用
+	private Ray2D attack_ray;				//飛ばすレイ
+	private float attack_distance = 10.0f;  //レイを飛ばす距離
+	private RaycastHit2D attack_hit;		//レイが何かに当たった時の情報
+	private Vector3 attack_rayPosition;		//レイを発射する位置
 	private GameObject attack = null;       //攻撃オブジェクト
 	private int attack_cooltime = 0;        //攻撃クールタイム
 	private int attack_rotation = 0;        //攻撃中の剣回転
@@ -94,10 +103,10 @@ public class Player_Ver2 : BaseStatusClass
 
 
 	//接地関連
-	private Ray2D ray_left, ray_right;			//飛ばすレイ
+	private Ray2D ground_ray;					//飛ばすレイ
 	private float distance = 2.0f;				//レイを飛ばす距離
-	private RaycastHit2D hit_left,hit_right;	//レイが何かに当たった時の情報
-	private Vector3 rayPosition1, rayPosition2;	//レイを発射する位置
+	private RaycastHit2D ground_hit;			//レイが何かに当たった時の情報
+	private Vector3 ground_rayPosition;			//レイを発射する位置
 	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
 
 
@@ -130,7 +139,32 @@ public class Player_Ver2 : BaseStatusClass
 				attacking = true;
 
 				//コライダーを生成
-				PlayerAttack(attack, AttackCollider, attackpos);
+				//PlayerAttack(attack, AttackCollider, attackpos);
+
+				//レイを発射する位置の調整
+				attack_rayPosition = transform.position;
+
+				//レイを飛ばす
+				attack_ray = new Ray2D(attack_rayPosition, atkQuaternion.eulerAngles);
+				Debug.Log(atkQuaternion.eulerAngles.normalized);
+
+				//Enemyとだけ衝突する
+				int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
+				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
+
+				//レイを黄色で表示させる
+				Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
+
+				//コライダーとレイが接触
+				if (attack_hit.collider)
+				{
+					if (attack_hit.collider.tag == "Enemy")
+					{
+						enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
+						hit_enemy_pos = enemyObj.transform.position;
+						hit_enemy = true;
+					}
+				}
 			}
 		}
 	}
@@ -140,12 +174,11 @@ public class Player_Ver2 : BaseStatusClass
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 		//レイを発射する位置の調整
-		rayPosition1 = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
+		ground_rayPosition = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
 		//rayPosition2 = transform.position + new Vector3(0.5f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
-		RayGround(ray_left, hit_left, rayPosition1);
-		//RayGround(ray_right, hit_right, rayPosition2);
+		RayGround(ground_ray, ground_hit, ground_rayPosition);
 
 		if(attack_col)
         {
@@ -228,7 +261,7 @@ public class Player_Ver2 : BaseStatusClass
 				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
 			}
-			else if (transform.position.x > hit_enemy_pos.x)
+			else
 			{
 				if (!dont_move)
 				{
@@ -237,6 +270,11 @@ public class Player_Ver2 : BaseStatusClass
 				}
 				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
 			}
+
+			if(transform.position == hit_enemy_pos)
+            {
+				AttackFin();
+            }
 		}
 
 		//攻撃クールタイム
@@ -258,7 +296,7 @@ public class Player_Ver2 : BaseStatusClass
 		//地面に触れた時
         if (collision.gameObject.CompareTag("Ground"))
         {
-			ground_hit = true;
+			ground_on = true;
 			move_stop = false;
 
 			//コンボリセットして反映
@@ -283,7 +321,7 @@ public class Player_Ver2 : BaseStatusClass
 		//地面に触れた時
 		if (collision.gameObject.CompareTag("Ground"))
 		{
-			ground_hit = true;
+			ground_on = true;
 			move_stop = false;
 
 			//コンボリセットして反映
@@ -303,7 +341,7 @@ public class Player_Ver2 : BaseStatusClass
     {
 		if (collision.gameObject.CompareTag("Ground"))
 		{
-			ground_hit = false;
+			ground_on = false;
 		}
 	}
 
@@ -325,7 +363,7 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			SearchGameObject = hit.collider.gameObject;
 
-			if (SearchGameObject.tag == "Ground" && ground_hit == true && jump_count > 0)
+			if (SearchGameObject.tag == "Ground" && ground_on == true && jump_count > 0)
 			{
 				Debug.Log("着地してる！");
 				jump_count = 0;
@@ -344,6 +382,9 @@ public class Player_Ver2 : BaseStatusClass
 	//攻撃解除
 	private void AttackFin()
 	{
+		//ジャンプ回数リセット
+		jump_count = 0;
+
 		hit_enemy = false;
 		rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 		dont_move = false;
@@ -395,9 +436,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	private void Attack()
     {
-		//ジャンプ回数リセット
-		jump_count = 0;
-
 		//コンボ増やして反映
 		combo_count++;
 		Combo.text = combo_count.ToString();
@@ -449,3 +487,16 @@ public class Player_Ver2 : BaseStatusClass
 		return rad * Mathf.Rad2Deg;
 	}
 }
+
+/* やること
+ * 主人公の攻撃オブジェクトをレイに変換
+ * 主人公からカーソルを表示
+ * 敵に攻撃したら効果音「ズシャア！！」
+*/
+
+/* バグ
+ * 先の敵が死ぬ
+ * 高くジャンプする
+ * 攻撃をスカしてから敵に当たるとコンボ増える
+ * Wave切り替えタイミングで攻撃すると止まる
+*/
