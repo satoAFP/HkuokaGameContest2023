@@ -27,6 +27,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃当たり判定")]
 	private GameObject AttackCollider;
 
+	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
+	private int AttackDistance;
+
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
 
@@ -74,7 +77,6 @@ public class Player_Ver2 : BaseStatusClass
 	private bool attacking = false;			//攻撃中true
 	private bool dont_move = false;         //敵の向きを1回取る用
 	private Ray2D attack_ray;				//飛ばすレイ
-	private float attack_distance = 10.0f;  //レイを飛ばす距離
 	private RaycastHit2D attack_hit;		//レイが何かに当たった時の情報
 	private Vector3 attack_rayPosition;		//レイを発射する位置
 	private GameObject attack = null;       //攻撃オブジェクト
@@ -137,10 +139,10 @@ public class Player_Ver2 : BaseStatusClass
 
 				//Enemyとだけ衝突する
 				int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
-				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
+				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, AttackDistance, attack_layerMask);
 
 				//レイを黄色で表示させる
-				Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
+				Debug.DrawRay(attack_ray.origin, attack_ray.direction * AttackDistance, Color.yellow);
 
 				//コライダーとレイが接触
 				if (attack_hit.collider)
@@ -167,7 +169,7 @@ public class Player_Ver2 : BaseStatusClass
 		//レイの接地判定
 		RayGround(ground_ray, ground_hit, ground_rayPosition);
 
-		if(attacking)
+		if(hit_enemy)
         {
 			//剣の回転
 			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
@@ -505,7 +507,6 @@ public class Player_Ver2 : BaseStatusClass
 }
 
 /* やること
- * 主人公の攻撃オブジェクトをレイに変換
  * 主人公からカーソルを表示
  * 敵に攻撃したら効果音「ズシャア！！」
 */

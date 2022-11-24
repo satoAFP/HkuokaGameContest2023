@@ -236,6 +236,7 @@ MonoBehaviour:
   AvoidDis: 12
   AvoidTime: 30
   AttackCollider: {fileID: 5275458724918441197, guid: 057e6da6659eeb4409e6b8c17161abfa, type: 3}
+  AttackDistance: 5
   AttackCoolTime: 10
   AttackMovePos: {x: 0.5, y: 0, z: 0}
   AttackMoveSpeed: 0.7
