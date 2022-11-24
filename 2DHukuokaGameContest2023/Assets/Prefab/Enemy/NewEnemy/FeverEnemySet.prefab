@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34d1fa54f0761645aa18a185fef3b39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FirstSpownFrame: 20
   RespownFrame: 60
   FeverTimeCheck: 1
   SpownEnemy: {fileID: 6613929883129229713, guid: 1865cb1ef5a6b9f48b2e66199b88c92e, type: 3}

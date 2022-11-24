@@ -13,9 +13,6 @@ public class RankingSystem : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
             Score[i] = Random.Range(0, 100);
-
-        Debug.Log(Score[0] + ":" + Score[1] + ":" + Score[2] + ":" + Score[3] + ":" + Score[4]
-            + ":" + Score[5] + ":" + Score[6] + ":" + Score[7] + ":" + Score[8] + ":" + Score[9]);
     }
 
     // Update is called once per frame
