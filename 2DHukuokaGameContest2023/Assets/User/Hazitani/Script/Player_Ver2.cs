@@ -163,15 +163,16 @@ public class Player_Ver2 : BaseStatusClass
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
+		//接地判定
 		//レイを発射する位置の調整
 		ground_rayPosition = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
 
 		//レイの接地判定
 		RayGround(ground_ray, ground_hit, ground_rayPosition);
 
-		if(hit_enemy)
+		//剣の回転
+		if (hit_enemy)
         {
-			//剣の回転
 			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 		}
 		else
@@ -277,6 +278,22 @@ public class Player_Ver2 : BaseStatusClass
 				attack_ok = true;
             }
         }
+
+		//フィーバータイムのとき
+		if (ManagerAccessor.Instance.systemManager.FeverTime)
+        {
+			//フィーバータイムをカウント
+			time_fever++;
+			Debug.Log(ManagerAccessor.Instance.systemManager.FeverTime);
+
+			//時間経過したら
+			if (time_fever >= 500)
+			{
+				//フィーバータイム終了
+				ManagerAccessor.Instance.systemManager.FeverTime = false;
+				time_fever = 0;
+			}
+		}
 	}
 
 	//コライダーに触れた時
@@ -435,9 +452,10 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			//フィーバータイムまでのコンボをカウント
 			combo_fever_count++;
+			Debug.Log(ManagerAccessor.Instance.systemManager.FeverTime);
 
 			//コンボを達成したとき
-			if(combo_fever_count >= 10)
+			if (combo_fever_count >= 10)
             {
 				//フィーバータイムに移行
 				ManagerAccessor.Instance.systemManager.FeverTime = true;
@@ -445,20 +463,6 @@ public class Player_Ver2 : BaseStatusClass
 				//フィーバー用のコンボを初期化
 				combo_fever_count = 0;
 			}
-		}
-		else
-        {
-			//フィーバータイムをカウント
-			time_fever++;
-
-			//時間経過したら
-			if (time_fever >= 500)
-            {
-				//フィーバータイム終了
-				ManagerAccessor.Instance.systemManager.FeverTime = false;
-				time_fever = 0;
-            }
-
 		}
 
 		if (enemyObj != null)
@@ -512,7 +516,6 @@ public class Player_Ver2 : BaseStatusClass
 */
 
 /* バグ
- * 先の敵が死ぬ
  * 高くジャンプする
  * 攻撃をスカしてから敵に当たるとコンボ増える
  * Wave切り替えタイミングで攻撃すると止まる
