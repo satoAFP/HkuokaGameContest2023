@@ -42,14 +42,6 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃中に剣を回転させる速さ")]
 	private int AttackRotationSpeed;
 
-	[SerializeField, Header("コンボテキスト")]
-	private Text Combo;
-
-	[SerializeField, Header("最大コンボテキスト")]
-	private Text ComboMax;
-
-	[SerializeField, Header("スコアテキスト")]
-	private Text Score;
 
 	public enum Direction
 	{
@@ -72,7 +64,6 @@ public class Player_Ver2 : BaseStatusClass
 	//システム関連
 	private int combo_fever_count = 0;		//フィーバータイムに入るために必要なコンボ数
 	private int time_fever = 0;				//フィーバータイムの時間を数える用
-	private SpawnEnemy spawn_enemy;         //スポーンエネミー取得用
 
 
 	//攻撃関連
@@ -115,14 +106,6 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
-
-		//テキスト初期化
-		Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
-		ComboMax.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
-		Score.text = ManagerAccessor.Instance.systemManager.Score.ToString();
-
-		//スポーンエネミーを検索して登録
-		spawn_enemy = GameObject.Find("SpawnEnemy").GetComponent<SpawnEnemy>();
 	}
 
 	void Update()
@@ -144,33 +127,32 @@ public class Player_Ver2 : BaseStatusClass
 				attacking = true;
 
 				//コライダーを生成
-				PlayerAttack(attack, AttackCollider, attackpos);
+				//PlayerAttack(attack, AttackCollider, attackpos);
 
-				////レイを発射する位置の調整
-				//attack_rayPosition = transform.position;
+				//レイを発射する位置の調整
+				attack_rayPosition = transform.position;
 
-				////レイを飛ばす
-				//attack_ray = new Ray2D(attack_rayPosition, atkQuaternion.eulerAngles);
-				//Debug.Log(atkQuaternion.eulerAngles.normalized);
+				//レイを飛ばす
+				attack_ray = new Ray2D(attack_rayPosition, mousePos - attack_rayPosition);
 
-				////Enemyとだけ衝突する
-				//int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
-				//attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
+				//Enemyとだけ衝突する
+				int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
+				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, attack_distance, attack_layerMask);
 
-				////レイを黄色で表示させる
-				//Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
+				//レイを黄色で表示させる
+				Debug.DrawRay(attack_ray.origin, attack_ray.direction * attack_distance, Color.yellow);
 
-				////コライダーとレイが接触
-				//if (attack_hit.collider)
-				//{
-				//	if (attack_hit.collider.tag == "Enemy")
-				//	{
-				//		enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
-				//		hit_enemy_pos = enemyObj.transform.position;
-				//		hit_enemy = true;
-				//	}
-				//}
-			}
+				//コライダーとレイが接触
+				if (attack_hit.collider)
+                {
+                    if (attack_hit.collider.tag == "Enemy")
+                    {
+                        enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
+                        hit_enemy_pos = enemyObj.transform.position;
+                        hit_enemy = true;
+                    }
+                }
+            }
 		}
 	}
 
@@ -185,7 +167,7 @@ public class Player_Ver2 : BaseStatusClass
 		//レイの接地判定
 		RayGround(ground_ray, ground_hit, ground_rayPosition);
 
-		if(attack_col)
+		if(attacking)
         {
 			//剣の回転
 			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
@@ -304,15 +286,7 @@ public class Player_Ver2 : BaseStatusClass
 			ground_on = true;
 			move_stop = false;
 
-			//コンボリセットして反映
-			if (!ManagerAccessor.Instance.systemManager.FeverTime)
-			{
-				ManagerAccessor.Instance.systemManager.Combo = 0;
-				Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
-
-				//フィーバータイムに必要なコンボも初期化
-				combo_fever_count = 0;
-			}
+			ComboReset();
 		}
 
 		//攻撃のノックバック
@@ -332,12 +306,7 @@ public class Player_Ver2 : BaseStatusClass
 			ground_on = true;
 			move_stop = false;
 
-			if (!ManagerAccessor.Instance.systemManager.FeverTime)
-			{
-				//コンボリセットして反映
-				ManagerAccessor.Instance.systemManager.Combo = 0;
-				Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
-			}
+			ComboReset();
 		}
 
 		if (collision.gameObject.tag == "Enemy")
@@ -450,13 +419,13 @@ public class Player_Ver2 : BaseStatusClass
     {
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
-		Combo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
 
 		//マックスコンボ変更
 		if (ManagerAccessor.Instance.systemManager.MaxCombo < ManagerAccessor.Instance.systemManager.Combo)
 		{
 			ManagerAccessor.Instance.systemManager.MaxCombo = ManagerAccessor.Instance.systemManager.Combo;
-			ComboMax.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
+			ManagerAccessor.Instance.systemManager.textMaxCombo.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
 		}
 
 		//フィーバータイムではないとき
@@ -497,7 +466,7 @@ public class Player_Ver2 : BaseStatusClass
 
 			//表示用のスコア決める
 			ManagerAccessor.Instance.systemManager.Score = ScoreSetting(ManagerAccessor.Instance.systemManager.Score, ManagerAccessor.Instance.systemManager.Combo);
-			Score.text = ManagerAccessor.Instance.systemManager.Score.ToString();
+			ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
 
 			//HPが0の時
 			//if (enemyObj.HP <= 0)
@@ -518,6 +487,20 @@ public class Player_Ver2 : BaseStatusClass
 		float dy = p2.y - p1.y;
 		float rad = Mathf.Atan2(dy, dx);
 		return rad * Mathf.Rad2Deg;
+	}
+
+	private void ComboReset()
+    {
+		//コンボリセットして反映
+		if (!ManagerAccessor.Instance.systemManager.FeverTime)
+		{
+			//コンボリセットして反映
+			ManagerAccessor.Instance.systemManager.Combo = 0;
+			ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+
+			//フィーバータイムに必要なコンボも初期化
+			combo_fever_count = 0;
+		}
 	}
 }
 
