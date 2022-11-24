@@ -49,6 +49,8 @@ public class SpawnEnemy2 : MonoBehaviour
             {
                 if (clone != null)
                     Destroy(clone);
+                //初期スポーンだけタイミングずらすため
+                RespownFrame = FirstSpownFrame;
             }
         }
     }
