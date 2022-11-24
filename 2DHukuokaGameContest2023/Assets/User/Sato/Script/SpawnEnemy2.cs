@@ -45,6 +45,11 @@ public class SpawnEnemy2 : MonoBehaviour
             {
                 EnemySpawn();
             }
+            else
+            {
+                if (clone != null)
+                    Destroy(clone);
+            }
         }
     }
 
