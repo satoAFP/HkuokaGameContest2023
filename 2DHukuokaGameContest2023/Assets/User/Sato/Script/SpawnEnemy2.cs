@@ -20,21 +20,13 @@ public class SpawnEnemy2 : MonoBehaviour
 
 
 
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!FeverTime)
+        if (!FeverTimeCheck)
         {
-            if (clone == null)
-            {
-                if (RespownFrame <= FrameCount)
-                {
-                    clone = Instantiate(SpownEnemy, transform.position, Quaternion.identity);
-                    clone.transform.parent = transform;
-                    FrameCount = 0;
-                }
-                FrameCount++;
-            }
+            EnemySpawn();
         }
         else
         {
@@ -42,17 +34,26 @@ public class SpawnEnemy2 : MonoBehaviour
             Debug.Log(FeverTime);
             if (FeverTime)
             {
-                if (clone == null)
-                {
-                    if (RespownFrame <= FrameCount)
-                    {
-                        clone = Instantiate(SpownEnemy, transform.position, Quaternion.identity);
-                        clone.transform.parent = transform;
-                        FrameCount = 0;
-                    }
-                    FrameCount++;
-                }
+                EnemySpawn();
             }
+        }
+    }
+
+
+    /// <summary>
+    /// ìGè¢ä´ópä÷êî
+    /// </summary>
+    private void EnemySpawn()
+    {
+        if (clone == null)
+        {
+            if (RespownFrame <= FrameCount)
+            {
+                clone = Instantiate(SpownEnemy, transform.position, Quaternion.identity);
+                clone.transform.parent = transform;
+                FrameCount = 0;
+            }
+            FrameCount++;
         }
     }
 }
