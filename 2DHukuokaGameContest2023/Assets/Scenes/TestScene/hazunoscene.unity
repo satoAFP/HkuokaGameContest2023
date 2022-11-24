@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 227210710}
   - component: {fileID: 227210709}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: SystemManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,6 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4084299b95717d94883d3cc7f868cc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textCombo: {fileID: 482783363}
+  textMaxCombo: {fileID: 520293610}
+  textScore: {fileID: 1346469808}
 --- !u!4 &227210710
 Transform:
   m_ObjectHideFlags: 0
@@ -164,7 +167,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &345057139
 PrefabInstance:
@@ -479,7 +482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387076, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8472068412912387076, guid: 2cd42416a79fe88429c4dfa74067683d, type: 3}
       propertyPath: m_LocalScale.x
@@ -918,7 +921,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &773902808
 GameObject:
@@ -1016,7 +1019,7 @@ RectTransform:
   - {fileID: 520293607}
   - {fileID: 1346469805}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1087,7 +1090,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1307740394
 GameObject:
@@ -1370,7 +1373,7 @@ Transform:
   m_LocalScale: {x: 80, y: 6.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1440569840
 GameObject:
@@ -1416,7 +1419,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &4068600176354096256
 AudioListener:
@@ -1508,18 +1511,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
-      propertyPath: Combo
-      value: 
-      objectReference: {fileID: 482783363}
-    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
-      propertyPath: Score
-      value: 
-      objectReference: {fileID: 1346469808}
-    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
-      propertyPath: ComboMax
-      value: 
-      objectReference: {fileID: 520293610}
     - target: {fileID: 347360261909828781, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_Name
       value: Player
