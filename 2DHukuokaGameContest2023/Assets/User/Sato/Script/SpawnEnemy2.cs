@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpawnEnemy2 : MonoBehaviour
 {
+    [SerializeField, Header("初期スポーンまでのフレーム")]
+    private int FirstSpownFrame;
+
     [SerializeField, Header("リスポーンまでのフレーム")]
     private int RespownFrame;
 
@@ -14,24 +17,30 @@ public class SpawnEnemy2 : MonoBehaviour
     private GameObject SpownEnemy;
 
 
-    private int FrameCount = 0; //フレームカウント用
-    private GameObject clone;
-    private bool FeverTime = false;
+    private int FrameCount = 0;     //フレームカウント用
+    private GameObject clone;       //クローンしたオブジェクトを入れるよう
+    private bool FeverTime = false; //フィーバーモード取得用
+    private int MemRespownFrame = 0;//リスポーンまでの時間記憶用
 
 
+    private void Start()
+    {
+        //初期スポーンだけタイミングずらすため
+        MemRespownFrame = RespownFrame;
+        RespownFrame = FirstSpownFrame;
+    }
 
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!FeverTimeCheck)
+        if (!FeverTimeCheck)//通常モード
         {
             EnemySpawn();
         }
-        else
+        else//フィーバーモード
         {
             FeverTime = ManagerAccessor.Instance.systemManager.FeverTime;
-            Debug.Log(FeverTime);
             if (FeverTime)
             {
                 EnemySpawn();
@@ -51,6 +60,7 @@ public class SpawnEnemy2 : MonoBehaviour
             {
                 clone = Instantiate(SpownEnemy, transform.position, Quaternion.identity);
                 clone.transform.parent = transform;
+                RespownFrame = MemRespownFrame;
                 FrameCount = 0;
             }
             FrameCount++;
