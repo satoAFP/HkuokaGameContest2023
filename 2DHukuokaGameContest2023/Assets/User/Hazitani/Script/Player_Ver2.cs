@@ -167,7 +167,7 @@ public class Player_Ver2 : BaseStatusClass
 		//レイの接地判定
 		RayGround(ground_ray, ground_hit, ground_rayPosition);
 
-		if(attacking)
+		if(hit_enemy)
         {
 			//剣の回転
 			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
@@ -505,7 +505,6 @@ public class Player_Ver2 : BaseStatusClass
 }
 
 /* やること
- * 主人公の攻撃オブジェクトをレイに変換
  * 主人公からカーソルを表示
  * 敵に攻撃したら効果音「ズシャア！！」
 */
