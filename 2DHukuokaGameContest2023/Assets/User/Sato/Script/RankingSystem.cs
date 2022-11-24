@@ -12,7 +12,7 @@ public class RankingSystem : MonoBehaviour
     void Start()
     {
         for (int i = 0; i < 10; i++)
-            Score[i] = PlayerPrefs.GetInt("SCORE" +[i], 0);
+            Score[i] = PlayerPrefs.GetInt("SCORE" + i, 0);
     }
 
     // Update is called once per frame
