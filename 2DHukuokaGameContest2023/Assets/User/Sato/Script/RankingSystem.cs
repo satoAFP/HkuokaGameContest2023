@@ -12,7 +12,7 @@ public class RankingSystem : MonoBehaviour
     void Start()
     {
         for (int i = 0; i < 10; i++)
-            Score[i] = Random.Range(0, 100);
+            Score[i] = PlayerPrefs.GetInt("SCORE" +[i], 0);
     }
 
     // Update is called once per frame
@@ -52,6 +52,14 @@ public class RankingSystem : MonoBehaviour
             Score[max_pos] = Score[i];
             Score[i] = max;
         }
+    }
+
+
+    public void MemScore()
+    {
+        for (int i = 0; i < 10; i++)
+            PlayerPrefs.SetInt("SCORE" + i, Score[i]);
+        PlayerPrefs.Save();
     }
 
 }
