@@ -45,6 +45,8 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃中に剣を回転させる速さ")]
 	private int AttackRotationSpeed;
 
+	[SerializeField, Header("フィーバータイム残り時間テキスト")]
+	private Text textFeverTime;
 
 	public enum Direction
 	{
@@ -108,6 +110,10 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
+
+		//テキストの更新
+		textFeverTime.text = "";
+		textFeverTime.gameObject.SetActive(false);
 	}
 
 	void Update()
@@ -284,7 +290,12 @@ public class Player_Ver2 : BaseStatusClass
         {
 			//フィーバータイムをカウント
 			time_fever++;
-			Debug.Log(ManagerAccessor.Instance.systemManager.FeverTime);
+
+			if(time_fever % 50 == 0)
+            {
+				textFeverTime.gameObject.SetActive(true);
+				textFeverTime.text = "あと" + (10 - (time_fever / 50)) + "秒";
+			}
 
 			//時間経過したら
 			if (time_fever >= 500)
@@ -292,6 +303,8 @@ public class Player_Ver2 : BaseStatusClass
 				//フィーバータイム終了
 				ManagerAccessor.Instance.systemManager.FeverTime = false;
 				time_fever = 0;
+				textFeverTime.text = "";
+				textFeverTime.gameObject.SetActive(false);
 			}
 		}
 	}
@@ -452,7 +465,6 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			//フィーバータイムまでのコンボをカウント
 			combo_fever_count++;
-			Debug.Log(ManagerAccessor.Instance.systemManager.FeverTime);
 
 			//コンボを達成したとき
 			if (combo_fever_count >= 10)
