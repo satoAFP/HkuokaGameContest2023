@@ -240,6 +240,4 @@ MonoBehaviour:
   AttackMovePos: {x: 0.5, y: 0, z: 0}
   AttackMoveSpeed: 0.7
   SubjugationKnockback: {x: 9, y: 20}
-  Combo: {fileID: 0}
-  ComboMax: {fileID: 0}
-  Score: {fileID: 0}
+  AttackRotationSpeed: 0
