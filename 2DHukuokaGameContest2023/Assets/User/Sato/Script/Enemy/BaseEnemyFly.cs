@@ -43,6 +43,9 @@ public class BaseEnemyFly : BaseStatusClass
     [SerializeField, Header("死ぬときのエフェクト")]
     private GameObject DethEffct;
 
+    [SerializeField, Header("死ぬときのアニメーション")]
+    private GameObject DethAni;
+
 
 
     private Vector2 RayRotato;                  //レイの回転位置決定変数
@@ -146,6 +149,9 @@ public class BaseEnemyFly : BaseStatusClass
             {
                 //死亡時のエフェクト
                 Instantiate(DethEffct, transform.position, Quaternion.identity);
+
+                //死亡時のアニメーション
+                Instantiate(DethAni, transform.position, Quaternion.identity);
 
                 //削除
                 Destroy(gameObject);
