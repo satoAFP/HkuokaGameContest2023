@@ -18,15 +18,6 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("重力"), Range(0, 100)]
 	private float Gravity;
 
-	[SerializeField, Header("回避距離"), Range(0, 100)]
-	private float AvoidDis;
-
-	[SerializeField, Header("回避時間"), Range(0, 100)]
-	private int AvoidTime;
-
-	[SerializeField, Header("攻撃当たり判定")]
-	private GameObject AttackCollider;
-
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private int AttackDistance;
 
@@ -111,9 +102,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	void Update()
     {
-		//攻撃の向き設定
-		Vector3 attackpos = transform.position;//攻撃位置の座標更新用
-
 		//角度設定
 		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
@@ -125,10 +113,6 @@ public class Player_Ver2 : BaseStatusClass
 			if (attack_ok)
 			{
 				attack_ok = false;
-				attacking = true;
-
-				//コライダーを生成
-				//PlayerAttack(attack, AttackCollider, attackpos);
 
 				//レイを発射する位置の調整
 				attack_rayPosition = transform.position;
@@ -151,7 +135,8 @@ public class Player_Ver2 : BaseStatusClass
                         enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
                         hit_enemy_pos = enemyObj.transform.position;
                         hit_enemy = true;
-                    }
+						attacking = true;
+					}
                 }
             }
 		}
@@ -230,40 +215,51 @@ public class Player_Ver2 : BaseStatusClass
 			jump_key_flag = false;
 		}
 
-		//攻撃が敵に当たった場合
+		//レイが敵に当たった場合
 		if (hit_enemy)
 		{
-			move_stop = true;
-			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
 			if (enemyObj != null)
 			{
-				hit_enemy_pos = enemyObj.transform.position;
-			}
+				move_stop = true;
+				rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-			if (transform.position.x < hit_enemy_pos.x)
-			{
-				if (!dont_move)
+				if (transform.position.x < hit_enemy_pos.x)
 				{
-					dont_move = true;
-					hit_enemy_frip = true;
+					if (!dont_move)
+					{
+						dont_move = true;
+						hit_enemy_frip = true;
+					}
+					transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
 				}
-				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
+				else
+				{
+					if (!dont_move)
+					{
+						dont_move = true;
+						hit_enemy_frip = false;
+					}
+					transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
+				}
+
+				if (transform.position == hit_enemy_pos)
+				{
+					AttackFin();
+				}
 			}
+			//レイが当たったが、敵が消えてしまった場合
 			else
-			{
-				if (!dont_move)
-				{
-					dont_move = true;
-					hit_enemy_frip = false;
-				}
-				transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
-			}
-
-			if(transform.position == hit_enemy_pos)
             {
-				AttackFin();
-            }
+				//攻撃関連のフラグ全部リセット
+				jump_count = 0;
+				move_stop = false;
+				hit_enemy = false;
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+				dont_move = false;
+				attacking = false;
+				attack_cooltime = 0;
+				attack_ok = true;
+			}
 		}
 
 		//攻撃クールタイム
@@ -518,6 +514,4 @@ public class Player_Ver2 : BaseStatusClass
 
 /* バグ
  * 高くジャンプする
- * 攻撃をスカしてから敵に当たるとコンボ増える
- * Wave切り替えタイミングで攻撃すると止まる
 */
