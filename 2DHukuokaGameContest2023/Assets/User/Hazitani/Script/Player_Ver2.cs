@@ -164,15 +164,19 @@ public class Player_Ver2 : BaseStatusClass
 			transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 		}
 
-		//矢印の回転
+		//カーソルを表示するかどうか
 		if (AttackCursor)
 		{
+			//矢印を表示
 			transform.GetChild(1).gameObject.SetActive(true);
+			
+			//矢印の回転
 			transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
 			transform.GetChild(1).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 		}
 		else
         {
+			//矢印を非表示
 			transform.GetChild(1).gameObject.SetActive(false);
 		}
 
@@ -511,7 +515,6 @@ public class Player_Ver2 : BaseStatusClass
 }
 
 /* やること
- * 主人公からカーソルを表示
  * 敵に攻撃したら効果音「ズシャア！！」
 */
 
