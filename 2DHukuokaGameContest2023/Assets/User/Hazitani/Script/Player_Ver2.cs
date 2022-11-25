@@ -36,6 +36,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("UŒ‚’†‚ÉŒ•‚ğ‰ñ“]‚³‚¹‚é‘¬‚³")]
 	private int AttackRotationSpeed;
 
+	[SerializeField, Header("ƒJ[ƒ\ƒ‹‚Ì•\¦")]
+	private bool AttackCursor;
+
 	public enum Direction
 	{
 		LEFT = -1,
@@ -162,8 +165,16 @@ public class Player_Ver2 : BaseStatusClass
 		}
 
 		//–îˆó‚Ì‰ñ“]
-		transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
-		transform.GetChild(1).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+		if (AttackCursor)
+		{
+			transform.GetChild(1).gameObject.SetActive(true);
+			transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
+			transform.GetChild(1).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+		}
+		else
+        {
+			transform.GetChild(1).gameObject.SetActive(false);
+		}
 
 		//ˆÚ“®ˆ—
 		if (!move_stop)
