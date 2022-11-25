@@ -2532,7 +2532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db6ee664c84b7d4cb28333cf1ffbb96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EndTime: 20
+  EndTime: 2000
   TimeText: {fileID: 1414221693}
   RankingPanel: {fileID: 1040865259}
 --- !u!4 &1712163673 stripped
