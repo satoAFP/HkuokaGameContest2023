@@ -45,9 +45,6 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃中に剣を回転させる速さ")]
 	private int AttackRotationSpeed;
 
-	[SerializeField, Header("フィーバータイム残り時間テキスト")]
-	private Text textFeverTime;
-
 	public enum Direction
 	{
 		LEFT = -1,
@@ -110,10 +107,6 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
-
-		//テキストの更新
-		textFeverTime.text = "";
-		textFeverTime.gameObject.SetActive(false);
 	}
 
 	void Update()
@@ -291,46 +284,27 @@ public class Player_Ver2 : BaseStatusClass
 			//フィーバータイムをカウント
 			time_fever++;
 
-			if(time_fever % 50 == 0)
-            {
-				textFeverTime.gameObject.SetActive(true);
-				textFeverTime.text = "あと" + (10 - (time_fever / 50)) + "秒";
-			}
-
 			//時間経過したら
 			if (time_fever >= 500)
 			{
 				//フィーバータイム終了
 				ManagerAccessor.Instance.systemManager.FeverTime = false;
 				time_fever = 0;
-				textFeverTime.text = "";
-				textFeverTime.gameObject.SetActive(false);
 			}
 		}
 	}
 
-	//コライダーに触れた時
-    private void OnCollisionEnter2D(Collision2D collision)
+    //コライダーに触れた時
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-		//地面に触れた時
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-			ground_on = true;
-			move_stop = false;
-
-			ComboReset();
-		}
-
 		//攻撃のノックバック
-		if (collision.gameObject.tag == "Enemy")
+		if (collider.gameObject.tag == "Enemy")
 		{
 			if (attacking)
 				Attack();
 		}
 	}
-
-    //コライダーに触れている間
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
 		//地面に触れた時
 		if (collision.gameObject.CompareTag("Ground"))
@@ -340,11 +314,26 @@ public class Player_Ver2 : BaseStatusClass
 
 			ComboReset();
 		}
+	}
 
-		if (collision.gameObject.tag == "Enemy")
+    //コライダーに触れている間
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+		if (collider.gameObject.tag == "Enemy")
 		{
 			if(attacking)
 				Attack();
+		}
+	}
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+		//地面に触れた時
+		if (collision.gameObject.CompareTag("Ground"))
+		{
+			ground_on = true;
+			move_stop = false;
+
+			ComboReset();
 		}
 	}
 
@@ -357,8 +346,8 @@ public class Player_Ver2 : BaseStatusClass
 		}
 	}
 
-	//レイの接地判定
-	private void RayGround(Ray2D ray, RaycastHit2D hit, Vector3 vec)
+    //レイの接地判定
+    private void RayGround(Ray2D ray, RaycastHit2D hit, Vector3 vec)
 	{
 		//レイを下に飛ばす
 		ray = new Ray2D(vec, -transform.up);
