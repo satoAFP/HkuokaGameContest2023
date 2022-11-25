@@ -21,4 +21,5 @@ public class ManagerAccessor
     //マネージャーの参照
     public Player_Ver2 player;
     public SystemManager systemManager;
+    public SceneManagerScript sceneManager;
 }

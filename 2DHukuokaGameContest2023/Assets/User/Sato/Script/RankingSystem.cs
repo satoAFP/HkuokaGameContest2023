@@ -1,35 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RankingSystem : MonoBehaviour
 {
-    private int[] Score = new int[10];
+    [SerializeField, Header("ランキング表示用")]
+    private Text[] RankingText;
 
-    private bool first = true;
+    [System.NonSerialized]
+    public int[] Score;         //計算用スコア
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        for (int i = 0; i < 10; i++)
-            Score[i] = PlayerPrefs.GetInt("SCORE" + i, 0);
-    }
 
     // Update is called once per frame
     void Update()
     {
-        Sort();
-
-        if (first)
-        {
-            for (int i = 0; i < Score.Length; i++)
-                Debug.Log(Score[i]);
-            first = false;
-        }
+        //十位まで表示
+        for (int i = 0; i < RankingText.Length; i++)
+            RankingText[i].text = Score[i].ToString();
     }
 
-
-    private void Sort()
+    /// <summary>
+    /// ソート処理
+    /// </summary>
+    public void Sort()
     {
         int max = 0;
         int max_pos = 0;
@@ -54,12 +48,33 @@ public class RankingSystem : MonoBehaviour
         }
     }
 
+    //初期化
+    public void Init()
+    {
+        Score = new int[RankingText.Length + 1];
+        for (int i = 0; i < Score.Length; i++)
+            Score[i] = 0;
+    }
 
+
+    //スコア記憶用関数
     public void MemScore()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < Score.Length; i++)
             PlayerPrefs.SetInt("SCORE" + i, Score[i]);
         PlayerPrefs.Save();
+    }
+
+    //スコア読み込み用関数
+    public void WriteScore()
+    {
+        for (int i = 0; i < Score.Length; i++)
+            Score[i] = PlayerPrefs.GetInt("SCORE" + i, 0);
+    }
+
+    public void DeleteScore()
+    {
+        PlayerPrefs.DeleteAll();
     }
 
 }
