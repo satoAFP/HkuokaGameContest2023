@@ -17,7 +17,7 @@ public class RankingSystem : MonoBehaviour
     {
         //è\à Ç‹Ç≈ï\é¶
         for (int i = 0; i < RankingText.Length; i++)
-            RankingText[i].text = Score[i].ToString();
+            RankingText[i].text = (i + 1) + "à Å@" + Score[i].ToString();
     }
 
     /// <summary>

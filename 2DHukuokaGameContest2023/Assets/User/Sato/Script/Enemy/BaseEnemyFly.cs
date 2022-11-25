@@ -154,7 +154,7 @@ public class BaseEnemyFly : BaseStatusClass
                 Instantiate(DethAni, transform.position, Quaternion.identity);
 
                 //íœ
-                Destroy(gameObject);
+                Destroy(transform.parent.gameObject);
             }
         }
     }
