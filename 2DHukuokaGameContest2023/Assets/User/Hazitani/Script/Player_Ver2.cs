@@ -19,7 +19,7 @@ public class Player_Ver2 : BaseStatusClass
 	private float Gravity;
 
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
-	private int AttackDistance;
+	private float AttackDistance;
 
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
@@ -69,11 +69,8 @@ public class Player_Ver2 : BaseStatusClass
 	private Ray2D attack_ray;				//飛ばすレイ
 	private RaycastHit2D attack_hit;		//レイが何かに当たった時の情報
 	private Vector3 attack_rayPosition;		//レイを発射する位置
-	private GameObject attack = null;       //攻撃オブジェクト
 	private int attack_cooltime = 0;        //攻撃クールタイム
 	private int attack_rotation = 0;        //攻撃中の剣回転
-	[System.NonSerialized]
-	public bool attack_col = false;			//アタックコライダー出現中true
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
@@ -164,6 +161,10 @@ public class Player_Ver2 : BaseStatusClass
 			transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 		}
 
+		//矢印の回転
+		transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
+		transform.GetChild(1).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+
 		//移動処理
 		if (!move_stop)
 		{
@@ -202,7 +203,6 @@ public class Player_Ver2 : BaseStatusClass
 			{
 				jump_key_flag = true;
 				move_stop = false;
-				Debug.Log("ジャンプ入力された");
 
 				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
@@ -362,18 +362,9 @@ public class Player_Ver2 : BaseStatusClass
 
 			if (SearchGameObject.tag == "Ground" && ground_on == true && jump_count > 0)
 			{
-				Debug.Log("着地してる！");
 				jump_count = 0;
 			}
 		}
-	}
-
-	//攻撃オブジェクト生成
-	private void PlayerAttack(GameObject attack, GameObject prefab, Vector3 attackpos)
-    {
-		attack = Instantiate(prefab, attackpos += target, atkQuaternion);
-		attack.transform.parent = gameObject.transform;
-		attack.GetComponentInChildren<AttckCollision>().Damage = ATK;
 	}
 
 	//攻撃解除
@@ -492,6 +483,7 @@ public class Player_Ver2 : BaseStatusClass
 		return rad * Mathf.Rad2Deg;
 	}
 
+	//コンボリセット
 	private void ComboReset()
     {
 		//コンボリセットして反映
