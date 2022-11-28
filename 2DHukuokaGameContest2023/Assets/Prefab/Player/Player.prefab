@@ -354,3 +354,4 @@ MonoBehaviour:
   SubjugationKnockback: {x: 9, y: 20}
   AttackRotationSpeed: 0
   AttackCursor: 1
+  textFeverTime: {fileID: 0}

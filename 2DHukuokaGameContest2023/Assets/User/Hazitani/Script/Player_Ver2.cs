@@ -39,6 +39,12 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
+	[SerializeField, Header("フィーバータイムのテキスト")]
+	private Text textFeverTime;
+
+	[SerializeField, Header("フィーバータイムの時間")]
+	private int FeverTime;
+
 	public enum Direction
 	{
 		LEFT = -1,
@@ -98,6 +104,9 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
+
+		//テキストの初期化
+		textFeverTime.text = "";
 	}
 
 	void Update()
@@ -295,12 +304,21 @@ public class Player_Ver2 : BaseStatusClass
 			//フィーバータイムをカウント
 			time_fever++;
 
+			if (time_fever % 50 == 0)
+			{
+				textFeverTime.gameObject.SetActive(true);
+				textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
+			}
+
 			//時間経過したら
-			if (time_fever >= 500)
+			if (time_fever >= FeverTime * 50)
 			{
 				//フィーバータイム終了
 				ManagerAccessor.Instance.systemManager.FeverTime = false;
 				time_fever = 0;
+
+				textFeverTime.text = "";
+				textFeverTime.gameObject.SetActive(false);
 			}
 		}
 	}
