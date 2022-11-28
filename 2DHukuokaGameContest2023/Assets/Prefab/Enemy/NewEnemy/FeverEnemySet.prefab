@@ -46,4 +46,4 @@ MonoBehaviour:
   FirstSpownFrame: 20
   RespownFrame: 60
   FeverTimeCheck: 1
-  SpownEnemy: {fileID: 6613929883129229713, guid: 1865cb1ef5a6b9f48b2e66199b88c92e, type: 3}
+  SpownEnemy: {fileID: 8371838662693408581, guid: 67b566caa2d7db64ca2dc336299f5f59, type: 3}

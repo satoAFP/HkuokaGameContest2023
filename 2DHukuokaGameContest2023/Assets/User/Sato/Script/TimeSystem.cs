@@ -16,7 +16,15 @@ public class TimeSystem : MonoBehaviour
 
     private int FrameCount = 0;     //フレームカウント用
     private bool first = true;      //最初の一回だけ入れる処理
+    private RankingSystem ranking;  //ランキングシステム
 
+    private bool first2 = true;
+
+
+    private void Start()
+    {
+        ranking = RankingPanel.GetComponent<RankingSystem>();
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -40,9 +48,23 @@ public class TimeSystem : MonoBehaviour
         }
         else
         {
-            RankingPanel.SetActive(true);
+            if (first2)
+            {
+                RankingPanel.SetActive(true);
+
+                ranking.Init();
+                ranking.WriteScore();
+                ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
+                ranking.Sort();
+                ranking.MemScore();
+
+                first2 = false;
+            }
         }
+    }
 
-
+    public void Reload()
+    {
+        ManagerAccessor.Instance.sceneManager.SceneReload();
     }
 }
