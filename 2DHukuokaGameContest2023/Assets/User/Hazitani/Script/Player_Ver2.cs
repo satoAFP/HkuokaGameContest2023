@@ -18,6 +18,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("重力"), Range(0, 100)]
 	private float Gravity;
 
+	[SerializeField, Header("落下最高速度"), Range(0, 100)]
+	private float FallSpeed;
+
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private float AttackDistance;
 
@@ -33,7 +36,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
-	[SerializeField, Header("攻撃中に剣を回転させる速さ")]
+	[SerializeField, Header("攻撃中に剣を回転させる速さ"), Range(0, 100)]
 	private int AttackRotationSpeed;
 
 	[SerializeField, Header("カーソルの表示")]
@@ -42,7 +45,10 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("フィーバータイムのテキスト")]
 	private Text textFeverTime;
 
-	[SerializeField, Header("フィーバータイムの時間")]
+	[SerializeField, Header("フィーバータイムまでのコンボ数"), Range(0, 100)]
+	private int FeverCombo;
+
+	[SerializeField, Header("フィーバータイムの時間"), Range(0, 100)]
 	private int FeverTime;
 
 	public enum Direction
@@ -155,6 +161,12 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
+
+		//落下最高速度を超えないようにする
+		if (rb2D.velocity.y > FallSpeed)
+		{
+			rb2D.AddForce(-transform.up * MoveSpeed, ForceMode2D.Force);
+		}
 
 		//接地判定
 		//レイを発射する位置の調整
@@ -283,6 +295,16 @@ public class Player_Ver2 : BaseStatusClass
 				attacking = false;
 				attack_cooltime = 0;
 				attack_ok = true;
+
+				//攻撃後跳ね返り
+				if (hit_enemy_frip)
+				{
+					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+				}
+				else
+				{
+					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
+				}
 			}
 		}
 
@@ -475,7 +497,7 @@ public class Player_Ver2 : BaseStatusClass
 			combo_fever_count++;
 
 			//コンボを達成したとき
-			if (combo_fever_count >= 10)
+			if (combo_fever_count >= FeverCombo)
             {
 				//フィーバータイムに移行
 				ManagerAccessor.Instance.systemManager.FeverTime = true;
