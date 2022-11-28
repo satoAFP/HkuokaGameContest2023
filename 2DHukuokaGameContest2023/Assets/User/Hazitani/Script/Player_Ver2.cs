@@ -18,6 +18,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("重力"), Range(0, 100)]
 	private float Gravity;
 
+	[SerializeField, Header("落下最高速度"), Range(0, 100)]
+	private float FallSpeed;
+
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private float AttackDistance;
 
@@ -158,6 +161,12 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		//重力設定
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
+
+		//落下最高速度を超えないようにする
+		if (rb2D.velocity.y > FallSpeed)
+		{
+			rb2D.AddForce(-transform.up * MoveSpeed, ForceMode2D.Force);
+		}
 
 		//接地判定
 		//レイを発射する位置の調整

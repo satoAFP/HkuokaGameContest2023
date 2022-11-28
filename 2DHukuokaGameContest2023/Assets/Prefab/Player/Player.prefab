@@ -347,6 +347,7 @@ MonoBehaviour:
   MoveSpeed: 80
   LimitSpeed: 8
   Gravity: 50
+  FallSpeed: 40
   AttackDistance: 5
   AttackCoolTime: 10
   AttackMovePos: {x: 0.5, y: 0, z: 0}
@@ -355,5 +356,5 @@ MonoBehaviour:
   AttackRotationSpeed: 0
   AttackCursor: 1
   textFeverTime: {fileID: 0}
-  FeverCombo: 10
+  FeverCombo: 2
   FeverTime: 10
