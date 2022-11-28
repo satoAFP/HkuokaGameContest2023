@@ -306,7 +306,6 @@ public class Player_Ver2 : BaseStatusClass
 
 			if (time_fever % 50 == 0)
 			{
-				textFeverTime.gameObject.SetActive(true);
 				textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
 			}
 
@@ -483,6 +482,10 @@ public class Player_Ver2 : BaseStatusClass
 
 				//フィーバー用のコンボを初期化
 				combo_fever_count = 0;
+
+				//残り時間テキストを表示
+				textFeverTime.gameObject.SetActive(true);
+				textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
 			}
 		}
 
