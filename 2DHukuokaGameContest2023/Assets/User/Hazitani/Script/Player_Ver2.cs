@@ -159,13 +159,11 @@ public class Player_Ver2 : BaseStatusClass
 
 	void FixedUpdate()
 	{
-		//重力設定
-		Physics2D.gravity = new Vector3(0, -Gravity, 0);
-
 		//落下最高速度を超えないようにする
-		if (rb2D.velocity.y > FallSpeed)
+		if (rb2D.velocity.y < FallSpeed)
 		{
-			rb2D.AddForce(-transform.up * MoveSpeed, ForceMode2D.Force);
+			//重力設定
+			Physics2D.gravity = new Vector3(0, -Gravity, 0);
 		}
 
 		//接地判定
