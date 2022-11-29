@@ -36,6 +36,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
+	[SerializeField, Header("ヒットストップのフレーム数"), Range(0, 100)]
+	private int HitStopFrame;
+
 	[SerializeField, Header("攻撃中に剣を回転させる速さ"), Range(0, 100)]
 	private int AttackRotationSpeed;
 
@@ -79,12 +82,13 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
-	private bool attacking = false;			//攻撃中true
 	private bool dont_move = false;         //敵の向きを1回取る用
 	private Ray2D attack_ray;				//飛ばすレイ
 	private RaycastHit2D attack_hit;		//レイが何かに当たった時の情報
 	private Vector3 attack_rayPosition;		//レイを発射する位置
 	private int attack_cooltime = 0;        //攻撃クールタイム
+	private bool hitstop_on = false;        //ヒットストップ中true
+	private int hitstop_frame = 0;			//ヒットストップフレームカウント用
 	private int attack_rotation = 0;        //攻撃中の剣回転
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
@@ -150,7 +154,7 @@ public class Player_Ver2 : BaseStatusClass
                         enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
                         hit_enemy_pos = enemyObj.transform.position;
                         hit_enemy = true;
-						attacking = true;
+						hitstop_frame = 0;
 					}
                 }
             }
@@ -159,14 +163,16 @@ public class Player_Ver2 : BaseStatusClass
 
 	void FixedUpdate()
 	{
-		//重力設定
-		Physics2D.gravity = new Vector3(0, -Gravity, 0);
-
 		//落下最高速度を超えないようにする
 		if (rb2D.velocity.y < -FallSpeed)
 		{
 			Debug.Log("落下最大速度超えてる");
 			Physics2D.gravity = Vector3.zero;
+		}
+		else
+        {
+			//重力設定
+			Physics2D.gravity = new Vector3(0, -Gravity, 0);
 		}
 
 		//接地判定
@@ -278,34 +284,45 @@ public class Player_Ver2 : BaseStatusClass
 					}
 					transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
 				}
-
-				if (transform.position == hit_enemy_pos)
-				{
-					AttackFin();
-				}
 			}
 			//レイが当たったが、敵が消えてしまった場合
 			else
             {
-				//攻撃関連のフラグ全部リセット
-				jump_count = 0;
-				move_stop = false;
-				hit_enemy = false;
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-				dont_move = false;
-				attacking = false;
-				attack_cooltime = 0;
-				attack_ok = true;
+				if (!hitstop_on)
+				{
+					//攻撃関連のフラグリセット
+					jump_count = 0;
+					hitstop_on = false;
+					hitstop_frame = 0;
+					move_stop = false;
+					hit_enemy = false;
+					rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+					dont_move = false;
+					attack_cooltime = 0;
+					attack_ok = true;
 
-				//攻撃後跳ね返り
-				if (hit_enemy_frip)
-				{
-					rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+					//攻撃後跳ね返り
+					if (hit_enemy_frip)
+					{
+						rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+					}
+					else
+					{
+						rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
+					}
 				}
-				else
-				{
-					rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
-				}
+			}
+		}
+
+		//ヒットストップ
+		if(hitstop_on)
+        {
+			hitstop_frame++;
+			Debug.Log("ヒットストップ");
+
+			if(hitstop_frame >= HitStopFrame)
+            {
+				AttackFin();
 			}
 		}
 
@@ -351,8 +368,15 @@ public class Player_Ver2 : BaseStatusClass
 		//攻撃のノックバック
 		if (collider.gameObject.tag == "Enemy")
 		{
-			if (attacking)
-				Attack();
+			if (hit_enemy)
+            {
+				if (!hitstop_on)
+                {
+					hitstop_on = true;
+					hitstop_frame = 0;
+					Attack();
+				}
+			}
 		}
 	}
     private void OnCollisionEnter2D(Collision2D collision)
@@ -372,8 +396,15 @@ public class Player_Ver2 : BaseStatusClass
     {
 		if (collider.gameObject.tag == "Enemy")
 		{
-			if(attacking)
-				Attack();
+			if (hit_enemy)
+			{
+				if (!hitstop_on)
+				{
+					hitstop_on = true;
+					hitstop_frame = 0;
+					Attack();
+				}
+			}
 		}
 	}
     private void OnCollisionStay2D(Collision2D collision)
@@ -425,13 +456,13 @@ public class Player_Ver2 : BaseStatusClass
 	//攻撃解除
 	private void AttackFin()
 	{
-		//ジャンプ回数リセット
+		//攻撃関連のフラグ全部リセット
 		jump_count = 0;
-
+		hitstop_on = false;
+		hitstop_frame = 0;
 		hit_enemy = false;
 		rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 		dont_move = false;
-		attacking = false;
 
 		//攻撃後跳ね返り
 		if (hit_enemy_frip)
@@ -479,7 +510,7 @@ public class Player_Ver2 : BaseStatusClass
 
 	//攻撃処理
 	private void Attack()
-    {
+	{
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
@@ -499,7 +530,7 @@ public class Player_Ver2 : BaseStatusClass
 
 			//コンボを達成したとき
 			if (combo_fever_count >= FeverCombo)
-            {
+			{
 				//フィーバータイムに移行
 				ManagerAccessor.Instance.systemManager.FeverTime = true;
 
@@ -527,8 +558,6 @@ public class Player_Ver2 : BaseStatusClass
 			//    //ヒットストップの処理
 			//}
 		}
-
-		AttackFin();
 	}
 
 	//二点間の角度を求める関数
