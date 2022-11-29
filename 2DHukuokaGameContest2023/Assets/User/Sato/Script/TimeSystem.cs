@@ -44,7 +44,7 @@ public class TimeSystem : MonoBehaviour
         {
             if (FrameCount % 50 == 0)
                 ManagerAccessor.Instance.systemManager.Time--;
-            TimeText.text = "Žc‚è:" + ManagerAccessor.Instance.systemManager.Time + "•b";
+            TimeText.text = ManagerAccessor.Instance.systemManager.Time.ToString();
         }
         else
         {
