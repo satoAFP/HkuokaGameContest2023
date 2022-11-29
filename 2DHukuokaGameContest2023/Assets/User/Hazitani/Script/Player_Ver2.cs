@@ -39,8 +39,8 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("ヒットストップのフレーム数"), Range(0, 100)]
 	private int HitStopFrame;
 
-	[SerializeField, Header("攻撃中に剣を回転させる速さ"), Range(0, 100)]
-	private int AttackRotationSpeed;
+	[SerializeField, Header("剣の回転アニメーション")]
+	private Animator RotationAnimator;
 
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
@@ -89,7 +89,6 @@ public class Player_Ver2 : BaseStatusClass
 	private int attack_cooltime = 0;        //攻撃クールタイム
 	private bool hitstop_on = false;        //ヒットストップ中true
 	private int hitstop_frame = 0;			//ヒットストップフレームカウント用
-	private int attack_rotation = 0;        //攻撃中の剣回転
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
@@ -166,7 +165,6 @@ public class Player_Ver2 : BaseStatusClass
 		//落下最高速度を超えないようにする
 		if (rb2D.velocity.y < -FallSpeed)
 		{
-			Debug.Log("落下最大速度超えてる");
 			Physics2D.gravity = Vector3.zero;
 		}
 		else
@@ -320,7 +318,6 @@ public class Player_Ver2 : BaseStatusClass
 		if(hitstop_on)
         {
 			hitstop_frame++;
-			Debug.Log("ヒットストップ");
 
 			if(hitstop_frame >= HitStopFrame)
             {
@@ -513,6 +510,9 @@ public class Player_Ver2 : BaseStatusClass
 	//攻撃処理
 	private void Attack()
 	{
+		//剣の回転
+		StartCoroutine(StartRotato());
+
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
@@ -585,6 +585,19 @@ public class Player_Ver2 : BaseStatusClass
 
 			//フィーバータイムに必要なコンボも初期化
 			combo_fever_count = 0;
+		}
+	}
+
+	//回転アニメーション
+	private IEnumerator StartRotato()
+	{
+		RotationAnimator.SetTrigger("Attack");
+		yield return null;//1フレーム待つ
+
+		while (!RotationAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idel"))
+		{
+			//演出中は待機
+			yield return null;
 		}
 	}
 }
