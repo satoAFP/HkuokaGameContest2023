@@ -353,8 +353,9 @@ MonoBehaviour:
   AttackMovePos: {x: 0.5, y: 0, z: 0}
   AttackMoveSpeed: 0.7
   SubjugationKnockback: {x: 9, y: 20}
+  HitStopFrame: 5
   AttackRotationSpeed: 0
   AttackCursor: 1
   textFeverTime: {fileID: 0}
-  FeverCombo: 2
+  FeverCombo: 10
   FeverTime: 10
