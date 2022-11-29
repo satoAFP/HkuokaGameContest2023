@@ -45,8 +45,8 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
-	[SerializeField, Header("フィーバータイムのテキスト")]
-	private Text textFeverTime;
+	//[SerializeField, Header("フィーバータイムのテキスト")]
+	//private Text textFeverTime;
 
 	[SerializeField, Header("フィーバータイムまでのコンボ数"), Range(0, 100)]
 	private int FeverCombo;
@@ -116,7 +116,7 @@ public class Player_Ver2 : BaseStatusClass
 		ManagerAccessor.Instance.player = this;
 
 		//テキストの初期化
-		textFeverTime.text = "";
+		//textFeverTime.text = "";
 	}
 
 	void Update()
@@ -185,11 +185,13 @@ public class Player_Ver2 : BaseStatusClass
 		//剣の回転
 		if (hit_enemy)
         {
-			transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+			if(!hitstop_on)
+				transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 		}
 		else
         {
-			transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+			if (!hitstop_on)
+				transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 		}
 
 		//カーソルを表示するかどうか
@@ -344,10 +346,10 @@ public class Player_Ver2 : BaseStatusClass
 			//フィーバータイムをカウント
 			time_fever++;
 
-			if (time_fever % 50 == 0)
-			{
-				textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
-			}
+			//if (time_fever % 50 == 0)
+			//{
+			//	textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
+			//}
 
 			//時間経過したら
 			if (time_fever >= FeverTime * 50)
@@ -356,8 +358,8 @@ public class Player_Ver2 : BaseStatusClass
 				ManagerAccessor.Instance.systemManager.FeverTime = false;
 				time_fever = 0;
 
-				textFeverTime.text = "";
-				textFeverTime.gameObject.SetActive(false);
+				//textFeverTime.text = "";
+				//textFeverTime.gameObject.SetActive(false);
 			}
 		}
 	}
@@ -538,8 +540,8 @@ public class Player_Ver2 : BaseStatusClass
 				combo_fever_count = 0;
 
 				//残り時間テキストを表示
-				textFeverTime.gameObject.SetActive(true);
-				textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
+				//textFeverTime.gameObject.SetActive(true);
+				//textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
 			}
 		}
 
