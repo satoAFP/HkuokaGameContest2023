@@ -356,6 +356,5 @@ MonoBehaviour:
   HitStopFrame: 5
   AttackRotationSpeed: 0
   AttackCursor: 1
-  textFeverTime: {fileID: 0}
-  FeverCombo: 10
+  FeverCombo: 2
   FeverTime: 10
