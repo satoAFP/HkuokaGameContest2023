@@ -6,15 +6,17 @@ using UnityEngine.UI;
 public class SystemManager : MonoBehaviour
 {
     [System.NonSerialized]
-    public int Combo = 0;
+    public int Combo = 0;           //コンボ数
     [System.NonSerialized]
-    public int MaxCombo = 0;
+    public int MaxCombo = 0;        //最大コンボ数
     [System.NonSerialized]
-    public bool FeverTime = false;
+    public bool FeverTime = false;  //フィーバータイム
     [System.NonSerialized]
-    public int Score = 0;
+    public int Score = 0;           //スコア
     [System.NonSerialized]
-    public int Time = 0;
+    public int Time = 0;            //ゲーム内の時間
+    [System.NonSerialized]
+    public bool GameEnd = false;    //ゲーム終了
 
     [SerializeField, Header("コンボテキスト")]
     public Text textCombo;

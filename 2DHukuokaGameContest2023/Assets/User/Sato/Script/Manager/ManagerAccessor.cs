@@ -22,4 +22,5 @@ public class ManagerAccessor
     public Player_Ver2 player;
     public SystemManager systemManager;
     public SceneManagerScript sceneManager;
+    public BossManager bossManager;
 }
