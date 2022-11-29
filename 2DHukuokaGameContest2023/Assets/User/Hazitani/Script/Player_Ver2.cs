@@ -163,9 +163,10 @@ public class Player_Ver2 : BaseStatusClass
 		Physics2D.gravity = new Vector3(0, -Gravity, 0);
 
 		//—Ž‰ºÅ‚‘¬“x‚ð’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
-		if (rb2D.velocity.y > FallSpeed)
+		if (rb2D.velocity.y < -FallSpeed)
 		{
-			rb2D.AddForce(-transform.up * MoveSpeed, ForceMode2D.Force);
+			Debug.Log("—Ž‰ºÅ‘å‘¬“x’´‚¦‚Ä‚é");
+			Physics2D.gravity = Vector3.zero;
 		}
 
 		//Ú’n”»’è
