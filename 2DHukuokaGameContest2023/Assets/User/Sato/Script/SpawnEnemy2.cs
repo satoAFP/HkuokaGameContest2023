@@ -50,6 +50,11 @@ public class SpawnEnemy2 : MonoBehaviour
             if (FeverTime)
             {
                 EnemySpawn();
+
+                if (ManagerAccessor.Instance.player.time_fever > 400) 
+                {
+
+                }
             }
             else
             {
@@ -70,9 +75,8 @@ public class SpawnEnemy2 : MonoBehaviour
         if (clone == null)
         {
             if (RespownFrame - EffectFrame == FrameCount)
-            {
-                Instantiate(SpownEffect, transform.position, Quaternion.identity); Debug.Log("aaa");
-            }
+                Instantiate(SpownEffect, transform.position, Quaternion.identity);
+
 
             if (RespownFrame <= FrameCount)
             {
