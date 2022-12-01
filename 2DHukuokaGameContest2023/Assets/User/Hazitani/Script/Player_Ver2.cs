@@ -648,6 +648,7 @@ public class Player_Ver2 : BaseStatusClass
 }
 
 /* やること
+ * カーソルわかりやすく
  * 敵に攻撃したら効果音「ズシャア！！」
 */
 
