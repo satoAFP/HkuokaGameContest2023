@@ -8,12 +8,40 @@ public class RankingSystem : MonoBehaviour
     [SerializeField, Header("ランキング表示用")]
     private Text[] RankingText;
 
+    [SerializeField, Header("ランキング表示時のアクティブにするオブジェクト")]
+    private GameObject[] ActiveObj;
+
     [System.NonSerialized]
     public int[] Score;         //計算用スコア
 
+    private void Start()
+    {
+        ManagerAccessor.Instance.rankingSystem = this;
+    }
 
-    // Update is called once per frame
-    void Update()
+
+    public void OnRanking()
+    {
+        //オブジェクト表示
+        for (int i = 0; i < ActiveObj.Length; i++)
+            ActiveObj[i].SetActive(true);
+
+        //ランキング表示
+        Init();
+        WriteScore();
+        DisplayRanking();
+    }
+
+    public void OfRanking()
+    {
+        //オブジェクト表示
+        for (int i = 0; i < ActiveObj.Length; i++)
+            ActiveObj[i].SetActive(false);
+    }
+
+
+    //ランキングの表示
+    public void DisplayRanking()
     {
         //十位まで表示
         for (int i = 0; i < RankingText.Length; i++)
@@ -72,6 +100,7 @@ public class RankingSystem : MonoBehaviour
             Score[i] = PlayerPrefs.GetInt("SCORE" + i, 0);
     }
 
+    //ランキングデータ消去用
     public void DeleteScore()
     {
         PlayerPrefs.DeleteAll();

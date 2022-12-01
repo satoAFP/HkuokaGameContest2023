@@ -12,18 +12,18 @@ public class TimeSystem : MonoBehaviour
     private Text TimeText;
 
     [SerializeField, Header("ランキングパネル")]
-    private GameObject RankingPanel;
+    private GameObject ResultPanel;
 
     private int FrameCount = 0;     //フレームカウント用
     private bool first = true;      //最初の一回だけ入れる処理
-    private RankingSystem ranking;  //ランキングシステム
+    private ResultManager result;  //ランキングシステム
 
     private bool first2 = true;
 
 
     private void Start()
     {
-        ranking = RankingPanel.GetComponent<RankingSystem>();
+        result = ResultPanel.GetComponent<ResultManager>();
     }
 
     // Update is called once per frame
@@ -50,7 +50,9 @@ public class TimeSystem : MonoBehaviour
         {
             if (first2)
             {
-                RankingPanel.SetActive(true);
+                ResultPanel.SetActive(true);
+
+                RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
 
                 ranking.Init();
                 ranking.WriteScore();
@@ -58,6 +60,7 @@ public class TimeSystem : MonoBehaviour
                 ranking.Sort();
                 ranking.MemScore();
 
+                ManagerAccessor.Instance.systemManager.GameEnd = true;
                 first2 = false;
             }
         }

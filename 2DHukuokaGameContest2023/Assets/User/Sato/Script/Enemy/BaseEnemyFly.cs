@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BaseEnemyFly : BaseStatusClass
 {
+    [SerializeField, Header("ボスのとき")]
+    private bool BossMode;
+
     [SerializeField, Header("敵の攻撃時の飛んでいく方向")]
     private Vector3 MoveDirection;
 
@@ -56,15 +59,19 @@ public class BaseEnemyFly : BaseStatusClass
     private bool OnDamageEffect = false;        //ダメージ受けた時のエフェクト
     private int EffectIntervalCount = 0;        //エフェクトのインターバルのカウント
     private int EffectCount = 0;                //エフェクトの回数カウント
+    private int NowHP = 0;                      //現在のHP
 
     private bool first1 = true;
 
 
-
-    [System.NonSerialized]
-    public bool deth = false;                   //主人公受け渡し用死亡判定
     [System.NonSerialized]
     public int stopCount = 0;                   //移動停止までのカウント
+
+
+    private void Start()
+    {
+        NowHP = HP;
+    }
 
 
 
@@ -87,6 +94,13 @@ public class BaseEnemyFly : BaseStatusClass
         if(ConstantFrag)
         {
             transform.position += MoveDirection;
+        }
+
+        //HPが減った時エフェクト表示
+        if (NowHP > HP)
+        {
+            OnDamageEffect = true;
+            NowHP = HP;
         }
 
     }
@@ -136,13 +150,10 @@ public class BaseEnemyFly : BaseStatusClass
     {
         if (HP <= 0)
         {
-
-            //死亡判定受け渡し用
-            deth = true;
-
-            OnDamageEffect = true;
+            //エフェクトを表示して消す
+            //OnDamageEffect = true;
             DethFrameCount++;
-            gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
+            Destroy(gameObject.GetComponent<CapsuleCollider2D>());
 
 
             if (DethFrame == DethFrameCount)
@@ -154,7 +165,10 @@ public class BaseEnemyFly : BaseStatusClass
                 Instantiate(DethAni, transform.position, Quaternion.identity);
 
                 //削除
-                Destroy(transform.parent.gameObject);
+                if (!BossMode)
+                    Destroy(transform.parent.gameObject);
+                else
+                    Destroy(gameObject);
             }
         }
     }
@@ -208,6 +222,7 @@ public class BaseEnemyFly : BaseStatusClass
             }
         }
     }
+
 
 
     //private void RightMove()
