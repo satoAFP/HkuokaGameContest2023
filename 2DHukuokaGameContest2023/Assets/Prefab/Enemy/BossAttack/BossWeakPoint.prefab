@@ -124,6 +124,7 @@ MonoBehaviour:
   DethFrame: 10
   TrackingFrag: 0
   ConstantFrag: 0
+  AppearanceEffct: {fileID: 6608234748546185238, guid: 3d19c736faf443a42a60718305d59523, type: 3}
   RecEffct: {fileID: 1094666327152733925, guid: cc3f8e23f64025d439e80ff9b757222d, type: 3}
   DethEffct: {fileID: 5435948412440824238, guid: 101f631809614054ba15de9cbe1b6d83, type: 3}
   DethAni: {fileID: 9150660192195960290, guid: b57b9f4a83f42174ab8200ec46233fc6, type: 3}

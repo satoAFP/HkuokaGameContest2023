@@ -39,7 +39,6 @@ public class BaseEnemyFly : BaseStatusClass
     private bool ConstantFrag;
 
 
-
     [SerializeField, Header("攻撃されたときのエフェクト")]
     private GameObject RecEffct;
 

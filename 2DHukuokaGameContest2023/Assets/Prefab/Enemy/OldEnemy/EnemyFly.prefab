@@ -126,6 +126,10 @@ PrefabInstance:
       propertyPath: HP
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 8302650788882026458, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
+      propertyPath: AppearanceEffct
+      value: 
+      objectReference: {fileID: 6608234748546185238, guid: 3d19c736faf443a42a60718305d59523, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
 --- !u!4 &5660616936953362613 stripped
