@@ -59,12 +59,19 @@ public class BaseEnemyFly : BaseStatusClass
     private bool OnDamageEffect = false;        //ダメージ受けた時のエフェクト
     private int EffectIntervalCount = 0;        //エフェクトのインターバルのカウント
     private int EffectCount = 0;                //エフェクトの回数カウント
+    private int NowHP = 0;                      //現在のHP
 
     private bool first1 = true;
 
 
     [System.NonSerialized]
     public int stopCount = 0;                   //移動停止までのカウント
+
+
+    private void Start()
+    {
+        NowHP = HP;
+    }
 
 
 
@@ -87,6 +94,13 @@ public class BaseEnemyFly : BaseStatusClass
         if(ConstantFrag)
         {
             transform.position += MoveDirection;
+        }
+
+        //HPが減った時エフェクト表示
+        if (NowHP > HP)
+        {
+            OnDamageEffect = true;
+            NowHP = HP;
         }
 
     }
@@ -137,7 +151,7 @@ public class BaseEnemyFly : BaseStatusClass
         if (HP <= 0)
         {
             //エフェクトを表示して消す
-            OnDamageEffect = true;
+            //OnDamageEffect = true;
             DethFrameCount++;
             Destroy(gameObject.GetComponent<CapsuleCollider2D>());
 
@@ -208,6 +222,7 @@ public class BaseEnemyFly : BaseStatusClass
             }
         }
     }
+
 
 
     //private void RightMove()

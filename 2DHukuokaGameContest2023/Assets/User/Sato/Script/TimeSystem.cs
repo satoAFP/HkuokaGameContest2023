@@ -52,11 +52,13 @@ public class TimeSystem : MonoBehaviour
             {
                 ResultPanel.SetActive(true);
 
-                //ranking.Init();
-                //ranking.WriteScore();
-                //ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
-                //ranking.Sort();
-                //ranking.MemScore();
+                RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
+
+                ranking.Init();
+                ranking.WriteScore();
+                ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
+                ranking.Sort();
+                ranking.MemScore();
 
                 ManagerAccessor.Instance.systemManager.GameEnd = true;
                 first2 = false;
