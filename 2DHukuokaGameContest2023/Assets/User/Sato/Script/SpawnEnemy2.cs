@@ -10,11 +10,17 @@ public class SpawnEnemy2 : MonoBehaviour
     [SerializeField, Header("リスポーンまでのフレーム")]
     private int RespownFrame;
 
+    [SerializeField, Header("エフェクトをずらして表示するためのフレーム")]
+    private int EffectFrame;
+
     [SerializeField, Header("フィーバータイム")]
     private bool FeverTimeCheck;
 
     [SerializeField, Header("出現させるオブジェクト")]
     private GameObject SpownEnemy;
+
+    [SerializeField, Header("出現エフェクト")]
+    private GameObject SpownEffect;
 
 
     private int FrameCount = 0;     //フレームカウント用
@@ -63,6 +69,9 @@ public class SpawnEnemy2 : MonoBehaviour
     {
         if (clone == null)
         {
+            if (RespownFrame - EffectFrame == FrameCount)
+                Instantiate(SpownEffect, transform.position, Quaternion.identity);
+
             if (RespownFrame <= FrameCount)
             {
                 clone = Instantiate(SpownEnemy, transform.position, Quaternion.identity);
