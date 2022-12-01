@@ -1193,6 +1193,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 300012784}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: FeverCombo
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: AttackCoolTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: SubjugationKnockback.x
       value: 6.5
       objectReference: {fileID: 0}
