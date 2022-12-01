@@ -50,16 +50,19 @@ public class TimeSystem : MonoBehaviour
         {
             if (first2)
             {
+                //リザルト画面表示
                 ResultPanel.SetActive(true);
 
-                RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
 
+                //ランキング情報更新
+                RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
                 ranking.Init();
                 ranking.WriteScore();
                 ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
                 ranking.Sort();
                 ranking.MemScore();
 
+                //共有情報のゲーム終了
                 ManagerAccessor.Instance.systemManager.GameEnd = true;
                 first2 = false;
             }

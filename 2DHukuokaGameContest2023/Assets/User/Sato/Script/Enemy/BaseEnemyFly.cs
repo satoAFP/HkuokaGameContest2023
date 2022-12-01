@@ -39,6 +39,8 @@ public class BaseEnemyFly : BaseStatusClass
     private bool ConstantFrag;
 
 
+    [SerializeField, Header("出現時のエフェクト")]
+    private GameObject AppearanceEffct;
 
     [SerializeField, Header("攻撃されたときのエフェクト")]
     private GameObject RecEffct;
@@ -71,6 +73,7 @@ public class BaseEnemyFly : BaseStatusClass
     private void Start()
     {
         NowHP = HP;
+        Instantiate(AppearanceEffct, transform.position, Quaternion.identity);
     }
 
 
