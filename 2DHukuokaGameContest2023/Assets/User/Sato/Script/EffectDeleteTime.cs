@@ -10,7 +10,7 @@ public class EffectDeleteTime : MonoBehaviour
     private int frameCount = 0;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (frameCount == DeleteTime)
         {
