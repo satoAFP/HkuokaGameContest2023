@@ -70,7 +70,9 @@ public class SpawnEnemy2 : MonoBehaviour
         if (clone == null)
         {
             if (RespownFrame - EffectFrame == FrameCount)
-                Instantiate(SpownEffect, transform.position, Quaternion.identity);
+            {
+                Instantiate(SpownEffect, transform.position, Quaternion.identity); Debug.Log("aaa");
+            }
 
             if (RespownFrame <= FrameCount)
             {
