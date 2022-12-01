@@ -28,7 +28,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1645322854101213268}
+  - {fileID: 1222662143835313380}
   m_Father: {fileID: 347360261909828950}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -248,8 +250,6 @@ Transform:
   m_Children:
   - {fileID: 173726536}
   - {fileID: 1734377598}
-  - {fileID: 1645322854101213268}
-  - {fileID: 1222662143835313380}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -386,11 +386,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 347360261909828950}
+    m_TransformParent: {fileID: 173726536}
     m_Modifications:
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_LocalScale.x
@@ -418,15 +418,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 982818269244064633, guid: 4c4313d834fd1594b908d9fd1ceacd99, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -460,11 +460,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 347360261909828950}
+    m_TransformParent: {fileID: 173726536}
     m_Modifications:
     - target: {fileID: 829001895011638010, guid: b365611122a806f47b2bc3ffedb12941, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 829001895011638010, guid: b365611122a806f47b2bc3ffedb12941, type: 3}
       propertyPath: m_LocalScale.x

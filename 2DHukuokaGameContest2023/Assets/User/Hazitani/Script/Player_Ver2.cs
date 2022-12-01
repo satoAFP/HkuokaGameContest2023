@@ -11,9 +11,9 @@ public class Player_Ver2 : BaseStatusClass
 	/// 
 	/// Player
 	///		PlayerSprite
+	///			rainbow_aura
+	///			aura
 	///		Arrow
-	///		rainbow_aura
-	///		aura
 	///		
 	/// この順番じゃないとGetChild関数がバグります
 	/// </summary>
@@ -79,9 +79,9 @@ public class Player_Ver2 : BaseStatusClass
 	private enum PrefabChild
     {
 		PlayerSprite = 0,
-		Arrow,
-		Rainbow_Aura,
-		Aura,
+			Rainbow_Aura = 0,
+			Aura = 1,
+		Arrow = 1,
 	}
 
 
@@ -380,11 +380,11 @@ public class Player_Ver2 : BaseStatusClass
 
 				//オーラの処理
 				//虹色のオーラを消す
-				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
 				//20コンボ以上ならオレンジオーラを出す
 				if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
 				{
-					transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+					transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 				}
 
 				//textFeverTime.text = "";
@@ -565,7 +565,7 @@ public class Player_Ver2 : BaseStatusClass
 			//20コンボ以上ならオレンジオーラを出す
 			if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
 			{
-				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 			}
 
 			//コンボを達成したとき
@@ -578,8 +578,8 @@ public class Player_Ver2 : BaseStatusClass
 				combo_fever_count = 0;
 
 				//虹色のオーラを出す
-				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
-				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
 
 				//残り時間テキストを表示
 				//textFeverTime.gameObject.SetActive(true);
@@ -629,7 +629,7 @@ public class Player_Ver2 : BaseStatusClass
 			combo_fever_count = 0;
 
 			//オレンジオーラも消す
-			transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+			transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
 		}
 	}
 
