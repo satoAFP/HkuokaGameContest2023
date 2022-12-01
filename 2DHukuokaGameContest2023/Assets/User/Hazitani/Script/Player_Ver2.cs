@@ -6,6 +6,18 @@ using UnityEngine.UI;
 
 public class Player_Ver2 : BaseStatusClass
 {
+	/// <summary>
+	/// Playerオブジェクトの子オブジェクトの順番
+	/// 
+	/// Player
+	///		PlayerSprite
+	///		Arrow
+	///		rainbow_aura
+	///		aura
+	///		
+	/// この順番じゃないとGetChild関数がバグります
+	/// </summary>
+
 	[SerializeField, Header("ジャンプ力"), Range(0, 100)]
 	private float JumpPower;
 
@@ -39,14 +51,17 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("ヒットストップのフレーム数"), Range(0, 100)]
 	private int HitStopFrame;
 
-	[SerializeField, Header("攻撃中に剣を回転させる速さ"), Range(0, 100)]
-	private int AttackRotationSpeed;
+	[SerializeField, Header("剣の回転アニメーション")]
+	private Animator RotationAnimator;
 
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
 	//[SerializeField, Header("フィーバータイムのテキスト")]
 	//private Text textFeverTime;
+
+	[SerializeField, Header("オレンジオーラ出すまでのコンボ数"), Range(0, 100)]
+	private int OrangeCombo;
 
 	[SerializeField, Header("フィーバータイムまでのコンボ数"), Range(0, 100)]
 	private int FeverCombo;
@@ -59,6 +74,14 @@ public class Player_Ver2 : BaseStatusClass
 		LEFT = -1,
 		STOP,
 		RIGHT,
+	}
+
+	private enum PrefabChild
+    {
+		PlayerSprite = 0,
+		Arrow,
+		Rainbow_Aura,
+		Aura,
 	}
 
 
@@ -89,7 +112,6 @@ public class Player_Ver2 : BaseStatusClass
 	private int attack_cooltime = 0;        //攻撃クールタイム
 	private bool hitstop_on = false;        //ヒットストップ中true
 	private int hitstop_frame = 0;			//ヒットストップフレームカウント用
-	private int attack_rotation = 0;        //攻撃中の剣回転
 	[System.NonSerialized]
 	public Vector3 hit_enemy_pos;			//攻撃が当たった敵の位置
 	[System.NonSerialized]
@@ -166,7 +188,6 @@ public class Player_Ver2 : BaseStatusClass
 		//落下最高速度を超えないようにする
 		if (rb2D.velocity.y < -FallSpeed)
 		{
-			Debug.Log("落下最大速度超えてる");
 			Physics2D.gravity = Vector3.zero;
 		}
 		else
@@ -185,29 +206,29 @@ public class Player_Ver2 : BaseStatusClass
 		//剣の回転
 		if (hit_enemy)
         {
-			if(!hitstop_on)
-				transform.GetChild(0).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+			if (!hitstop_on)
+				transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 		}
 		else
         {
 			if (!hitstop_on)
-				transform.GetChild(0).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+				transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 		}
 
 		//カーソルを表示するかどうか
 		if (AttackCursor)
 		{
 			//矢印を表示
-			transform.GetChild(1).gameObject.SetActive(true);
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(true);
 			
 			//矢印の回転
-			transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
-			transform.GetChild(1).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
 		}
 		else
         {
 			//矢印を非表示
-			transform.GetChild(1).gameObject.SetActive(false);
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
 		}
 
 		//移動処理
@@ -320,7 +341,6 @@ public class Player_Ver2 : BaseStatusClass
 		if(hitstop_on)
         {
 			hitstop_frame++;
-			Debug.Log("ヒットストップ");
 
 			if(hitstop_frame >= HitStopFrame)
             {
@@ -357,6 +377,15 @@ public class Player_Ver2 : BaseStatusClass
 				//フィーバータイム終了
 				ManagerAccessor.Instance.systemManager.FeverTime = false;
 				time_fever = 0;
+
+				//オーラの処理
+				//虹色のオーラを消す
+				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
+				//20コンボ以上ならオレンジオーラを出す
+				if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
+				{
+					transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+				}
 
 				//textFeverTime.text = "";
 				//textFeverTime.gameObject.SetActive(false);
@@ -513,6 +542,9 @@ public class Player_Ver2 : BaseStatusClass
 	//攻撃処理
 	private void Attack()
 	{
+		//剣の回転
+		StartCoroutine(StartRotato());
+
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
@@ -530,6 +562,12 @@ public class Player_Ver2 : BaseStatusClass
 			//フィーバータイムまでのコンボをカウント
 			combo_fever_count++;
 
+			//20コンボ以上ならオレンジオーラを出す
+			if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
+			{
+				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+			}
+
 			//コンボを達成したとき
 			if (combo_fever_count >= FeverCombo)
 			{
@@ -538,6 +576,10 @@ public class Player_Ver2 : BaseStatusClass
 
 				//フィーバー用のコンボを初期化
 				combo_fever_count = 0;
+
+				//虹色のオーラを出す
+				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
 
 				//残り時間テキストを表示
 				//textFeverTime.gameObject.SetActive(true);
@@ -585,6 +627,22 @@ public class Player_Ver2 : BaseStatusClass
 
 			//フィーバータイムに必要なコンボも初期化
 			combo_fever_count = 0;
+
+			//オレンジオーラも消す
+			transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+		}
+	}
+
+	//回転アニメーション
+	private IEnumerator StartRotato()
+	{
+		RotationAnimator.SetTrigger("Attack");
+		yield return null;//1フレーム待つ
+
+		while (!RotationAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idel"))
+		{
+			//演出中は待機
+			yield return null;
 		}
 	}
 }
