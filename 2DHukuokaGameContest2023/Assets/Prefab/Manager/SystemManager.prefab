@@ -46,3 +46,6 @@ MonoBehaviour:
   textCombo: {fileID: 0}
   textMaxCombo: {fileID: 0}
   textScore: {fileID: 0}
+  imageFever: {fileID: 0}
+  feverSpeed: 30
+  feverStopTime: 2
