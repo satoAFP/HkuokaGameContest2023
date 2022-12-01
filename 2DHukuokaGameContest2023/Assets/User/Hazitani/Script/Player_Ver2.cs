@@ -11,9 +11,9 @@ public class Player_Ver2 : BaseStatusClass
 	/// 
 	/// Player
 	///		PlayerSprite
+	///			rainbow_aura
+	///			aura
 	///		Arrow
-	///		rainbow_aura
-	///		aura
 	///		
 	/// この順番じゃないとGetChild関数がバグります
 	/// </summary>
@@ -79,9 +79,10 @@ public class Player_Ver2 : BaseStatusClass
 	private enum PrefabChild
     {
 		PlayerSprite = 0,
-		Arrow,
-		Rainbow_Aura,
-		Aura,
+			Rainbow_Aura = 0,
+			Aura = 1,
+		Arrow = 1,
+			ArrowImage = 0,
 	}
 
 
@@ -93,11 +94,15 @@ public class Player_Ver2 : BaseStatusClass
 	private int now_move = 0;				//左:-1・停止:0・右:1
 	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;         //動きを止めたいとき使用
+	private Ray2D cursor_ray;               //飛ばすレイ
+	private RaycastHit2D cursor_hit;        //レイが何かに当たった時の情報
+	private Vector3 cursor_rayPosition;     //レイを発射する位置
 
 
 	//システム関連
-	private int combo_fever_count = 0;		//フィーバータイムに入るために必要なコンボ数
-	private int time_fever = 0;				//フィーバータイムの時間を数える用
+	private int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数
+	[System.NonSerialized]
+	public int time_fever = 0;				//フィーバータイムの時間を数える用
 
 
 	//攻撃関連
@@ -148,6 +153,30 @@ public class Player_Ver2 : BaseStatusClass
 		target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
 		atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
+		//カーソルの色変更
+		transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 50);
+
+		//カーソルのレイ
+		//レイを発射する位置の調整
+		cursor_rayPosition = transform.position;
+
+		//レイを飛ばす
+		cursor_ray = new Ray2D(cursor_rayPosition, mousePos - cursor_rayPosition);
+
+		//Enemyとだけ衝突する
+		int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
+		cursor_hit = Physics2D.Raycast(cursor_ray.origin, cursor_ray.direction, AttackDistance, attack_layerMask);
+
+		//コライダーとレイが接触
+		if (cursor_hit.collider)
+		{
+			if (cursor_hit.collider.tag == "Enemy")
+			{
+				//カーソルの色変更
+				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+			}
+		}
+
 		//攻撃
 		if (Input.GetMouseButtonDown(0))
 		{
@@ -162,7 +191,6 @@ public class Player_Ver2 : BaseStatusClass
 				attack_ray = new Ray2D(attack_rayPosition, mousePos - attack_rayPosition);
 
 				//Enemyとだけ衝突する
-				int attack_layerMask = LayerMask.GetMask(new string[] { "Enemy" });
 				attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, AttackDistance, attack_layerMask);
 
 				//レイを黄色で表示させる
@@ -380,11 +408,11 @@ public class Player_Ver2 : BaseStatusClass
 
 				//オーラの処理
 				//虹色のオーラを消す
-				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
 				//20コンボ以上ならオレンジオーラを出す
 				if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
 				{
-					transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+					transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 				}
 
 				//textFeverTime.text = "";
@@ -565,7 +593,7 @@ public class Player_Ver2 : BaseStatusClass
 			//20コンボ以上ならオレンジオーラを出す
 			if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
 			{
-				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 			}
 
 			//コンボを達成したとき
@@ -578,8 +606,8 @@ public class Player_Ver2 : BaseStatusClass
 				combo_fever_count = 0;
 
 				//虹色のオーラを出す
-				transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
-				transform.GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
 
 				//残り時間テキストを表示
 				//textFeverTime.gameObject.SetActive(true);
@@ -629,7 +657,7 @@ public class Player_Ver2 : BaseStatusClass
 			combo_fever_count = 0;
 
 			//オレンジオーラも消す
-			transform.GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
+			transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
 		}
 	}
 
@@ -648,6 +676,7 @@ public class Player_Ver2 : BaseStatusClass
 }
 
 /* やること
+ * カーソルわかりやすく
  * 敵に攻撃したら効果音「ズシャア！！」
 */
 
