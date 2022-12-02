@@ -102,7 +102,9 @@ public class Player_Ver2 : BaseStatusClass
 	//システム関連
 	private int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数
 	[System.NonSerialized]
-	public int time_fever = 0;				//フィーバータイムの時間を数える用
+	public int time_fever = 0;              //フィーバータイムの時間を数える用
+	[System.NonSerialized]
+	public int score_add = 0;				//これから加算されるスコア
 
 
 	//攻撃関連
@@ -535,15 +537,18 @@ public class Player_Ver2 : BaseStatusClass
 	}
 
 	//スコア加算
-	private int ScoreSetting(int score, int combo)
+	private int ScoreSetting(int combo)
     {
+		//加算されるスコアを初期化
+		score_add = 0;
+
 		//コンボによってスコア加算
 		if (combo >= 1 && combo < 50)
-			score += 1000;
+			score_add += 1000;
 		else if (combo >= 50 && combo < 100)
-			score += 5000;
+			score_add += 5000;
 		else if (combo >= 100)
-			score += 10000;
+			score_add += 10000;
 
 		/*
 		コンボボーナス
@@ -553,18 +558,18 @@ public class Player_Ver2 : BaseStatusClass
 		*/
 		if (combo % 100 == 0)
 		{
-			score += 100000;
+			score_add += 100000;
 		}
 		else if (combo % 50 == 0)
 		{
-			score += 10000;
+			score_add += 10000;
 		}
 		else if (combo % 10 == 0)
 		{
-			score += 5000;
+			score_add += 5000;
 		}
 
-		return score;
+		return score_add;
 	}
 
 	//攻撃処理
@@ -621,7 +626,7 @@ public class Player_Ver2 : BaseStatusClass
 			enemyObj.HP -= ATK;
 
 			//表示用のスコア決める
-			ManagerAccessor.Instance.systemManager.Score = ScoreSetting(ManagerAccessor.Instance.systemManager.Score, ManagerAccessor.Instance.systemManager.Combo);
+			ManagerAccessor.Instance.systemManager.Score += ScoreSetting(ManagerAccessor.Instance.systemManager.Combo);
 			ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
 
 			//HPが0の時

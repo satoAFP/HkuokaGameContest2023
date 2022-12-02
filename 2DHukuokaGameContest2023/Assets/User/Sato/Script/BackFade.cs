@@ -7,8 +7,8 @@ public class BackFade : MonoBehaviour
     [SerializeField, Header("背景の画像")]
     private SpriteRenderer[] image;
 
-    [SerializeField, Header("背景のグラデーション")]
-    private Gradient Gradation = default;
+    [SerializeField, Header("フィーバータイムの背景の画像")]
+    private GameObject Fever_image;
 
     [SerializeField, Header("色を変える時間と現在の時間")]
     private float FADE_COLOR_TIME;
@@ -31,7 +31,6 @@ public class BackFade : MonoBehaviour
     {
         for (int i = 1; i < image.Length; i++)
             image[i].color = new Color(1, 1, 1, 0f);
-        //MoveAlpha = 1.0f / (50 * FADE_COLOR_TIME);
         FadeDistance = FinishLine.transform.position.y - StartLine.transform.position.y;
 
         player = GameObject.Find("Player").GetComponent<Player_Ver2>();
@@ -40,28 +39,22 @@ public class BackFade : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //ImageGradation();
-
         PlayerMoveGradation();
 
+        if (ManagerAccessor.Instance.systemManager.FeverTime)
+            Fever_image.SetActive(true);
+        else
+            Fever_image.SetActive(false);
+
     }
 
-    private void ImageGradation()
-    {
-        if ((image.Length - 1) > NowImage) 
-        {
-            image[NowImage].color -= new Color(0, 0, 0, MoveAlpha);
-            image[NowImage + 1].color += new Color(0, 0, 0, MoveAlpha);
-
-            if (image[NowImage].color.a <= 0.0f)
-                NowImage++;
-        }
-    }
 
     private void PlayerMoveGradation()
     {
+        //グラデーションの計算
         MoveAlpha = ((image.Length - 1) / FadeDistance) * (player.transform.position.y - StartLine.transform.position.y);
 
+        //グラデーションのタイミング
         if (MoveAlpha > 0.0f && MoveAlpha <= 1.0f) 
         {
             image[NowImage].color = new Color(1, 1, 1, 1 - MoveAlpha);
@@ -74,14 +67,4 @@ public class BackFade : MonoBehaviour
         }
     }
 
-
-    private void ColorGradation()
-    {
-        //時間を進める
-        _currentTime += Time.deltaTime;
-        var timeRate = Mathf.Min(1f, _currentTime / FADE_COLOR_TIME);
-
-        //色を変更
-        gameObject.GetComponent<SpriteRenderer>().color = Gradation.Evaluate(timeRate);
-    }
 }
