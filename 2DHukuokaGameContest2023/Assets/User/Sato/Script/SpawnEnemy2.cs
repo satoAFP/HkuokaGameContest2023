@@ -16,6 +16,13 @@ public class SpawnEnemy2 : MonoBehaviour
     [SerializeField, Header("フィーバータイム")]
     private bool FeverTimeCheck;
 
+    [SerializeField, Header("点滅までのフレーム")]
+    private int TikatikaFrame;
+
+    [SerializeField, Header("点滅の間隔")]
+    private int TikatikaInterval;
+
+
     [SerializeField, Header("出現させるオブジェクト")]
     private GameObject SpownEnemy;
 
@@ -27,13 +34,17 @@ public class SpawnEnemy2 : MonoBehaviour
     private GameObject clone;       //クローンしたオブジェクトを入れるよう
     private bool FeverTime = false; //フィーバーモード取得用
     private int MemRespownFrame = 0;//リスポーンまでの時間記憶用
-
+    private Color ObjColor;         //クローンしたオブジェクトの色情報
+    private bool AlphInversion = false;//アルファ変更用
+    private int AlphFrameCount = 0; //アルファ変更用フレームカウント
 
     private void Start()
     {
         //初期スポーンだけタイミングずらすため
         MemRespownFrame = RespownFrame;
         RespownFrame = FirstSpownFrame;
+
+        ObjColor = new Color(1, 1, 1, 0);
     }
 
 
@@ -50,6 +61,30 @@ public class SpawnEnemy2 : MonoBehaviour
             if (FeverTime)
             {
                 EnemySpawn();
+
+                if (ManagerAccessor.Instance.player.time_fever > TikatikaFrame) 
+                {
+                    if (clone != null)
+                    {
+                        AlphFrameCount++;
+                        
+                        if (AlphFrameCount >= TikatikaInterval) 
+                        {
+                            AlphInversion = !AlphInversion;
+                            AlphFrameCount = 0;
+                        }
+
+                        //アルファ切り替え
+                        if (AlphInversion)
+                        {
+                            AlphChange(0); 
+                        }
+                        else
+                        {
+                            AlphChange(1);
+                        }
+                    }
+                }
             }
             else
             {
@@ -70,9 +105,8 @@ public class SpawnEnemy2 : MonoBehaviour
         if (clone == null)
         {
             if (RespownFrame - EffectFrame == FrameCount)
-            {
-                Instantiate(SpownEffect, transform.position, Quaternion.identity); Debug.Log("aaa");
-            }
+                Instantiate(SpownEffect, transform.position, Quaternion.identity);
+
 
             if (RespownFrame <= FrameCount)
             {
@@ -83,5 +117,14 @@ public class SpawnEnemy2 : MonoBehaviour
             }
             FrameCount++;
         }
+    }
+
+    //アルファ変更用
+    private void AlphChange(float a)
+    {
+        ObjColor.a = a;
+        clone.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().color = ObjColor;
+        clone.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().color = ObjColor;
+        clone.transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().color = ObjColor;
     }
 }
