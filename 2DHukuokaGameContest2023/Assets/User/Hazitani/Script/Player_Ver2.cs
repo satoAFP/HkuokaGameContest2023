@@ -218,7 +218,7 @@ public class Player_Ver2 : BaseStatusClass
 		//—‰ºÅ‚‘¬“x‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
 		if (rb2D.velocity.y < -FallSpeed)
 		{
-			Physics2D.gravity = Vector3.zero;
+			Physics2D.gravity = new Vector3(0, -rb2D.velocity.y, 0);
 		}
 		else
         {
