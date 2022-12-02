@@ -5,21 +5,10 @@ using UnityEngine.UI;
 
 public class GetScoreDisplay : MonoBehaviour
 {
-    [SerializeField, Header("移動量")]
-    private float MovePower;
-
     [SerializeField, Header("表示させたいテキスト")]
     private GameObject ScoreText;
 
-
     private int MemScore = 0;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -27,6 +16,10 @@ public class GetScoreDisplay : MonoBehaviour
         //スコアが増えた時
         if (MemScore < ManagerAccessor.Instance.systemManager.Score) 
         {
+            GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
+            clone.transform.parent = gameObject.transform;
+            clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
+
             MemScore = ManagerAccessor.Instance.systemManager.Score;
         }
     }
