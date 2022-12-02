@@ -569,6 +569,7 @@ public class Player_Ver2 : BaseStatusClass
 			score_add += 5000;
 		}
 
+		Debug.Log(score_add.ToString());
 		return score_add;
 	}
 
