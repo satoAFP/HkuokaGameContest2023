@@ -47,5 +47,7 @@ MonoBehaviour:
   RespownFrame: 60
   EffectFrame: 20
   FeverTimeCheck: 0
+  TikatikaFrame: 400
+  TikatikaInterval: 20
   SpownEnemy: {fileID: 8371838662693408581, guid: 67b566caa2d7db64ca2dc336299f5f59, type: 3}
   SpownEffect: {fileID: 6608234748546185238, guid: 3d19c736faf443a42a60718305d59523, type: 3}
