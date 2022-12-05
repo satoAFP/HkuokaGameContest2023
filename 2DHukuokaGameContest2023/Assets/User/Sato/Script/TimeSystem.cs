@@ -40,7 +40,7 @@ public class TimeSystem : MonoBehaviour
         }
 
         //ゲームスタートしたらタイムカウント
-        if (ManagerAccessor.Instance.systemManager.Time > 0)
+        if (ManagerAccessor.Instance.systemManager.Time > 0 && ManagerAccessor.Instance.systemManager.BossHP > 0) 
         {
             if (FrameCount % 50 == 0)
                 ManagerAccessor.Instance.systemManager.Time--;

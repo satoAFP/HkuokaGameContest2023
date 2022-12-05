@@ -177,7 +177,10 @@ public class BaseEnemyFly : BaseStatusClass
                 if (!BossMode)
                     Destroy(transform.parent.gameObject);
                 else
+                {
+                    ManagerAccessor.Instance.systemManager.BossHP--;
                     Destroy(gameObject);
+                }
             }
         }
     }
