@@ -30,15 +30,32 @@ public class SystemManager : MonoBehaviour
     [SerializeField, Header("フィーバーイメージ")]
     private Image imageFever;
 
+    [SerializeField, Header("フィーバー出現位置")]
+    private Vector3 feverPos;
+
     [SerializeField, Header("フィーバー通過速度"), Range(0, 500)]
     private float feverSpeed;
 
     [SerializeField, Header("フィーバー待機時間(秒)"), Range(0, 100)]
     private int feverStopTime;
 
-    private bool fever_in = false;  //フィーバーのイン　（右端から中央まで）
-    private bool fever_out = false; //フィーバーのアウト（中央から左端まで）
-    private int fever_stop_time = 0;//フィーバー中央待機時間計測用
+    [SerializeField, Header("コンボリセット演出の時間(フレーム数)"), Range(0, 100)]
+    private int comboResetTime;
+
+    [SerializeField, Header("動く幅"), Range(0, 50)]
+    private float moveWidth;
+
+    [SerializeField, Header("待機フレーム"), Range(0, 10)]
+    private int stopFrame;
+
+    private bool fever_in = false;      //フィーバーのイン　（右端から中央まで）
+    private bool fever_out = false;     //フィーバーのアウト（中央から左端まで）
+    private int fever_stop_time = 0;    //フィーバー中央待機時間計測用
+    private int combo_reset_time = 0;   //コンボリセットの時間
+    private bool reset_once = false;    //コンボリセットで1回のみ実行
+    private Vector3 firstPos;       //初期位置記憶用
+    private Vector3 movePos;        //移動量入力用
+    private int frameCount = 0;     //フレームカウント用
 
 
     private void Start()
@@ -51,7 +68,11 @@ public class SystemManager : MonoBehaviour
         textScore.text = Score.ToString();
 
         //フィーバーイメージを右端に設定
-        imageFever.transform.localPosition = new Vector3(1200.0f, 350.0f, 0.0f);
+        imageFever.transform.localPosition = feverPos;
+
+        //揺れの初期位置設定
+        firstPos = textCombo.transform.localPosition;
+        movePos = textCombo.transform.localPosition;
     }
 
     private void FixedUpdate()
@@ -63,7 +84,7 @@ public class SystemManager : MonoBehaviour
             if (!fever_in)
             {
                 //とりあえずフィーバーイメージを右端に移動
-                imageFever.transform.localPosition = new Vector3(1200.0f, 350.0f, 0.0f);
+                imageFever.transform.localPosition = feverPos;
                 fever_in = true;
             }
             else
@@ -72,10 +93,10 @@ public class SystemManager : MonoBehaviour
                 if (!fever_out)
                 {
                     //中央に移動
-                    imageFever.transform.localPosition = Vector3.MoveTowards(imageFever.transform.localPosition, new Vector3(0.0f, 350.0f, 0.0f), feverSpeed);
+                    imageFever.transform.localPosition = Vector3.MoveTowards(imageFever.transform.localPosition, new Vector3(0.0f, feverPos.y, 0.0f), feverSpeed);
 
                     //中央に到達
-                    if (imageFever.transform.localPosition == new Vector3(0.0f, 350.0f, 0.0f))
+                    if (imageFever.transform.localPosition == new Vector3(0.0f, feverPos.y, 0.0f))
                     {
                         //止める時間を計測
                         fever_stop_time++;
@@ -91,7 +112,7 @@ public class SystemManager : MonoBehaviour
                 else
                 {
                     //フィーバーイメージを左端に移動
-                    imageFever.transform.localPosition = Vector3.MoveTowards(imageFever.transform.localPosition, new Vector3(-1200.0f, 350.0f, 0.0f), feverSpeed);
+                    imageFever.transform.localPosition = Vector3.MoveTowards(imageFever.transform.localPosition, new Vector3(-feverPos.x, feverPos.y, 0.0f), feverSpeed);
                 }
             }
         }
@@ -100,6 +121,44 @@ public class SystemManager : MonoBehaviour
             //フラグリセット
             fever_in = false;
             fever_out = false;
+        }
+
+        //コンボがリセットされたとき
+        if(ManagerAccessor.Instance.player.combo_reset)
+        {
+            if (!reset_once)
+            {
+                reset_once = true;
+                textCombo.color = new Color32(255, 0, 0, 255);
+            }
+
+            combo_reset_time++;
+            ComboResetShaking();
+
+            if (combo_reset_time >= comboResetTime)
+            {
+                combo_reset_time = 0;
+                reset_once = false;
+                textCombo.color = new Color32(255, 135, 0, 255);
+                textCombo.transform.localPosition = firstPos;
+                ManagerAccessor.Instance.player.combo_reset = false;
+            }
+        }
+    }
+
+    //コンボリセット揺れ(HitStop流用)
+    private void ComboResetShaking()
+    {
+        frameCount++;
+        if (frameCount == stopFrame)
+        {
+            if (firstPos.x <= textCombo.transform.localPosition.x)
+                movePos.x = firstPos.x - moveWidth;
+            else
+                movePos.x = firstPos.x + moveWidth;
+
+            textCombo.transform.localPosition = movePos;
+            frameCount = 0;
         }
     }
 }
