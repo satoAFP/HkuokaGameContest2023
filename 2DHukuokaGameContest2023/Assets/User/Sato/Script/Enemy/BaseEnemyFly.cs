@@ -77,7 +77,7 @@ public class BaseEnemyFly : BaseStatusClass
     private void Start()
     {
         NowHP = HP;
-        //audioSource = ManagerAccessor.Instance.soundManager.GetComponent<AudioSource>();
+        audioSource = ManagerAccessor.Instance.soundManager.GetComponent<AudioSource>();
     }
 
 
@@ -108,6 +108,13 @@ public class BaseEnemyFly : BaseStatusClass
         {
             OnDamageEffect = true;
             NowHP = HP;
+
+
+            //SEçƒê∂
+            if (!BossMode)
+                audioSource.PlayOneShot(DethSound);
+            else
+                audioSource.PlayOneShot(BossDethSound);
         }
 
     }
@@ -162,11 +169,6 @@ public class BaseEnemyFly : BaseStatusClass
             DethFrameCount++;
             Destroy(gameObject.GetComponent<CapsuleCollider2D>());
 
-            //SEçƒê∂
-            //if (!BossMode)
-            //    audioSource.PlayOneShot(DethSound);
-            //else
-            //    audioSource.PlayOneShot(BossDethSound);
 
 
             if (DethFrame == DethFrameCount)
