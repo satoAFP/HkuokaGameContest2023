@@ -450,7 +450,8 @@ public class Player_Ver2 : BaseStatusClass
 			ground_on = true;
 			move_stop = false;
 
-			ComboReset();
+			if(ManagerAccessor.Instance.systemManager.Combo > 0)
+				ComboReset();
 		}
 	}
 
@@ -478,7 +479,8 @@ public class Player_Ver2 : BaseStatusClass
 			ground_on = true;
 			move_stop = false;
 
-			ComboReset();
+			if (ManagerAccessor.Instance.systemManager.Combo > 0)
+				ComboReset();
 		}
 	}
 
@@ -657,6 +659,9 @@ public class Player_Ver2 : BaseStatusClass
 		//コンボリセットして反映
 		if (!ManagerAccessor.Instance.systemManager.FeverTime)
 		{
+			//コンボリセット開始
+			combo_reset = true;
+
 			//コンボリセットして反映
 			ManagerAccessor.Instance.systemManager.Combo = 0;
 			ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();

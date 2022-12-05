@@ -47,5 +47,9 @@ MonoBehaviour:
   textMaxCombo: {fileID: 0}
   textScore: {fileID: 0}
   imageFever: {fileID: 0}
+  feverPos: {x: 1200, y: 350, z: 0}
   feverSpeed: 30
   feverStopTime: 2
+  comboResetTime: 15
+  moveWidth: 10
+  stopFrame: 1
