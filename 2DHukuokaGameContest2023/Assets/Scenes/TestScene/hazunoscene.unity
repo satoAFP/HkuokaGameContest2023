@@ -1377,6 +1377,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1346469808}
     - target: {fileID: 2509048705533358501, guid: 1f6d6a48e2375554b89a089b1f449f72, type: 3}
+      propertyPath: feverPos.x
+      value: 1200
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509048705533358501, guid: 1f6d6a48e2375554b89a089b1f449f72, type: 3}
+      propertyPath: feverPos.y
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509048705533358501, guid: 1f6d6a48e2375554b89a089b1f449f72, type: 3}
       propertyPath: imageFever
       value: 
       objectReference: {fileID: 1176146617}

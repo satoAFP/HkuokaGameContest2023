@@ -104,7 +104,9 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public int time_fever = 0;              //フィーバータイムの時間を数える用
 	[System.NonSerialized]
-	public int score_add = 0;				//これから加算されるスコア
+	public int score_add = 0;               //これから加算されるスコア
+	[System.NonSerialized]
+	public bool combo_reset = false;		//コンボが減った時true
 
 
 	//攻撃関連
