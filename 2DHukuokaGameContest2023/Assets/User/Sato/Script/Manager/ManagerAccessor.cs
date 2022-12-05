@@ -24,4 +24,5 @@ public class ManagerAccessor
     public SceneManagerScript sceneManager;
     public BossManager bossManager;
     public RankingSystem rankingSystem;
+    public SoundManager soundManager;
 }

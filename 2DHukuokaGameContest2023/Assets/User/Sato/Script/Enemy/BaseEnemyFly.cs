@@ -48,6 +48,12 @@ public class BaseEnemyFly : BaseStatusClass
     [SerializeField, Header("死ぬときのアニメーション")]
     private GameObject DethAni;
 
+    [SerializeField, Header("死ぬときのSE")]
+    private AudioClip DethSound;
+
+    [SerializeField, Header("ボスの弱点が死ぬときのSE")]
+    private AudioClip BossDethSound;
+
 
 
     private Vector2 RayRotato;                  //レイの回転位置決定変数
@@ -59,6 +65,7 @@ public class BaseEnemyFly : BaseStatusClass
     private int EffectIntervalCount = 0;        //エフェクトのインターバルのカウント
     private int EffectCount = 0;                //エフェクトの回数カウント
     private int NowHP = 0;                      //現在のHP
+    private AudioSource audioSource;
 
     private bool first1 = true;
 
@@ -70,6 +77,7 @@ public class BaseEnemyFly : BaseStatusClass
     private void Start()
     {
         NowHP = HP;
+        //audioSource = ManagerAccessor.Instance.soundManager.GetComponent<AudioSource>();
     }
 
 
@@ -153,6 +161,12 @@ public class BaseEnemyFly : BaseStatusClass
             //OnDamageEffect = true;
             DethFrameCount++;
             Destroy(gameObject.GetComponent<CapsuleCollider2D>());
+
+            //SE再生
+            //if (!BossMode)
+            //    audioSource.PlayOneShot(DethSound);
+            //else
+            //    audioSource.PlayOneShot(BossDethSound);
 
 
             if (DethFrame == DethFrameCount)
