@@ -30,7 +30,7 @@ public class SystemManager : MonoBehaviour
     [SerializeField, Header("フィーバーイメージ")]
     private Image imageFever;
 
-    [SerializeField, Header("フィーバー通過速度"), Range(0, 100)]
+    [SerializeField, Header("フィーバー通過速度"), Range(0, 500)]
     private float feverSpeed;
 
     [SerializeField, Header("フィーバー待機時間(秒)"), Range(0, 100)]
