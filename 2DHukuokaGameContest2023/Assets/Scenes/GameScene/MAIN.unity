@@ -489,7 +489,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: EndTime
-      value: 10
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: ResultPanel
@@ -8232,7 +8232,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ba6f12716df967b499fc7942663d5cbc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d7b482007533def458ddf92a46962b95, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
