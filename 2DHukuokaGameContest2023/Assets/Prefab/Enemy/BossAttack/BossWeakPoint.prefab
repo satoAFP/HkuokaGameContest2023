@@ -127,7 +127,7 @@ MonoBehaviour:
   ConstantFrag: 0
   RecEffct: {fileID: 1094666327152733925, guid: cc3f8e23f64025d439e80ff9b757222d, type: 3}
   DethEffct: {fileID: 5435948412440824238, guid: 101f631809614054ba15de9cbe1b6d83, type: 3}
-  DethAni: {fileID: 9150660192195960290, guid: b57b9f4a83f42174ab8200ec46233fc6, type: 3}
+  DethAni: {fileID: 8535994618352153468, guid: 1ec03ae558fa5a741bdccb847070ea75, type: 3}
   DethSound: {fileID: 8300000, guid: 6f972edc4014c4e4da00c684c72f9795, type: 3}
 --- !u!95 &4678271257221617839
 Animator:
