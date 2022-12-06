@@ -177,7 +177,7 @@ public class Player_Ver2 : BaseStatusClass
 				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 				//カーソルの色変更
-				//transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColor;
+				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColor;
 
 				//カーソルのレイ
 				//レイを発射する位置の調整
