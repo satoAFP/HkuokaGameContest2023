@@ -57,6 +57,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
+	[SerializeField, Header("攻撃できない時のカーソルの色")]
+	private Color32 CousorColor;
+
 	[SerializeField, Header("マウスカーソルの表示")]
 	private bool MouseCursor;
 
@@ -139,14 +142,14 @@ public class Player_Ver2 : BaseStatusClass
 	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
 
 
-	//private GameObject[] dotObjects = new GameObject[8];
-	//[SerializeField, Header("カーソルオブジェクトプレハブ")]
-	//private GameObject dotPrefab;
-	//[SerializeField, Header("カーソル間隔")]
-	//private float dotTimeInterval = 0.5f;
+    //private GameObject[] dotObjects = new GameObject[8];
+    //[SerializeField, Header("カーソルオブジェクトプレハブ")]
+    //private GameObject dotPrefab;
+    //[SerializeField, Header("カーソル間隔")]
+    //private float dotTimeInterval = 0.5f;
 
 
-	void Start()
+    void Start()
 	{
 		//リジットボディ登録
 		rb2D = GetComponent<Rigidbody2D>();
@@ -154,12 +157,13 @@ public class Player_Ver2 : BaseStatusClass
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
 
-		//for(int i = 0; i < dotObjects.Length; i++)
+		////ドットカーソル初期化
+        //for (int i = 0; i < dotObjects.Length; i++)
         //{
-			//dotObjects[i] = Instantiate(dotPrefab);
-			//dotObjects[i].transform.parent = transform;
+        //    dotObjects[i] = Instantiate(dotPrefab);
+        //    dotObjects[i].transform.parent = transform;
         //}
-	}
+    }
 
 	void Update()
     {
@@ -173,7 +177,7 @@ public class Player_Ver2 : BaseStatusClass
 				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 				//カーソルの色変更
-				//transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 50);
+				//transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColor;
 
 				//カーソルのレイ
 				//レイを発射する位置の調整
@@ -196,21 +200,21 @@ public class Player_Ver2 : BaseStatusClass
 					}
 				}
 
-				////カーソル表示
-				//var currentTime = dotTimeInterval;
+     //           //カーソル表示
+     //           var currentTime = dotTimeInterval;
 
-				//for (int i = 0; i < dotObjects.Length; i++)
-				//{
-				//	var positions = new Vector2();
-				//	positions.x = (transform.position.x + atkQuaternion.z + currentTime);
-				//	positions.y = (transform.position.y + atkQuaternion.z + currentTime);
+     //           for (int i = 0; i < dotObjects.Length; i++)
+     //           {
+     //               var positions = new Vector2();
+					//positions.x = (transform.position.x + ((mousePos.x - transform.position.x) * currentTime));
+     //               positions.y = (transform.position.y + ((mousePos.y - transform.position.y) * currentTime));
 
-				//	dotObjects[i].transform.position = positions;
-				//	currentTime += dotTimeInterval;
-				//}
+     //               dotObjects[i].transform.position = positions;
+     //               currentTime += dotTimeInterval;
+     //           }
 
-				//攻撃
-				if (Input.GetMouseButtonDown(0))
+                //攻撃
+                if (Input.GetMouseButtonDown(0))
 				{
 					if (attack_ok)
 					{
