@@ -16,12 +16,13 @@ public class SystemManager : MonoBehaviour
     [System.NonSerialized]
     public int Score = 0;           //スコア
     [System.NonSerialized]
-    public int BossHP = 0;    //ゲーム終了
+    public int BossHP = 0;          //ボスのHP
     [System.NonSerialized]
     public int Time = 0;            //ゲーム内の時間
     [System.NonSerialized]
     public bool GameEnd = false;    //ゲーム終了
-
+    [System.NonSerialized]
+    public bool GameStart = false;  //ゲーム開始
 
     [SerializeField, Header("コンボテキスト")]
     public Text textCombo;
