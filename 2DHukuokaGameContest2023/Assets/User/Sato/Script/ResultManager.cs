@@ -29,7 +29,7 @@ public class ResultManager : MonoBehaviour
 
         //スコア、コンボ表示用
         ScoreText.text = ManagerAccessor.Instance.systemManager.Score.ToString();
-        MaxComboText.text = ManagerAccessor.Instance.systemManager.MaxCombo.ToString();
+        MaxComboText.text = ManagerAccessor.Instance.systemManager.AllCombo.ToString();
 
         //リザルト順番に出す用の処理
         if (WaitFrame <= FrameCount) 

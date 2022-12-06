@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5913cde80c4d6b24ab8af8131251d447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 500
+  HP: 100
   ATK: 10
   BossMode: 1
   MoveDirection: {x: 0, y: 0, z: 0}
