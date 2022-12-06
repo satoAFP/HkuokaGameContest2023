@@ -83,6 +83,12 @@ public class TimeSystem : MonoBehaviour
             {
                 if (first2)
                 {
+                    //ボス撃破時スコア加算
+                    if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+                    {
+                        ManagerAccessor.Instance.systemManager.Score += ManagerAccessor.Instance.systemManager.BossScore;
+                        ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
+                    }
 
                     //リザルト画面表示
                     ResultPanel.SetActive(true);
