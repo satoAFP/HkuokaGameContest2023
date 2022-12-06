@@ -2291,8 +2291,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: dotPrefab
+      value: 
+      objectReference: {fileID: 166827887368697008, guid: 85fa2858d5f794047b933c285072329d, type: 3}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: MouseCursor
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: dotTimeInterval
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828781, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_Name

@@ -106,7 +106,7 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public int score_add = 0;               //これから加算されるスコア
 	[System.NonSerialized]
-	public bool combo_reset = false;		//コンボが減った時true
+	public bool combo_reset = false;        //コンボが減った時true
 
 
 	//攻撃関連
@@ -138,6 +138,13 @@ public class Player_Ver2 : BaseStatusClass
 	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
 
 
+	private GameObject[] dotObjects = new GameObject[8];
+	[SerializeField, Header("カーソルオブジェクトプレハブ")]
+	private GameObject dotPrefab;
+	[SerializeField, Header("カーソル間隔")]
+	private float dotTimeInterval = 0.5f;
+
+
 	void Start()
 	{
 		//リジットボディ登録
@@ -145,6 +152,12 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
+
+		for(int i = 0; i < dotObjects.Length; i++)
+        {
+			dotObjects[i] = Instantiate(dotPrefab);
+			dotObjects[i].transform.parent = transform;
+        }
 	}
 
 	void Update()
@@ -178,6 +191,19 @@ public class Player_Ver2 : BaseStatusClass
 					//カーソルの色変更
 					transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
 				}
+			}
+
+			//カーソル表示
+			var currentTime = dotTimeInterval;
+
+			for (int i = 0; i < dotObjects.Length; i++)
+			{
+				var positions = new Vector2();
+				positions.x = (transform.position.x + atkQuaternion.z + currentTime);
+				positions.y = (transform.position.y + atkQuaternion.z + currentTime);
+
+				dotObjects[i].transform.position = positions;
+				currentTime += dotTimeInterval;
 			}
 
 			//攻撃
@@ -425,16 +451,16 @@ public class Player_Ver2 : BaseStatusClass
 		}
 		else
         {
-			if (!ManagerAccessor.Instance.systemManager.GameEnd)
-            {
-				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-			}
-
 			//マウスカーソルの表示
 			Cursor.visible = true;
 			Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+			//if(ManagerAccessor.Instance.systemManager.GameStart)
+            {
+
+            }
 		}
     }
 
