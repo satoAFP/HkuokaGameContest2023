@@ -54,3 +54,4 @@ MonoBehaviour:
   moveWidth: 10
   stopFrame: 1
   bossHP: 5
+  bossScore: 1000000

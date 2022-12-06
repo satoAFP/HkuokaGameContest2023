@@ -18,6 +18,8 @@ public class SystemManager : MonoBehaviour
     [System.NonSerialized]
     public int BossHP = 0;          //ボスのHP
     [System.NonSerialized]
+    public int BossScore = 0;       //ボス撃破時のスコア
+    [System.NonSerialized]
     public int Time = 0;            //ゲーム内の時間
     [System.NonSerialized]
     public bool GameEnd = false;    //ゲーム終了
@@ -57,6 +59,9 @@ public class SystemManager : MonoBehaviour
     [SerializeField, Header("ボスのHP"), Range(1, 20)]
     private int bossHP;
 
+    [SerializeField, Header("ボス撃破時のスコア加算量")]
+    private int bossScore;
+
     private bool fever_in = false;      //フィーバーのイン　（右端から中央まで）
     private bool fever_out = false;     //フィーバーのアウト（中央から左端まで）
     private int fever_stop_time = 0;    //フィーバー中央待機時間計測用
@@ -80,6 +85,7 @@ public class SystemManager : MonoBehaviour
         imageFever.transform.localPosition = feverPos;
 
         BossHP = bossHP;
+        BossScore = bossScore;
 
         //揺れの初期位置設定
         firstPos = textCombo.transform.localPosition;
