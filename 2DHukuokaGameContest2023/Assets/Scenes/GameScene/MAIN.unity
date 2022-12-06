@@ -4598,6 +4598,14 @@ PrefabInstance:
       propertyPath: FinishLine
       value: 
       objectReference: {fileID: 819578376}
+    - target: {fileID: 701656043, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 701656045, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 08c60d507a1383949929fcb1b6aac169, type: 3}
     - target: {fileID: 1176150006061424641, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
       propertyPath: m_Name
       value: Main Camera
