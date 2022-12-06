@@ -10,6 +10,8 @@ public class SystemManager : MonoBehaviour
     [System.NonSerialized]
     public int MaxCombo = 0;        //最大コンボ数
     [System.NonSerialized]
+    public int AllCombo = 0;        //総コンボ数
+    [System.NonSerialized]
     public bool FeverTime = false;  //フィーバータイム
     [System.NonSerialized]
     public int Score = 0;           //スコア
