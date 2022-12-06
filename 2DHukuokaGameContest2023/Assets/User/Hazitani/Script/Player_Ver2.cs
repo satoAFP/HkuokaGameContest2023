@@ -57,6 +57,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
+	[SerializeField, Header("マウスカーソルの表示")]
+	private bool MouseCursor;
+
 	//[SerializeField, Header("フィーバータイムのテキスト")]
 	//private Text textFeverTime;
 
@@ -222,6 +225,9 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		if (!ManagerAccessor.Instance.systemManager.GameEnd)
 		{
+			//マウスカーソルの表示
+			Cursor.visible = MouseCursor;
+
 			//落下最高速度を超えないようにする
 			if (rb2D.velocity.y < -FallSpeed)
 			{
@@ -431,6 +437,9 @@ public class Player_Ver2 : BaseStatusClass
 		}
 		else
         {
+			//マウスカーソルの表示
+			Cursor.visible = true;
+
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 		}
     }
@@ -596,6 +605,7 @@ public class Player_Ver2 : BaseStatusClass
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+		ManagerAccessor.Instance.systemManager.AllCombo++;
 
 		//マックスコンボ変更
 		if (ManagerAccessor.Instance.systemManager.MaxCombo < ManagerAccessor.Instance.systemManager.Combo)
