@@ -225,9 +225,9 @@ public class Player_Ver2 : BaseStatusClass
 			Cursor.lockState = CursorLockMode.Confined;
 
 			//落下最高速度を超えないようにする
-			if (rb2D.velocity.y <= -FallSpeed)
+			if (rb2D.velocity.y < -FallSpeed)
 			{
-				Physics2D.gravity = new Vector3(0, -FallSpeed, 0);
+				Physics2D.gravity = new Vector3(0, -rb2D.velocity.y, 0);
 			}
 			else
 			{
@@ -425,6 +425,11 @@ public class Player_Ver2 : BaseStatusClass
 		}
 		else
         {
+			if (!ManagerAccessor.Instance.systemManager.GameEnd)
+            {
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+			}
+
 			//マウスカーソルの表示
 			Cursor.visible = true;
 			Cursor.lockState = CursorLockMode.None;
