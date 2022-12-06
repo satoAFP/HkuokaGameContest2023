@@ -1145,7 +1145,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: EndTime
-      value: 321
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: ResultPanel
