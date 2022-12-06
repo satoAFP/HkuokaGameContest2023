@@ -596,6 +596,7 @@ public class Player_Ver2 : BaseStatusClass
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+		ManagerAccessor.Instance.systemManager.AllCombo++;
 
 		//マックスコンボ変更
 		if (ManagerAccessor.Instance.systemManager.MaxCombo < ManagerAccessor.Instance.systemManager.Combo)
