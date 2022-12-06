@@ -64,6 +64,7 @@ public class TimeSystem : MonoBehaviour
             if (CountDown == 0) 
             {
                 ManagerAccessor.Instance.systemManager.GameStart = true;
+                ManagerAccessor.Instance.player.rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
                 CountDownText.gameObject.SetActive(false);
             }
         }
