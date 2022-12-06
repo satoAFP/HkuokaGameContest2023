@@ -151,6 +151,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8302650788882026458, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
+      propertyPath: DethAni
+      value: 
+      objectReference: {fileID: 3093258106113559532, guid: 8ed760213a9efe04e8de3ef53c7427aa, type: 3}
+    - target: {fileID: 8302650788882026458, guid: 52a2dfe31b3f8c942ad566847b89800d, type: 3}
       propertyPath: DethSound
       value: 
       objectReference: {fileID: 8300000, guid: da188e330c27a784a9c635ddc0750a42, type: 3}
