@@ -16,9 +16,12 @@ public class SystemManager : MonoBehaviour
     [System.NonSerialized]
     public int Score = 0;           //スコア
     [System.NonSerialized]
+    public int BossHP = 0;    //ゲーム終了
+    [System.NonSerialized]
     public int Time = 0;            //ゲーム内の時間
     [System.NonSerialized]
     public bool GameEnd = false;    //ゲーム終了
+
 
     [SerializeField, Header("コンボテキスト")]
     public Text textCombo;
@@ -50,6 +53,9 @@ public class SystemManager : MonoBehaviour
     [SerializeField, Header("待機フレーム"), Range(0, 10)]
     private int stopFrame;
 
+    [SerializeField, Header("ボスのHP"), Range(1, 20)]
+    private int bossHP;
+
     private bool fever_in = false;      //フィーバーのイン　（右端から中央まで）
     private bool fever_out = false;     //フィーバーのアウト（中央から左端まで）
     private int fever_stop_time = 0;    //フィーバー中央待機時間計測用
@@ -71,6 +77,8 @@ public class SystemManager : MonoBehaviour
 
         //フィーバーイメージを右端に設定
         imageFever.transform.localPosition = feverPos;
+
+        BossHP = bossHP;
 
         //揺れの初期位置設定
         firstPos = textCombo.transform.localPosition;

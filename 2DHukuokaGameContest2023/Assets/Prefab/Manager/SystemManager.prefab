@@ -53,3 +53,4 @@ MonoBehaviour:
   comboResetTime: 15
   moveWidth: 10
   stopFrame: 1
+  bossHP: 5
