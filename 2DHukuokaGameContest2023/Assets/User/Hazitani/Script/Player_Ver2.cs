@@ -60,9 +60,6 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("マウスカーソルの表示")]
 	private bool MouseCursor;
 
-	//[SerializeField, Header("フィーバータイムのテキスト")]
-	//private Text textFeverTime;
-
 	[SerializeField, Header("オレンジオーラ出すまでのコンボ数"), Range(0, 100)]
 	private int OrangeCombo;
 
@@ -148,9 +145,6 @@ public class Player_Ver2 : BaseStatusClass
 
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
-
-		//テキストの初期化
-		//textFeverTime.text = "";
 	}
 
 	void Update()
@@ -223,15 +217,17 @@ public class Player_Ver2 : BaseStatusClass
 
 	void FixedUpdate()
 	{
+		//ゲーム中
 		if (!ManagerAccessor.Instance.systemManager.GameEnd)
 		{
 			//マウスカーソルの表示
 			Cursor.visible = MouseCursor;
+			Cursor.lockState = CursorLockMode.Confined;
 
 			//落下最高速度を超えないようにする
-			if (rb2D.velocity.y < -FallSpeed)
+			if (rb2D.velocity.y <= -FallSpeed)
 			{
-				Physics2D.gravity = new Vector3(0, -rb2D.velocity.y, 0);
+				Physics2D.gravity = new Vector3(0, -FallSpeed, 0);
 			}
 			else
 			{
@@ -409,11 +405,6 @@ public class Player_Ver2 : BaseStatusClass
 				//フィーバータイムをカウント
 				time_fever++;
 
-				//if (time_fever % 50 == 0)
-				//{
-				//	textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
-				//}
-
 				//時間経過したら
 				if (time_fever >= FeverTime * 50)
 				{
@@ -429,9 +420,6 @@ public class Player_Ver2 : BaseStatusClass
 					{
 						transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 					}
-
-					//textFeverTime.text = "";
-					//textFeverTime.gameObject.SetActive(false);
 				}
 			}
 		}
@@ -439,6 +427,7 @@ public class Player_Ver2 : BaseStatusClass
         {
 			//マウスカーソルの表示
 			Cursor.visible = true;
+			Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 		}
@@ -638,10 +627,6 @@ public class Player_Ver2 : BaseStatusClass
 				//虹色のオーラを出す
 				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(false);
 				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(true);
-
-				//残り時間テキストを表示
-				//textFeverTime.gameObject.SetActive(true);
-				//textFeverTime.text = "あと" + (FeverTime - (time_fever / 50)) + "秒";
 			}
 		}
 
@@ -653,12 +638,6 @@ public class Player_Ver2 : BaseStatusClass
 			//表示用のスコア決める
 			ManagerAccessor.Instance.systemManager.Score += ScoreSetting(ManagerAccessor.Instance.systemManager.Combo);
 			ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
-
-			//HPが0の時
-			//if (enemyObj.HP <= 0)
-			//{
-			//    //ヒットストップの処理
-			//}
 		}
 	}
 
