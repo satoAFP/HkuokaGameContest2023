@@ -196,7 +196,7 @@ public class Player_Ver2 : BaseStatusClass
 					if (cursor_hit.collider.tag == "Enemy")
 					{
 						//カーソルの色変更
-						transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+						transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 0, 0, 255);
 					}
 				}
 
