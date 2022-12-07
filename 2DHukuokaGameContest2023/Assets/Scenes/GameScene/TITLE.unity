@@ -1169,6 +1169,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ranking
       objectReference: {fileID: 0}
+    - target: {fileID: 1421105476116916382, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1421105476336763679, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
