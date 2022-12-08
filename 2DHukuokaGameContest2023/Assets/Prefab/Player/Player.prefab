@@ -245,7 +245,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347360261909828781}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -6, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 173726536}
@@ -378,6 +378,12 @@ MonoBehaviour:
   HitStopFrame: 7
   RotationAnimator: {fileID: 779877733}
   AttackCursor: 1
+  CousorColorOk:
+    serializedVersion: 2
+    rgba: 4278190335
+  CousorColorNo:
+    serializedVersion: 2
+    rgba: 4294967295
   MouseCursor: 0
   OrangeCombo: 20
   FeverCombo: 10
