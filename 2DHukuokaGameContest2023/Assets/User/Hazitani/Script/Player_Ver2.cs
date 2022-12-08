@@ -57,8 +57,11 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("カーソルの表示")]
 	private bool AttackCursor;
 
+	[SerializeField, Header("攻撃できる時のカーソルの色")]
+	private Color32 CousorColorOk;
+
 	[SerializeField, Header("攻撃できない時のカーソルの色")]
-	private Color32 CousorColor;
+	private Color32 CousorColorNo;
 
 	[SerializeField, Header("マウスカーソルの表示")]
 	private bool MouseCursor;
@@ -177,7 +180,7 @@ public class Player_Ver2 : BaseStatusClass
 				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
 
 				//カーソルの色変更
-				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColor;
+				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorNo;
 
 				//カーソルのレイ
 				//レイを発射する位置の調整
@@ -196,7 +199,7 @@ public class Player_Ver2 : BaseStatusClass
 					if (cursor_hit.collider.tag == "Enemy")
 					{
 						//カーソルの色変更
-						transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = new Color32(255, 0, 0, 255);
+						transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorOk;
 					}
 				}
 
