@@ -262,8 +262,12 @@ public class PlayerAnimation : BaseStatusClass
 		//À•W‚ÌŒÅ’è‚Æ‰ğœ
 		if (freeze)
 		{
-			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-			first = true;
+			if (!first)
+			{
+				velocity = rb2D.velocity;
+				rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+				first = true;
+			}
 		}
 		else
 		{
@@ -277,7 +281,7 @@ public class PlayerAnimation : BaseStatusClass
 		}
 
 
-		velocity = (transform.position - MemPos) / Time.deltaTime;
+		//velocity = (transform.position - MemPos) / Time.deltaTime;
 
 		//—‰ºÅ‚‘¬“x‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
 		if (rb2D.velocity.y < -FallSpeed)
