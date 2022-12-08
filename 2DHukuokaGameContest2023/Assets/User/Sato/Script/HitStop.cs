@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class HitStop : MonoBehaviour
 {
@@ -25,8 +26,8 @@ public class HitStop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        FirstPos = transform.localPosition;
-        MovePos = transform.localPosition;
+        FirstPos = gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
+        MovePos = gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
     }
 
     // Update is called once per frame
@@ -44,20 +45,20 @@ public class HitStop : MonoBehaviour
         {
             if (MoveCount < MoveNum)
             {
-                if (FirstPos.y <= transform.localPosition.y)
+                if (FirstPos.y <= gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.y)
                     MovePos.y = FirstPos.y - MoveWidth;
                 else
                     MovePos.y = FirstPos.y + MoveWidth;
                 
 
                 MoveCount++;
-                transform.localPosition = MovePos;
+                gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = MovePos;
             }
             else
             {
                 OnHitStop = false;
                 MoveCount = 0;
-                transform.localPosition = FirstPos;
+                gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = FirstPos;
             }
             FrameCount = 0;
         }
