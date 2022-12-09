@@ -275,7 +275,8 @@ public class PlayerAnimation : BaseStatusClass
 
 			if (first)
 			{
-				rb2D.AddForce(velocity, ForceMode2D.Force); Debug.Log(velocity);
+				rb2D.AddForce(velocity, ForceMode2D.Impulse);
+				Debug.Log(velocity);
 				first = false;
 			}
 		}
