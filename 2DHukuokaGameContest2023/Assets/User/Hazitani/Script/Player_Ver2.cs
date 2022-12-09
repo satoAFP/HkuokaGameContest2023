@@ -244,8 +244,6 @@ public class Player_Ver2 : BaseStatusClass
 								hit_enemy_pos = enemyObj.transform.position;
 								hit_enemy = true;
 								hitstop_frame = 0;
-								//Œ•‚Ì‰ñ“]
-								StartCoroutine(StartRotato());
 							}
 						}
 					}
