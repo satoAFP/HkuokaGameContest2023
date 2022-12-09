@@ -9,6 +9,8 @@ TagManager:
   - EnemyAttack
   - Enemy
   - Camera
+  - Ani1
+  - Ani2
   layers:
   - Default
   - TransparentFX
