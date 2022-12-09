@@ -640,11 +640,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 670145996862546731, guid: 5ff1eed83865cc34391143cc6c5d57c0, type: 3}
   m_PrefabInstance: {fileID: 277207045}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &208791135 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 1176150006061424644, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
+  m_PrefabInstance: {fileID: 1079331662}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &220502140 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6245482207849958474, guid: 41cac895da65eeb42967c1431b12c25c, type: 3}
   m_PrefabInstance: {fileID: 1037547412}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &222289913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 222289915}
+  - component: {fileID: 222289914}
+  m_Layer: 0
+  m_Name: AniPos2
+  m_TagString: Ani2
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!61 &222289914
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222289913}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!4 &222289915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222289913}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3, y: -4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &227873181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -839,14 +901,14 @@ MonoBehaviour:
   HP: 0
   ATK: 100
   JumpPower: 21.5
-  MoveSpeed: 80
-  LimitSpeed: 8
+  MoveSpeed: 60
+  LimitSpeed: 6
   Gravity: 50
   FallSpeed: 20
   AttackDistance: 5
   AttackCoolTime: 10
   AttackMovePos: {x: 0.5, y: 0, z: 0}
-  AttackMoveSpeed: 0.7
+  AttackMoveSpeed: 0.4
   SubjugationKnockback: {x: 9, y: 20}
   HitStopFrame: 7
   RotationAnimator: {fileID: 462848025}
@@ -856,6 +918,8 @@ MonoBehaviour:
   FeverCombo: 10
   FeverTime: 10
   freeze: 0
+  cameras: {fileID: 208791135}
+  StopTime: 2
 --- !u!1001 &277207045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2768,6 +2832,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 173726536, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 173726536, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 173726536, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 173726536, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 779877733, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 810957414, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.75
@@ -4772,7 +4856,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1176150006061424644, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
       propertyPath: orthographic size
-      value: 4.5
+      value: 8.29
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1176150006061424647, guid: 3d7f24583840d9a46a1dc9291b43f25e, type: 3}
