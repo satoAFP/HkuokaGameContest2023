@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class HitStop : MonoBehaviour
 {
@@ -13,8 +14,12 @@ public class HitStop : MonoBehaviour
     [SerializeField, Header("待機フレーム"), Range(0, 20)]
     private int StopFrame;
 
-    [SerializeField, Header("ヒットストップ発動")]
-    public bool OnHitStop;
+    [SerializeField, Header("カメラコライダー")]
+    public GameObject CameraColl;
+
+    [SerializeField, Header("主人公の代わり")]
+    public GameObject DecoyColl;
+
 
 
     private Vector3 FirstPos;       //初期位置記憶用
@@ -22,46 +27,87 @@ public class HitStop : MonoBehaviour
     private int MoveCount = 0;      //動く回数カウント用
     private int FrameCount = 0;     //フレームカウント用
 
+    private bool first = true;
+
     // Start is called before the first frame update
     void Start()
     {
-        FirstPos = transform.localPosition;
-        MovePos = transform.localPosition;
+        FirstPos = gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
+        MovePos = gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (OnHitStop)
-            HitStopCamera();
+        //主人公の代わりにいるオブジェクトに主人公のY座標のみ更新
+        DecoyColl.transform.position = new Vector3(0, ManagerAccessor.Instance.player.gameObject.transform.position.y, 0);
+
+        //ボス撃破時
+        if (ManagerAccessor.Instance.systemManager.MoveCamera)
+            BossCamera();
+
+        //弱点攻撃時
+        if (ManagerAccessor.Instance.systemManager.WeakCamera)
+            WeakCamera();
     }
 
 
-    private void HitStopCamera()
+    public void BossCamera()
     {
         FrameCount++;
-        if (FrameCount == StopFrame)
+
+        if (ManagerAccessor.Instance.systemManager.BossDethTime * 50 >= FrameCount)
         {
-            if (MoveCount < MoveNum)
+            if (FrameCount == StopFrame)
             {
-                if (FirstPos.y <= transform.localPosition.y)
-                    MovePos.y = FirstPos.y - MoveWidth;
+                if (MoveCount < MoveNum)
+                {
+                    if (FirstPos.x <= gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.x)
+                        MovePos.x = FirstPos.x - MoveWidth;
+                    else
+                        MovePos.x = FirstPos.x + MoveWidth;
+
+                    MoveCount++;
+                    gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = MovePos;
+                }
                 else
-                    MovePos.y = FirstPos.y + MoveWidth;
-                
-
-                MoveCount++;
-                transform.localPosition = MovePos;
+                {
+                    MoveCount = 0;
+                    gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = FirstPos;
+                }
+                FrameCount = 0;
             }
-            else
-            {
-                OnHitStop = false;
-                MoveCount = 0;
-                transform.localPosition = FirstPos;
-            }
-            FrameCount = 0;
         }
+    }
 
+    public void WeakCamera()
+    {
+        FrameCount++;
+
+        if (ManagerAccessor.Instance.systemManager.WeakCamera)
+        {
+            if (FrameCount == StopFrame)
+            {
+                if (MoveCount < MoveNum)
+                {
+                    if (FirstPos.x <= gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.x)
+                        MovePos.x = FirstPos.x - MoveWidth;
+                    else
+                        MovePos.x = FirstPos.x + MoveWidth;
+
+
+                    MoveCount++;
+                    gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = MovePos;
+                }
+                else
+                {
+                    ManagerAccessor.Instance.systemManager.WeakCamera = false;
+                    MoveCount = 0;
+                    gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = FirstPos;
+                }
+                FrameCount = 0;
+            }
+        }
     }
 
 

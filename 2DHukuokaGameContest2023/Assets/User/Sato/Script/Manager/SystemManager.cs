@@ -16,15 +16,16 @@ public class SystemManager : MonoBehaviour
     [System.NonSerialized]
     public int Score = 0;           //スコア
     [System.NonSerialized]
-    public int BossHP = 0;          //ボスのHP
-    [System.NonSerialized]
-    public int BossScore = 0;       //ボス撃破時のスコア
-    [System.NonSerialized]
     public int Time = 0;            //ゲーム内の時間
     [System.NonSerialized]
     public bool GameEnd = false;    //ゲーム終了
     [System.NonSerialized]
     public bool GameStart = false;  //ゲーム開始
+    [System.NonSerialized]
+    public bool MoveCamera = false; //ボス死亡時のカメラ移動
+    [System.NonSerialized]
+    public bool WeakCamera = false; //弱点攻撃時のカメラ移動
+
 
     [SerializeField, Header("コンボテキスト")]
     public Text textCombo;
@@ -57,10 +58,13 @@ public class SystemManager : MonoBehaviour
     private int stopFrame;
 
     [SerializeField, Header("ボスのHP"), Range(1, 20)]
-    private int bossHP;
+    public int BossHP;
 
     [SerializeField, Header("ボス撃破時のスコア加算量")]
-    private int bossScore;
+    public int BossScore;
+
+    [SerializeField, Header("ボスが新で消えるまでの時間")]
+    public int BossDethTime;
 
     private bool fever_in = false;      //フィーバーのイン　（右端から中央まで）
     private bool fever_out = false;     //フィーバーのアウト（中央から左端まで）
@@ -84,8 +88,6 @@ public class SystemManager : MonoBehaviour
         //フィーバーイメージを右端に設定
         imageFever.transform.localPosition = feverPos;
 
-        BossHP = bossHP;
-        BossScore = bossScore;
 
         //揺れの初期位置設定
         firstPos = textCombo.transform.localPosition;

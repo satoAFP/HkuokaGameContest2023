@@ -53,5 +53,6 @@ MonoBehaviour:
   comboResetTime: 15
   moveWidth: 10
   stopFrame: 1
-  bossHP: 5
-  bossScore: 1000000
+  BossHP: 10
+  BossScore: 1000000
+  BossDethTime: 2

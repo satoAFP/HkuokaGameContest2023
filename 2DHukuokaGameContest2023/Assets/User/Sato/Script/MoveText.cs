@@ -23,7 +23,6 @@ public class MoveText : MonoBehaviour
     void FixedUpdate()
     {
         FrameCount++;
-        Debug.Log("aaa");
 
         gameObject.GetComponent<RectTransform>().position += new Vector3(0, MoveSpeed, 0);
         gameObject.GetComponent<Text>().color -= new Color32(0, 0, 0, (byte)DeleteSpeed);
