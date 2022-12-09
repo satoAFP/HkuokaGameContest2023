@@ -69,7 +69,7 @@ public class TimeSystem : MonoBehaviour
             }
         }
 
-
+        //ゲームが開始されたら
         if (ManagerAccessor.Instance.systemManager.GameStart)
         {
             //ゲームスタートしたらタイムカウント
