@@ -22,6 +22,7 @@ public class TimeSystem : MonoBehaviour
 
     private int FrameCount = 0;         //フレームカウント用
     private int CDFrameCount = 0;       //カウントダウンカウント用
+    private int BossDethCount = 0;      //ボスが死んでからリザルトまで行く時間をカウントする変数
 
 
     //最初の一回だけ入れる処理
@@ -69,7 +70,7 @@ public class TimeSystem : MonoBehaviour
             }
         }
 
-
+        //ゲームが開始されたら
         if (ManagerAccessor.Instance.systemManager.GameStart)
         {
             //ゲームスタートしたらタイムカウント
@@ -81,30 +82,44 @@ public class TimeSystem : MonoBehaviour
             }
             else
             {
-                if (first2)
+                //フレームカウント
+                BossDethCount++;
+
+                //共有情報のゲーム終了
+                ManagerAccessor.Instance.systemManager.GameEnd = true;
+
+                //画面揺らす
+                ManagerAccessor.Instance.systemManager.MoveCamera = true;
+
+                if (ManagerAccessor.Instance.systemManager.BossDethTime * 50 <= BossDethCount)
                 {
-                    //ボス撃破時スコア加算
-                    if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+                    //画面揺れ止める
+                    ManagerAccessor.Instance.systemManager.MoveCamera = false;
+
+                    if (first2)
                     {
-                        ManagerAccessor.Instance.systemManager.Score += ManagerAccessor.Instance.systemManager.BossScore;
-                        ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
+                        //ボス撃破時スコア加算
+                        if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+                        {
+                            ManagerAccessor.Instance.systemManager.Score += ManagerAccessor.Instance.systemManager.BossScore;
+                            ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
+                        }
+
+                        //リザルト画面表示
+                        ResultPanel.SetActive(true);
+
+
+                        //ランキング情報更新
+                        RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
+                        ranking.Init();
+                        ranking.WriteScore();
+                        ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
+                        ranking.Sort();
+                        ranking.MemScore();
+
+                        
+                        first2 = false;
                     }
-
-                    //リザルト画面表示
-                    ResultPanel.SetActive(true);
-
-
-                    //ランキング情報更新
-                    RankingSystem ranking = ManagerAccessor.Instance.rankingSystem;
-                    ranking.Init();
-                    ranking.WriteScore();
-                    ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
-                    ranking.Sort();
-                    ranking.MemScore();
-
-                    //共有情報のゲーム終了
-                    ManagerAccessor.Instance.systemManager.GameEnd = true;
-                    first2 = false;
                 }
             }
         }

@@ -178,7 +178,10 @@ public class BaseEnemyFly : BaseStatusClass
                     Destroy(transform.parent.gameObject);
                 else
                 {
+                    //ƒ{ƒX‚ÌHPŒ¸‚ç‚·
                     ManagerAccessor.Instance.systemManager.BossHP--;
+                    //ƒJƒƒ‰“®‚©‚·
+                    ManagerAccessor.Instance.systemManager.WeakCamera = true;
                     Destroy(gameObject);
                 }
             }
