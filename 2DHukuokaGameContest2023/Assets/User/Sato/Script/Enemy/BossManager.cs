@@ -11,11 +11,9 @@ public class BossManager : MonoBehaviour
     [SerializeField, Header("弱点の位置")]
     private GameObject[] WeakPos;
 
+    [SerializeField, Header("ボス倒した後消えるオブジェクト")]
+    private SpriteRenderer[] DeleteObj;
 
-    [SerializeField, Header("カメラコライダー")]
-    private GameObject CColl;
-
-    public CinemachineConfiner camera;
 
 
     private int WeakPosNum = 0;
@@ -44,9 +42,10 @@ public class BossManager : MonoBehaviour
         }
 
 
-        if (ManagerAccessor.Instance.systemManager.BossHP > 0)
+        if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
         {
-            
+            for (int i = 0; i < DeleteObj.Length; i++)
+                DeleteObj[i].color -= new Color(0, 0, 0, 1f / (ManagerAccessor.Instance.systemManager.BossDethTime * 50));
         }
     }
 }
