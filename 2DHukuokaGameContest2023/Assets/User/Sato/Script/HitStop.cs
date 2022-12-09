@@ -45,11 +45,12 @@ public class HitStop : MonoBehaviour
         {
             if (MoveCount < MoveNum)
             {
-                if (FirstPos.y <= gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.y)
-                    MovePos.y = FirstPos.y - MoveWidth;
+                if (FirstPos.x <= gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset.x)
+                    MovePos.x = FirstPos.x - MoveWidth;
                 else
-                    MovePos.y = FirstPos.y + MoveWidth;
-                
+                    MovePos.x = FirstPos.x + MoveWidth;
+
+                Debug.Log(FirstPos);
 
                 MoveCount++;
                 gameObject.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset = MovePos;
