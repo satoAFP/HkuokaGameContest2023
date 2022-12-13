@@ -9,6 +9,7 @@ public class GetScoreDisplay : MonoBehaviour
     private GameObject ScoreText;
 
     private int MemScore = 0;
+    private bool first = true;  //Å‰‚¾‚¯“ü‚éˆ—
 
     // Update is called once per frame
     void FixedUpdate()
@@ -21,6 +22,18 @@ public class GetScoreDisplay : MonoBehaviour
             clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
 
             MemScore = ManagerAccessor.Instance.systemManager.Score;
+        }
+
+        //ƒ{ƒX“|‚µ‚½‚Æ‚«
+        if (ManagerAccessor.Instance.systemManager.BossDethEnd) 
+        {
+            if(first) 
+            {
+                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
+                clone.transform.parent = gameObject.transform;
+                clone.GetComponent<Text>().text = ManagerAccessor.Instance.systemManager.BossScore.ToString();
+                first = false;
+            }
         }
     }
 }

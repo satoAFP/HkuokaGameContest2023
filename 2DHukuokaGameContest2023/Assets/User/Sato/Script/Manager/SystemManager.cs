@@ -25,6 +25,8 @@ public class SystemManager : MonoBehaviour
     public bool MoveCamera = false; //ボス死亡時のカメラ移動
     [System.NonSerialized]
     public bool WeakCamera = false; //弱点攻撃時のカメラ移動
+    [System.NonSerialized]
+    public bool BossDethEnd = false;//弱点攻撃時のカメラ移動
 
 
     [SerializeField, Header("コンボテキスト")]

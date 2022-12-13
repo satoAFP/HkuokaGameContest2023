@@ -5,8 +5,14 @@ using Cinemachine;
 
 public class BossManager : MonoBehaviour
 {
+    [SerializeField, Header("エフェクトとオブジェクトの出現時間のずれ")]
+    private int Lag;
+
     [SerializeField, Header("弱点")]
     private GameObject WeakPoint;
+
+    [SerializeField, Header("出現エフェクト")]
+    private GameObject eff;
 
     [SerializeField, Header("弱点の位置")]
     private GameObject[] WeakPos;
@@ -15,34 +21,48 @@ public class BossManager : MonoBehaviour
     private SpriteRenderer[] DeleteObj;
 
 
-
-    private int WeakPosNum = 0;
-    private GameObject clone = null;
+    private GameObject clone = null;        //クローンのオブジェクト
+    private int count = 0;                  //フレームカウント用
+    private bool first = true;              //一回しかしない処理
+    private int random = 0;                 //出現位置らんだむ
 
     // Start is called before the first frame update
     void Start()
     {
         ManagerAccessor.Instance.bossManager = this;
 
-        WeakPosNum = WeakPos.Length;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        int bosshp = ManagerAccessor.Instance.systemManager.BossHP;
         if (clone == null) 
         {
-            if (ManagerAccessor.Instance.systemManager.BossHP > 0)
+            if (bosshp > 0)
             {
-                int random = Random.Range(0, WeakPosNum);
+                count++;
 
                 //ボスの弱点出現
-                clone = Instantiate(WeakPoint, WeakPos[random].transform.position, Quaternion.identity);
+                if (first)
+                {
+                    random = Random.Range(0, WeakPos.Length);
+                    Instantiate(eff, WeakPos[random].transform.position, Quaternion.identity);
+                }
+
+                first = false;
+                if (count > Lag)
+                {
+                    clone = Instantiate(WeakPoint, WeakPos[random].transform.position, Quaternion.identity);
+                    clone.GetComponent<SpriteRenderer>().color = new Color(1, (float)bosshp / 10, (float)bosshp / 10, 1);
+                    count = 0;
+                    first = true;
+                }
             }
         }
 
-
-        if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+        //ボスが死んだときボスをだんだん薄くする
+        if (bosshp <= 0)
         {
             for (int i = 0; i < DeleteObj.Length; i++)
                 DeleteObj[i].color -= new Color(0, 0, 0, 1f / (ManagerAccessor.Instance.systemManager.BossDethTime * 50));

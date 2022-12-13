@@ -76,11 +76,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf8eec31d666774997c493c18aa76e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Lag: 20
   WeakPoint: {fileID: 8306195673025242627, guid: 6f7c75a80fc644944af03d4f934f9a6e, type: 3}
+  eff: {fileID: 6608234748546185238, guid: 3d19c736faf443a42a60718305d59523, type: 3}
   WeakPos:
   - {fileID: 2636084070420501545}
   - {fileID: 2636084069856586223}
   - {fileID: 2636084070155657335}
+  DeleteObj: []
 --- !u!1 &2636084070155657335
 GameObject:
   m_ObjectHideFlags: 0
