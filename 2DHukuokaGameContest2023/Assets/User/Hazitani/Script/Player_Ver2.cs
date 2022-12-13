@@ -84,7 +84,7 @@ public class Player_Ver2 : BaseStatusClass
 	private int FeverCombo;
 
 	[SerializeField, Header("フィーバータイムの時間"), Range(0, 100)]
-	private int FeverTime;
+	public int FeverTime;
 
 	public enum Direction
 	{
