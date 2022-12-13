@@ -36,6 +36,17 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private float AttackDistance;
 
+	/// ここから採用するか未定
+	[SerializeField, Header("攻撃を外した時の飛ぶ力"), Range(0, 100)]
+	private float AttackOutPower;
+
+	[SerializeField, Header("攻撃を外した時の飛べる回数"), Range(0, 100)]
+	private int AttackOutCount;
+
+	[SerializeField, Header("攻撃を外した時に飛べるかどうか")]
+	private bool AttackOutOn;
+	/// ここまで採用するか未定
+
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
 
@@ -54,7 +65,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("剣の回転アニメーション")]
 	private Animator RotationAnimator;
 
-	[SerializeField, Header("カーソルの表示")]
+	[SerializeField, Header("やじるしの表示")]
 	private bool AttackCursor;
 
 	[SerializeField, Header("攻撃できる時のカーソルの色")]
@@ -73,7 +84,7 @@ public class Player_Ver2 : BaseStatusClass
 	private int FeverCombo;
 
 	[SerializeField, Header("フィーバータイムの時間"), Range(0, 100)]
-	private int FeverTime;
+	public int FeverTime;
 
 	public enum Direction
 	{
@@ -107,7 +118,10 @@ public class Player_Ver2 : BaseStatusClass
 
 
 	//システム関連
-	private int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数
+	[System.NonSerialized]
+	public int combo_fever_in = 10;			//フィーバータイムに必要なコンボ数共有用
+	[System.NonSerialized]
+	public int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数カウント用
 	[System.NonSerialized]
 	public int time_fever = 0;              //フィーバータイムの時間を数える用
 	[System.NonSerialized]
@@ -118,7 +132,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	//攻撃関連
 	private Vector3 mousePos;				//マウスの位置取得用
-	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
 	private bool dont_move = false;         //敵の向きを1回取る用
@@ -134,7 +147,10 @@ public class Player_Ver2 : BaseStatusClass
 	public bool hit_enemy = false;			//攻撃が敵に当たったかどうか
 	private bool hit_enemy_frip = false;    //攻撃した敵の方向true右false左
 	[System.NonSerialized]
-	public BaseEnemyFly enemyObj = null;	//攻撃に当たった敵のオブジェクト
+	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
+	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
+	private int attack_out_count = 0;       //攻撃が当たらなかったときに飛ぶ回数
+	private Vector3 target;                 //自身から見たマウスの位置
 
 
 	//接地関連
@@ -160,13 +176,16 @@ public class Player_Ver2 : BaseStatusClass
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
 
+		//フィーバータイムに必要なコンボ数共有用
+		combo_fever_in = FeverCombo;
+
 		////ドットカーソル初期化
-        //for (int i = 0; i < dotObjects.Length; i++)
-        //{
-        //    dotObjects[i] = Instantiate(dotPrefab);
-        //    dotObjects[i].transform.parent = transform;
-        //}
-    }
+		//for (int i = 0; i < dotObjects.Length; i++)
+		//{
+		//    dotObjects[i] = Instantiate(dotPrefab);
+		//    dotObjects[i].transform.parent = transform;
+		//}
+	}
 
 	void Update()
     {
@@ -174,17 +193,17 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			if (ManagerAccessor.Instance.systemManager.GameStart)
 			{
-				//角度設定
-				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
-				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
-
-				//カーソルの色変更
-				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorNo;
-
 				//カーソルのレイ
 				//レイを発射する位置の調整
 				cursor_rayPosition = transform.position;
+				
+				//角度設定
+				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				target = (mousePos - cursor_rayPosition).normalized;
+				atkQuaternion = Quaternion.AngleAxis(GetAim(cursor_rayPosition, mousePos), Vector3.forward);
+
+				//カーソルの色変更
+				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorNo;
 
 				//レイを飛ばす
 				cursor_ray = new Ray2D(cursor_rayPosition, mousePos - cursor_rayPosition);
@@ -246,6 +265,19 @@ public class Player_Ver2 : BaseStatusClass
 								hitstop_frame = 0;
 							}
 						}
+						//攻撃外した
+                        else
+                        {
+							if (AttackOutOn)
+							{
+								//ぶっ飛び回数上限に達していない時
+								if (attack_out_count < AttackOutCount)
+								{
+									attack_out_count++;
+									attack_out = true;
+								}
+							}
+						}
 					}
 				}
 			}
@@ -298,7 +330,7 @@ public class Player_Ver2 : BaseStatusClass
 						transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 				}
 
-				//カーソルを表示するかどうか
+				//やじるしを表示するかどうか
 				if (AttackCursor)
 				{
 					//矢印を表示
@@ -362,6 +394,16 @@ public class Player_Ver2 : BaseStatusClass
 				else
 				{
 					jump_key_flag = false;
+				}
+
+				//クリックでカーソル方向にジャンプ採用するかは未定
+				if(attack_out)
+                {
+					//いったん加速度をリセット
+					rb2D.velocity = Vector3.zero;
+					//マウスの方向に設定したパワー分飛ばす
+					rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+					attack_out = false;
 				}
 
 				//レイが敵に当たった場合

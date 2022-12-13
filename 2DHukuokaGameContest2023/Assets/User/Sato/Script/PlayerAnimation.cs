@@ -70,6 +70,12 @@ public class PlayerAnimation : BaseStatusClass
 	[SerializeField, Header("位置固定")]
 	private bool freeze;
 
+	[SerializeField, Header("カメラオブジェクト")]
+	private Camera cameras;
+
+	[SerializeField, Header("止める時間(秒)"), Range(0, 100)]
+	private int StopTime;
+
 	public enum Direction
 	{
 		LEFT = -1,
@@ -144,7 +150,9 @@ public class PlayerAnimation : BaseStatusClass
 	private bool AttackAni = false;             //攻撃開始
 	private Vector3 MemPos;                     //前フレームのポジション記憶
 	private Vector3 velocity;                   //移動量
-
+	private float view = 0.0f;                  //カメラ用
+	private bool JumpAni = false;               //ジャンプ用
+	private int stopTime = 0;					//止める時間
 	private bool first = true;
 
 
@@ -218,7 +226,7 @@ public class PlayerAnimation : BaseStatusClass
 				//}
 
 				//攻撃
-				if (AttackAni)
+				if (AttackAni && !freeze)
 				{
 					AttackAni = false;
 
@@ -243,6 +251,8 @@ public class PlayerAnimation : BaseStatusClass
 							hit_enemy_pos = enemyObj.transform.position;
 							hit_enemy = true;
 							hitstop_frame = 0;
+							//剣の回転
+							StartCoroutine(StartRotato());
 						}
 					}
 				}
@@ -262,8 +272,22 @@ public class PlayerAnimation : BaseStatusClass
 		//座標の固定と解除
 		if (freeze)
 		{
-			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-			first = true;
+			stopTime++;
+			Debug.Log(stopTime);
+			Debug.Log(freeze);
+			if (stopTime >= StopTime * 50)
+            {
+				rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+				freeze = false;
+				stopTime = 0;
+			}
+
+			if (!first)
+			{
+				//velocity = rb2D.velocity;
+				rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+				first = true;
+			}
 		}
 		else
 		{
@@ -271,13 +295,14 @@ public class PlayerAnimation : BaseStatusClass
 
 			if (first)
 			{
-				rb2D.AddForce(velocity, ForceMode2D.Force); Debug.Log(velocity);
+				//rb2D.AddForce(velocity, ForceMode2D.Impulse);
+				//Debug.Log(velocity);
 				first = false;
 			}
 		}
 
 
-		velocity = (transform.position - MemPos) / Time.deltaTime;
+		//velocity = (transform.position - MemPos) / Time.deltaTime;
 
 		//落下最高速度を超えないようにする
 		if (rb2D.velocity.y < -FallSpeed)
@@ -352,10 +377,11 @@ public class PlayerAnimation : BaseStatusClass
 
 
 		//ジャンプ処理
-		if (Input.GetKey(KeyCode.Space) && jump_count < 1)
+		if (JumpAni && !freeze)
 		{
 			if (!jump_key_flag)
 			{
+				JumpAni = false;
 				jump_key_flag = true;
 				move_stop = false;
 
@@ -430,7 +456,9 @@ public class PlayerAnimation : BaseStatusClass
 		if (hitstop_on)
 		{
 			hitstop_frame++;
-
+			view = cameras.fieldOfView++;
+			cameras.fieldOfView = Mathf.Clamp(value: view, min: 0.1f, max: 100f);
+			Debug.Log(cameras.transform.position);
 			if (hitstop_frame >= HitStopFrame)
 			{
 				AttackFin();
@@ -504,7 +532,13 @@ public class PlayerAnimation : BaseStatusClass
 		//アニメーション用
 		if (collider.gameObject.tag == "Ani1")
 		{
+			freeze = true;
 			AttackAni = true;
+		}
+		if (collider.gameObject.tag == "Ani2")
+		{
+			freeze = true;
+			JumpAni = true;
 		}
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
