@@ -36,6 +36,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private float AttackDistance;
 
+	[SerializeField, Header("攻撃を外した時の飛ぶ力"), Range(0, 100)]
+	private float AttackOutPower;
+
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
 
@@ -118,7 +121,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	//攻撃関連
 	private Vector3 mousePos;				//マウスの位置取得用
-	private Vector3 target;					//攻撃位置調整用
 	private Quaternion atkQuaternion;		//攻撃角度
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
 	private bool dont_move = false;         //敵の向きを1回取る用
@@ -134,7 +136,9 @@ public class Player_Ver2 : BaseStatusClass
 	public bool hit_enemy = false;			//攻撃が敵に当たったかどうか
 	private bool hit_enemy_frip = false;    //攻撃した敵の方向true右false左
 	[System.NonSerialized]
-	public BaseEnemyFly enemyObj = null;	//攻撃に当たった敵のオブジェクト
+	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
+	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
+	private Vector3 target;                 //自身から見たマウスの位置
 
 
 	//接地関連
@@ -174,17 +178,17 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			if (ManagerAccessor.Instance.systemManager.GameStart)
 			{
-				//角度設定
-				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				target = Vector3.Scale((mousePos - transform.position), new Vector3(0, 0, 0)).normalized;
-				atkQuaternion = Quaternion.AngleAxis(GetAim(transform.position, mousePos), Vector3.forward);
-
-				//カーソルの色変更
-				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorNo;
-
 				//カーソルのレイ
 				//レイを発射する位置の調整
 				cursor_rayPosition = transform.position;
+				
+				//角度設定
+				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				target = (mousePos - cursor_rayPosition).normalized;
+				atkQuaternion = Quaternion.AngleAxis(GetAim(cursor_rayPosition, mousePos), Vector3.forward);
+
+				//カーソルの色変更
+				transform.GetChild((int)PrefabChild.Arrow).GetChild((int)PrefabChild.ArrowImage).GetComponent<SpriteRenderer>().color = CousorColorNo;
 
 				//レイを飛ばす
 				cursor_ray = new Ray2D(cursor_rayPosition, mousePos - cursor_rayPosition);
@@ -245,6 +249,12 @@ public class Player_Ver2 : BaseStatusClass
 								hit_enemy = true;
 								hitstop_frame = 0;
 							}
+						}
+                        else
+                        {
+							//攻撃外した
+							attack_out = true;
+							Debug.Log("攻撃外しました");
 						}
 					}
 				}
@@ -362,6 +372,16 @@ public class Player_Ver2 : BaseStatusClass
 				else
 				{
 					jump_key_flag = false;
+				}
+
+				//クリックでカーソル方向にジャンプ
+				if(attack_out)
+                {
+					//いったん加速度をリセット
+					rb2D.velocity = Vector3.zero;
+					//マウスの方向に設定したパワー分飛ばす
+					rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+					attack_out = false;
 				}
 
 				//レイが敵に当たった場合
