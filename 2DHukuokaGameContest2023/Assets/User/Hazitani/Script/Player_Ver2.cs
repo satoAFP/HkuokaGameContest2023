@@ -36,11 +36,16 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃が届く距離"), Range(0, 10)]
 	private float AttackDistance;
 
+	/// ここから採用するか未定
 	[SerializeField, Header("攻撃を外した時の飛ぶ力"), Range(0, 100)]
 	private float AttackOutPower;
 
 	[SerializeField, Header("攻撃を外した時の飛べる回数"), Range(0, 100)]
 	private int AttackOutCount;
+
+	[SerializeField, Header("攻撃を外した時に飛べるかどうか")]
+	private bool AttackOutOn;
+	/// ここまで採用するか未定
 
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
@@ -60,7 +65,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("剣の回転アニメーション")]
 	private Animator RotationAnimator;
 
-	[SerializeField, Header("カーソルの表示")]
+	[SerializeField, Header("やじるしの表示")]
 	private bool AttackCursor;
 
 	[SerializeField, Header("攻撃できる時のカーソルの色")]
@@ -257,11 +262,14 @@ public class Player_Ver2 : BaseStatusClass
 						//攻撃外した
                         else
                         {
-							//ぶっ飛び回数上限に達していない時
-							if (attack_out_count < AttackOutCount)
+							if (AttackOutOn)
 							{
-								attack_out_count++;
-								attack_out = true;
+								//ぶっ飛び回数上限に達していない時
+								if (attack_out_count < AttackOutCount)
+								{
+									attack_out_count++;
+									attack_out = true;
+								}
 							}
 						}
 					}
@@ -316,7 +324,7 @@ public class Player_Ver2 : BaseStatusClass
 						transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 				}
 
-				//カーソルを表示するかどうか
+				//やじるしを表示するかどうか
 				if (AttackCursor)
 				{
 					//矢印を表示
@@ -382,7 +390,7 @@ public class Player_Ver2 : BaseStatusClass
 					jump_key_flag = false;
 				}
 
-				//クリックでカーソル方向にジャンプ
+				//クリックでカーソル方向にジャンプ採用するかは未定
 				if(attack_out)
                 {
 					//いったん加速度をリセット
