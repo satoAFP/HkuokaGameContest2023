@@ -118,7 +118,10 @@ public class Player_Ver2 : BaseStatusClass
 
 
 	//システム関連
-	private int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数
+	[System.NonSerialized]
+	public int combo_fever_in = 10;			//フィーバータイムに必要なコンボ数共有用
+	[System.NonSerialized]
+	public int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数カウント用
 	[System.NonSerialized]
 	public int time_fever = 0;              //フィーバータイムの時間を数える用
 	[System.NonSerialized]
@@ -173,13 +176,16 @@ public class Player_Ver2 : BaseStatusClass
 		//マネージャーに登録
 		ManagerAccessor.Instance.player = this;
 
+		//フィーバータイムに必要なコンボ数共有用
+		combo_fever_in = FeverCombo;
+
 		////ドットカーソル初期化
-        //for (int i = 0; i < dotObjects.Length; i++)
-        //{
-        //    dotObjects[i] = Instantiate(dotPrefab);
-        //    dotObjects[i].transform.parent = transform;
-        //}
-    }
+		//for (int i = 0; i < dotObjects.Length; i++)
+		//{
+		//    dotObjects[i] = Instantiate(dotPrefab);
+		//    dotObjects[i].transform.parent = transform;
+		//}
+	}
 
 	void Update()
     {
