@@ -39,6 +39,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃を外した時の飛ぶ力"), Range(0, 100)]
 	private float AttackOutPower;
 
+	[SerializeField, Header("攻撃を外した時の飛べる回数"), Range(0, 100)]
+	private int AttackOutCount;
+
 	[SerializeField, Header("攻撃のクールタイム")]
 	private int AttackCoolTime;
 
@@ -138,6 +141,7 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
 	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
+	private int attack_out_count = 0;       //攻撃が当たらなかったときに飛ぶ回数
 	private Vector3 target;                 //自身から見たマウスの位置
 
 
@@ -250,11 +254,15 @@ public class Player_Ver2 : BaseStatusClass
 								hitstop_frame = 0;
 							}
 						}
+						//攻撃外した
                         else
                         {
-							//攻撃外した
-							attack_out = true;
-							Debug.Log("攻撃外しました");
+							//ぶっ飛び回数上限に達していない時
+							if (attack_out_count < AttackOutCount)
+							{
+								attack_out_count++;
+								attack_out = true;
+							}
 						}
 					}
 				}
