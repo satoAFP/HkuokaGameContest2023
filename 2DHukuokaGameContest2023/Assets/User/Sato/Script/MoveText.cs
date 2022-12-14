@@ -11,18 +11,9 @@ public class MoveText : MonoBehaviour
     [SerializeField, Header("è¡Ç¶ÇÈë¨ìx")]
     private int DeleteSpeed;
 
-    [SerializeField, Header("è¡Ç¶ÇÈÇ‹Ç≈ÇÃéûä‘")]
-    private int DeleteFrame;
-
-
-    private int FrameCount = 0;
-
-
-
     // Update is called once per frame
     void FixedUpdate()
     {
-        FrameCount++;
 
         gameObject.GetComponent<RectTransform>().position += new Vector3(0, MoveSpeed, 0);
         gameObject.GetComponent<Text>().color -= new Color32(0, 0, 0, (byte)DeleteSpeed);

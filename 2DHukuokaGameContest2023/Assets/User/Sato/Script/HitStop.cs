@@ -51,7 +51,7 @@ public class HitStop : MonoBehaviour
             WeakCamera();
     }
 
-
+    //ƒ{ƒX“|‚µ‚½‚Æ‚«‚Ì‰æ–Ê—h‚ê
     public void BossCamera()
     {
         FrameCount++;
@@ -80,6 +80,7 @@ public class HitStop : MonoBehaviour
         }
     }
 
+    //ã“_UŒ‚‚µ‚½‚Æ‚«‚Ì‰æ–Ê—h‚ê
     public void WeakCamera()
     {
         FrameCount++;

@@ -89,7 +89,8 @@ public class TimeSystem : MonoBehaviour
                 ManagerAccessor.Instance.systemManager.GameEnd = true;
 
                 //‰æ–Ê—h‚ç‚·
-                ManagerAccessor.Instance.systemManager.MoveCamera = true;
+                if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+                    ManagerAccessor.Instance.systemManager.MoveCamera = true;
 
                 if (ManagerAccessor.Instance.systemManager.BossDethTime * 50 <= BossDethCount)
                 {
@@ -101,6 +102,7 @@ public class TimeSystem : MonoBehaviour
                         //ƒ{ƒXŒ‚”jŽžƒXƒRƒA‰ÁŽZ
                         if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
                         {
+                            ManagerAccessor.Instance.systemManager.BossDethEnd = true;
                             ManagerAccessor.Instance.systemManager.Score += ManagerAccessor.Instance.systemManager.BossScore;
                             ManagerAccessor.Instance.systemManager.textScore.text = ManagerAccessor.Instance.systemManager.Score.ToString();
                         }
