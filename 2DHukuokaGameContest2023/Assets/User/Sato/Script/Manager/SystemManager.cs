@@ -87,7 +87,7 @@ public class SystemManager : MonoBehaviour
         textMaxCombo.text = MaxCombo.ToString();
         textScore.text = Score.ToString();
 
-        //フィーバーイメージを右端に設定
+        //フィーバーイメージを端に設定
         imageFever.transform.localPosition = feverPos;
 
 
@@ -104,7 +104,7 @@ public class SystemManager : MonoBehaviour
             //フィーバーがまだ画面に映ってない
             if (!fever_in)
             {
-                //とりあえずフィーバーイメージを右端に移動
+                //とりあえずフィーバーイメージを端に移動
                 imageFever.transform.localPosition = feverPos;
                 fever_in = true;
             }
@@ -132,7 +132,7 @@ public class SystemManager : MonoBehaviour
                 }
                 else
                 {
-                    //フィーバーイメージを左端に移動
+                    //フィーバーイメージを端に移動
                     imageFever.transform.localPosition = Vector3.MoveTowards(imageFever.transform.localPosition, new Vector3(-feverPos.x, feverPos.y, 0.0f), feverSpeed);
                 }
             }
