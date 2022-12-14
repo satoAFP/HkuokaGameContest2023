@@ -14,20 +14,10 @@ public class GetScoreDisplay : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //スコアが増えた時
-        if (MemScore < ManagerAccessor.Instance.systemManager.Score) 
-        {
-            GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
-            clone.transform.parent = gameObject.transform;
-            clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
-
-            MemScore = ManagerAccessor.Instance.systemManager.Score;
-        }
-
         //ボス倒したとき
-        if (ManagerAccessor.Instance.systemManager.BossDethEnd) 
+        if (ManagerAccessor.Instance.systemManager.BossDethEnd)
         {
-            if(first) 
+            if (first)
             {
                 GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
                 clone.transform.parent = gameObject.transform;
@@ -35,5 +25,20 @@ public class GetScoreDisplay : MonoBehaviour
                 first = false;
             }
         }
+
+        //スコアが増えた時
+        if (MemScore < ManagerAccessor.Instance.systemManager.Score) 
+        {
+            //ボス倒した後は入らない
+            if (!ManagerAccessor.Instance.systemManager.BossDethEnd)
+            {
+                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
+                clone.transform.parent = gameObject.transform;
+                clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
+
+                MemScore = ManagerAccessor.Instance.systemManager.Score;
+            }
+        }
+
     }
 }
