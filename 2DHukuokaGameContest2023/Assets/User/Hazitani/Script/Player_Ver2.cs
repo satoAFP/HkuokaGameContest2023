@@ -128,7 +128,6 @@ public class Player_Ver2 : BaseStatusClass
 	public int score_add = 0;               //これから加算されるスコア
 	[System.NonSerialized]
 	public bool combo_reset = false;        //コンボが減った時true
-	private int combo_boss = 0;				//ボスを攻撃した回数
 
 
 	//攻撃関連
@@ -654,17 +653,7 @@ public class Player_Ver2 : BaseStatusClass
 		}
         else
         {
-			combo_boss++;
-
-			if(combo_boss < 10)
-            {
-				score_add += 5000;
-			}
-			else
-            {
-				score_add += 10000;
-				combo_boss = 0;
-            }
+			score_add += 10000;
         }
 
 		/*
