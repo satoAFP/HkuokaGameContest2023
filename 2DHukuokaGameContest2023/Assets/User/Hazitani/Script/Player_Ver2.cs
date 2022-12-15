@@ -641,6 +641,7 @@ public class Player_Ver2 : BaseStatusClass
 		//加算されるスコアを初期化
 		score_add = 0;
 
+		//ボス以外
 		if (!enemyObj.BossMode)
 		{
 			//コンボによってスコア加算
@@ -651,6 +652,7 @@ public class Player_Ver2 : BaseStatusClass
 			else if (combo >= 100)
 				score_add += 10000;
 		}
+		//ボス弱点
         else
         {
 			score_add += 10000;
