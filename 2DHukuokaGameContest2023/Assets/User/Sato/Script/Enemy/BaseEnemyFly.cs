@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseEnemyFly : BaseStatusClass
 {
     [SerializeField, Header("ƒ{ƒX‚Ì‚Æ‚«")]
-    private bool BossMode;
+    public bool BossMode;
 
     [SerializeField, Header("“G‚ÌUŒ‚‚Ì”ò‚ñ‚Å‚¢‚­•ûŒü")]
     private Vector3 MoveDirection;
