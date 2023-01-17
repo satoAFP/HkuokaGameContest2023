@@ -3304,7 +3304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: AttackOutPower
-      value: 30
+      value: 21.5
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: dotTimeInterval
