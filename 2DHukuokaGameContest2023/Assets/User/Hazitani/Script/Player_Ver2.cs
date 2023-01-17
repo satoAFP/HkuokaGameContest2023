@@ -59,6 +59,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("敵に当たったあとの飛ぶ力")]
 	private Vector2 SubjugationKnockback;
 
+	[SerializeField, Header("攻撃後、ジャンプ入力せずに移動できる")]
+	private bool AttackedMove;
+
 	[SerializeField, Header("ヒットストップのフレーム数"), Range(0, 100)]
 	private int HitStopFrame;
 
@@ -185,6 +188,18 @@ public class Player_Ver2 : BaseStatusClass
 		//    dotObjects[i] = Instantiate(dotPrefab);
 		//    dotObjects[i].transform.parent = transform;
 		//}
+
+		//やじるしを表示するかどうか
+		if (AttackCursor)
+		{
+			//矢印を表示
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(true);
+		}
+		else
+		{
+			//矢印を非表示
+			transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
+		}
 	}
 
 	void Update()
@@ -623,6 +638,9 @@ public class Player_Ver2 : BaseStatusClass
 		hit_enemy = false;
 		rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
 		dont_move = false;
+		//ジャンプ無しで移動できる
+		if(AttackedMove)
+			move_stop = false;
 
 		//攻撃後跳ね返り
 		if (hit_enemy_frip)

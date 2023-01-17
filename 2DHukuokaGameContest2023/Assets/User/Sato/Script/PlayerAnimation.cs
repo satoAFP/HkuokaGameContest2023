@@ -477,37 +477,6 @@ public class PlayerAnimation : BaseStatusClass
 			}
 		}
 
-		//フィーバータイムのとき
-		if (ManagerAccessor.Instance.systemManager.FeverTime)
-		{
-			//フィーバータイムをカウント
-			time_fever++;
-
-			//時間経過したら
-			if (time_fever >= FeverTime * 50)
-			{
-				//フィーバータイム終了
-				ManagerAccessor.Instance.systemManager.FeverTime = false;
-				time_fever = 0;
-
-				//オーラの処理
-				//虹色のオーラを消す
-				transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
-				//20コンボ以上ならオレンジオーラを出す
-				if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
-				{
-					transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
-				}
-			}
-		}
-		else
-		{
-			//マウスカーソルの設定
-			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
-
-		}
-
 		//座標の更新
 		MemPos = transform.position;
 	}
