@@ -705,6 +705,9 @@ public class Player_Ver2 : BaseStatusClass
 		//剣の回転
 		StartCoroutine(StartRotato());
 
+		//クリックジャンプ回数リセット
+		attack_out_count = 0;
+
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;
 		ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
