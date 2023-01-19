@@ -17,6 +17,9 @@ public class ResultManager : MonoBehaviour
     [SerializeField, Header("マックスコンボ用テキスト")]
     private Text MaxComboText;
 
+    [SerializeField, Header("残りタイム用テキスト")]
+    private Text TimeText;
+
 
     private int FrameCount = 0;     //フレームカウント用
     private int ObjCount = 0;       //オブジェクトカウント用
@@ -27,9 +30,10 @@ public class ResultManager : MonoBehaviour
     {
         FrameCount++;
 
-        //スコア、コンボ表示用
+        //スコア、コンボ、残りタイム表示用
         ScoreText.text = ManagerAccessor.Instance.systemManager.Score.ToString();
         MaxComboText.text = ManagerAccessor.Instance.systemManager.AllCombo.ToString();
+        TimeText.text = ManagerAccessor.Instance.systemManager.Time.ToString() + "秒";
 
         //リザルト順番に出す用の処理
         if (WaitFrame <= FrameCount) 
