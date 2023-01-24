@@ -146,7 +146,8 @@ public class Player_Ver2 : BaseStatusClass
 	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
 	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
 	private int attack_out_count = 0;       //攻撃が当たらなかったときに飛ぶ回数
-	private Vector2 jump_velocity;			//クリックジャンプの慣性保存用
+	private Vector2 jump_velocity;          //クリックジャンプの慣性保存用
+	private Vector3 target;                 //自身から見たマウスの位置
 
 
 	//接地関連
@@ -193,6 +194,7 @@ public class Player_Ver2 : BaseStatusClass
 				
 				//角度設定
 				mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				target = (mousePos - cursor_rayPosition).normalized;
 				atkQuaternion = Quaternion.AngleAxis(GetAim(cursor_rayPosition, mousePos), Vector3.forward);
 
 				//カーソルの色変更
@@ -378,7 +380,7 @@ public class Player_Ver2 : BaseStatusClass
                     //いったん加速度をリセット
                     rb2D.velocity = Vector3.zero;
                     //マウスの方向に設定したパワー分飛ばす
-                    //rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+                    rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
                     attack_out = false;
                 }
 
