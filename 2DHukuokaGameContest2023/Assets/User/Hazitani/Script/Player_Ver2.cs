@@ -334,45 +334,45 @@ public class Player_Ver2 : BaseStatusClass
 					transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
 				}
 
-				//移動処理
-				if (!move_stop)
-				{
-					if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-					{
-						//最高速度になるとそれ以上加速しない
-						if (rb2D.velocity.x > -LimitSpeed)
-						{
-							rb2D.AddForce(-transform.right * MoveSpeed, ForceMode2D.Force);
-						}
-					}
-					if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
-					{
-						//最高速度になるとそれ以上加速しない
-						if (rb2D.velocity.x < LimitSpeed)
-						{
-							rb2D.AddForce(transform.right * MoveSpeed, ForceMode2D.Force);
-						}
-					}
-				}
+				////移動処理
+				//if (!move_stop)
+				//{
+				//	if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+				//	{
+				//		//最高速度になるとそれ以上加速しない
+				//		if (rb2D.velocity.x > -LimitSpeed)
+				//		{
+				//			rb2D.AddForce(-transform.right * MoveSpeed, ForceMode2D.Force);
+				//		}
+				//	}
+				//	if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+				//	{
+				//		//最高速度になるとそれ以上加速しない
+				//		if (rb2D.velocity.x < LimitSpeed)
+				//		{
+				//			rb2D.AddForce(transform.right * MoveSpeed, ForceMode2D.Force);
+				//		}
+				//	}
+				//}
 
-				//ジャンプ処理
-				if (Input.GetKey(KeyCode.Space) && jump_count < 1)
-				{
-					if (!jump_key_flag)
-					{
-						jump_key_flag = true;
-						move_stop = false;
+				////ジャンプ処理
+				//if (Input.GetKey(KeyCode.Space) && jump_count < 1)
+				//{
+				//	if (!jump_key_flag)
+				//	{
+				//		jump_key_flag = true;
+				//		move_stop = false;
 
-						rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
+				//		rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
-						//カウント増加
-						jump_count++;
-					}
-				}
-				else
-				{
-					jump_key_flag = false;
-				}
+				//		//カウント増加
+				//		jump_count++;
+				//	}
+				//}
+				//else
+				//{
+				//	jump_key_flag = false;
+				//}
 
 				//クリックでカーソル方向にジャンプ採用するかは未定
 				if(attack_out)
