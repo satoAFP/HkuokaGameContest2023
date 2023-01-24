@@ -127,7 +127,6 @@ public class Player_Ver2 : BaseStatusClass
 
 	//攻撃関連
 	private Vector3 mousePos;               //マウスの位置取得用
-	private Vector3 mousePos_click;			//クリック時のマウスの位置取得用
 	private Quaternion atkQuaternion;       //攻撃角度
 	private float mouse_distance = 0;		//マウスと主人公の距離
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
@@ -227,7 +226,10 @@ public class Player_Ver2 : BaseStatusClass
 						attack_rayPosition = transform.position;
 
 						//レイの長さを設定
-						mouse_distance = Vector2.Distance(mousePos, transform.position);
+						if (Vector2.Distance(mousePos, transform.position) <= AttackDistance)
+							mouse_distance = Vector2.Distance(mousePos, transform.position);
+						else
+							mouse_distance = AttackDistance;
 
 						//レイを飛ばす
 						attack_ray = new Ray2D(attack_rayPosition, mousePos - attack_rayPosition);
@@ -254,9 +256,6 @@ public class Player_Ver2 : BaseStatusClass
                         {
 							if (AttackOutOn)
 							{
-								//クリックした位置を保存
-								mousePos_click = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
 								//ぶっ飛び回数上限に達していない時
 								if (attack_out_count < AttackOutCount)
 								{
@@ -376,36 +375,12 @@ public class Player_Ver2 : BaseStatusClass
 				//クリックでカーソル方向にジャンプ採用するかは未定
 				if(attack_out)
                 {
-					////いったん加速度をリセット
-					//rb2D.velocity = Vector3.zero;
-					////マウスの方向に設定したパワー分飛ばす
-					//rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
-					//attack_out = false;
-
-					move_stop = true;
-					rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
-					if (transform.position.x < mousePos_click.x)
-					{
-						transform.position = Vector2.MoveTowards(transform.position, mousePos_click - AttackMovePos, AttackMoveSpeed);
-						jump_velocity = rb2D.velocity;
-					}
-					else
-					{
-						transform.position = Vector2.MoveTowards(transform.position, mousePos_click + AttackMovePos, AttackMoveSpeed);
-						jump_velocity = rb2D.velocity;
-					}
-
-					if(Vector2.Distance(transform.position, mousePos_click) < 1)
-                    {
-						rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-						//ここ変！！！！！！！！！！！！！！
-						rb2D.AddForce(new Vector2(rb2D.velocity.x, jump_velocity.y), ForceMode2D.Force);
-						move_stop = false;
-						dont_move = false;
-						attack_out = false;
-					}
-				}
+                    //いったん加速度をリセット
+                    rb2D.velocity = Vector3.zero;
+                    //マウスの方向に設定したパワー分飛ばす
+                    //rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+                    attack_out = false;
+                }
 
 				//レイが敵に当たった場合
 				if (hit_enemy)
