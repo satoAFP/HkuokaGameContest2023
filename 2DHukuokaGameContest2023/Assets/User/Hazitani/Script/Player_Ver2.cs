@@ -110,6 +110,7 @@ public class Player_Ver2 : BaseStatusClass
 	private Ray2D cursor_ray;               //飛ばすレイ
 	private RaycastHit2D cursor_hit;        //レイが何かに当たった時の情報
 	private Vector3 cursor_rayPosition;     //レイを発射する位置
+	private Vector2 menu_velocity;			//メニュー後慣性保存用
 
 
 	//システム関連
@@ -123,6 +124,7 @@ public class Player_Ver2 : BaseStatusClass
 	public int score_add = 0;               //これから加算されるスコア
 	[System.NonSerialized]
 	public bool combo_reset = false;        //コンボが減った時true
+	private bool menu_once = false;			//メニューを閉じた後実行回数制御用
 
 
 	//攻撃関連
@@ -186,7 +188,7 @@ public class Player_Ver2 : BaseStatusClass
     {
 		if (!ManagerAccessor.Instance.systemManager.GameEnd)
 		{
-			if (ManagerAccessor.Instance.systemManager.GameStart)
+			if (ManagerAccessor.Instance.systemManager.GameStart && !ManagerAccessor.Instance.menuPop.menu_pop_now)
 			{
 				//カーソルのレイ
 				//レイを発射する位置の調整
@@ -284,207 +286,228 @@ public class Player_Ver2 : BaseStatusClass
 			}
 			else
 			{
-				//マウスカーソルの設定
-				Cursor.visible = MouseCursor;
-				Cursor.lockState = CursorLockMode.Confined;
-
-				//落下最高速度を超えないようにする
-				if (rb2D.velocity.y < -FallSpeed)
+				//メニューが表示されていない
+				if (!ManagerAccessor.Instance.menuPop.menu_pop_now)
 				{
-					Physics2D.gravity = new Vector3(0, -rb2D.velocity.y, 0);
-				}
-				else
-				{
-					//重力設定
-					Physics2D.gravity = new Vector3(0, -Gravity, 0);
-				}
-
-				//接地判定
-				//レイを発射する位置の調整
-				ground_rayPosition = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
-
-				//レイの接地判定
-				RayGround(ground_ray, ground_hit, ground_rayPosition);
-
-				//剣の回転
-				if (hit_enemy)
-				{
-					if (!hitstop_on)
-						transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
-				}
-				else
-				{
-					if (!hitstop_on)
-						transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-				}
-
-				//やじるしを表示するかどうか
-				if (AttackCursor)
-				{
-					//矢印を表示
-					transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(true);
-
-					//矢印の回転
-					transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
-					transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
-				}
-				else
-				{
-					//矢印を非表示
-					transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
-				}
-
-				////移動処理
-				//if (!move_stop)
-				//{
-				//	if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-				//	{
-				//		//最高速度になるとそれ以上加速しない
-				//		if (rb2D.velocity.x > -LimitSpeed)
-				//		{
-				//			rb2D.AddForce(-transform.right * MoveSpeed, ForceMode2D.Force);
-				//		}
-				//	}
-				//	if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
-				//	{
-				//		//最高速度になるとそれ以上加速しない
-				//		if (rb2D.velocity.x < LimitSpeed)
-				//		{
-				//			rb2D.AddForce(transform.right * MoveSpeed, ForceMode2D.Force);
-				//		}
-				//	}
-				//}
-
-				////ジャンプ処理
-				//if (Input.GetKey(KeyCode.Space) && jump_count < 1)
-				//{
-				//	if (!jump_key_flag)
-				//	{
-				//		jump_key_flag = true;
-				//		move_stop = false;
-
-				//		rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
-
-				//		//カウント増加
-				//		jump_count++;
-				//	}
-				//}
-				//else
-				//{
-				//	jump_key_flag = false;
-				//}
-
-				//クリックでカーソル方向にジャンプ採用するかは未定
-				if(attack_out)
-                {
-                    //いったん加速度をリセット
-                    rb2D.velocity = Vector3.zero;
-                    //マウスの方向に設定したパワー分飛ばす
-                    rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
-                    attack_out = false;
-                }
-
-				//レイが敵に当たった場合
-				if (hit_enemy)
-				{
-					if (enemyObj != null)
-					{
-						move_stop = true;
-						rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
-						if (transform.position.x < hit_enemy_pos.x)
-						{
-							if (!dont_move)
-							{
-								dont_move = true;
-								hit_enemy_frip = true;
-							}
-							transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
-						}
-						else
-						{
-							if (!dont_move)
-							{
-								dont_move = true;
-								hit_enemy_frip = false;
-							}
-							transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
-						}
+					//座標停止解除
+					if(!menu_once)
+                    {
+						rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+						rb2D.AddForce(menu_velocity, ForceMode2D.Impulse);
+						menu_once = true;
 					}
-					//レイが当たったが、敵が消えてしまった場合
+
+					//慣性を保存
+					menu_velocity = rb2D.velocity;
+
+					//マウスカーソルの設定
+					Cursor.visible = MouseCursor;
+					Cursor.lockState = CursorLockMode.Confined;
+
+					//落下最高速度を超えないようにする
+					if (rb2D.velocity.y < -FallSpeed)
+					{
+						Physics2D.gravity = new Vector3(0, -rb2D.velocity.y, 0);
+					}
+					else
+					{
+						//重力設定
+						Physics2D.gravity = new Vector3(0, -Gravity, 0);
+					}
+
+					//接地判定
+					//レイを発射する位置の調整
+					ground_rayPosition = transform.position + new Vector3(0.0f, -transform.localScale.y / 2, 0.0f);
+
+					//レイの接地判定
+					RayGround(ground_ray, ground_hit, ground_rayPosition);
+
+					//剣の回転
+					if (hit_enemy)
+					{
+						if (!hitstop_on)
+							transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+					}
 					else
 					{
 						if (!hitstop_on)
-						{
-							//攻撃関連のフラグリセット
-							jump_count = 0;
-							hitstop_on = false;
-							hitstop_frame = 0;
-							move_stop = false;
-							hit_enemy = false;
-							rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-							dont_move = false;
-							attack_cooltime = 0;
-							attack_ok = true;
+							transform.GetChild((int)PrefabChild.PlayerSprite).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+					}
 
-							//攻撃後跳ね返り
-							if (hit_enemy_frip)
+					//やじるしを表示するかどうか
+					if (AttackCursor)
+					{
+						//矢印を表示
+						transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(true);
+
+						//矢印の回転
+						transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.localScale = new Vector3(1.0f, AttackDistance / 5, 1.0f);
+						transform.GetChild((int)PrefabChild.Arrow).gameObject.transform.rotation = atkQuaternion * Quaternion.Euler(0, 0, 90);
+					}
+					else
+					{
+						//矢印を非表示
+						transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
+					}
+
+					////移動処理
+					//if (!move_stop)
+					//{
+					//	if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+					//	{
+					//		//最高速度になるとそれ以上加速しない
+					//		if (rb2D.velocity.x > -LimitSpeed)
+					//		{
+					//			rb2D.AddForce(-transform.right * MoveSpeed, ForceMode2D.Force);
+					//		}
+					//	}
+					//	if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+					//	{
+					//		//最高速度になるとそれ以上加速しない
+					//		if (rb2D.velocity.x < LimitSpeed)
+					//		{
+					//			rb2D.AddForce(transform.right * MoveSpeed, ForceMode2D.Force);
+					//		}
+					//	}
+					//}
+
+					////ジャンプ処理
+					//if (Input.GetKey(KeyCode.Space) && jump_count < 1)
+					//{
+					//	if (!jump_key_flag)
+					//	{
+					//		jump_key_flag = true;
+					//		move_stop = false;
+
+					//		rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
+
+					//		//カウント増加
+					//		jump_count++;
+					//	}
+					//}
+					//else
+					//{
+					//	jump_key_flag = false;
+					//}
+
+					//クリックでカーソル方向にジャンプ採用するかは未定
+					if (attack_out)
+					{
+						//いったん加速度をリセット
+						rb2D.velocity = Vector3.zero;
+						//マウスの方向に設定したパワー分飛ばす
+						rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+						attack_out = false;
+					}
+
+					//レイが敵に当たった場合
+					if (hit_enemy)
+					{
+						if (enemyObj != null)
+						{
+							move_stop = true;
+							rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+							if (transform.position.x < hit_enemy_pos.x)
 							{
-								rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+								if (!dont_move)
+								{
+									dont_move = true;
+									hit_enemy_frip = true;
+								}
+								transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos - AttackMovePos, AttackMoveSpeed);
 							}
 							else
 							{
-								rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
+								if (!dont_move)
+								{
+									dont_move = true;
+									hit_enemy_frip = false;
+								}
+								transform.position = Vector3.MoveTowards(transform.position, hit_enemy_pos + AttackMovePos, AttackMoveSpeed);
+							}
+						}
+						//レイが当たったが、敵が消えてしまった場合
+						else
+						{
+							if (!hitstop_on)
+							{
+								//攻撃関連のフラグリセット
+								jump_count = 0;
+								hitstop_on = false;
+								hitstop_frame = 0;
+								move_stop = false;
+								hit_enemy = false;
+								rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+								dont_move = false;
+								attack_cooltime = 0;
+								attack_ok = true;
+
+								//攻撃後跳ね返り
+								if (hit_enemy_frip)
+								{
+									rb2D.AddForce(new Vector2(-SubjugationKnockback.x, SubjugationKnockback.y), ForceMode2D.Impulse);
+								}
+								else
+								{
+									rb2D.AddForce(SubjugationKnockback, ForceMode2D.Impulse);
+								}
+							}
+						}
+					}
+
+					//ヒットストップ
+					if (hitstop_on)
+					{
+						hitstop_frame++;
+
+						if (hitstop_frame >= HitStopFrame)
+						{
+							AttackFin();
+						}
+					}
+
+					//攻撃クールタイム
+					if (!attack_ok)
+					{
+						attack_cooltime++;
+
+						if (attack_cooltime >= AttackCoolTime)
+						{
+							attack_cooltime = 0;
+							attack_ok = true;
+						}
+					}
+
+					//フィーバータイムのとき
+					if (ManagerAccessor.Instance.systemManager.FeverTime)
+					{
+						//フィーバータイムをカウント
+						time_fever++;
+
+						//時間経過したら
+						if (time_fever >= FeverTime * 50)
+						{
+							//フィーバータイム終了
+							ManagerAccessor.Instance.systemManager.FeverTime = false;
+							time_fever = 0;
+
+							//オーラの処理
+							//虹色のオーラを消す
+							transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
+							//20コンボ以上ならオレンジオーラを出す
+							if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
+							{
+								transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
 							}
 						}
 					}
 				}
-
-				//ヒットストップ
-				if (hitstop_on)
-				{
-					hitstop_frame++;
-
-					if (hitstop_frame >= HitStopFrame)
-					{
-						AttackFin();
-					}
-				}
-
-				//攻撃クールタイム
-				if (!attack_ok)
-				{
-					attack_cooltime++;
-
-					if (attack_cooltime >= AttackCoolTime)
-					{
-						attack_cooltime = 0;
-						attack_ok = true;
-					}
-				}
-
-				//フィーバータイムのとき
-				if (ManagerAccessor.Instance.systemManager.FeverTime)
-				{
-					//フィーバータイムをカウント
-					time_fever++;
-
-					//時間経過したら
-					if (time_fever >= FeverTime * 50)
-					{
-						//フィーバータイム終了
-						ManagerAccessor.Instance.systemManager.FeverTime = false;
-						time_fever = 0;
-
-						//オーラの処理
-						//虹色のオーラを消す
-						transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Rainbow_Aura).gameObject.SetActive(false);
-						//20コンボ以上ならオレンジオーラを出す
-						if (ManagerAccessor.Instance.systemManager.Combo >= OrangeCombo)
-						{
-							transform.GetChild((int)PrefabChild.PlayerSprite).GetChild((int)PrefabChild.Aura).gameObject.SetActive(true);
-						}
-					}
+				else
+                {
+					//メニュー表示中は止める
+					rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+					menu_once = false;
 				}
 			}
 		}
