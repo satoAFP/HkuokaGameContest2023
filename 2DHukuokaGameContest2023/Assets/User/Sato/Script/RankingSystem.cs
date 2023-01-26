@@ -45,7 +45,12 @@ public class RankingSystem : MonoBehaviour
     {
         //十位まで表示
         for (int i = 0; i < RankingText.Length; i++)
-            RankingText[i].text = (i + 1) + "位　" + Score[i].ToString();
+        {
+            if (i + 1 < 10)
+                RankingText[i].text = " " + (i + 1) + "位　" + Score[i].ToString();
+            else
+                RankingText[i].text = (i + 1) + "位　" + Score[i].ToString();
+        }
     }
 
     /// <summary>
