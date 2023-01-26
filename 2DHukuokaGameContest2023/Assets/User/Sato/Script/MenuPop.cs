@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuPop : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField, Header("メニュー")] private GameObject Menu;
+
+    [SerializeField, Header("メニューボタンのテキスト")] private Text text;
+
+
+    public void PopMenu()
     {
-        
+        if (Menu.activeSelf)
+        {
+            Menu.SetActive(false);
+            text.text = "メニュー";
+        }
+        else
+        {
+            Menu.SetActive(true);
+            text.text = "モドル";
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
