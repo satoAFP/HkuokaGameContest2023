@@ -89,13 +89,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("フィーバータイムの時間"), Range(0, 100)]
 	public int FeverTime;
 
-	public enum Direction
-	{
-		LEFT = -1,
-		STOP,
-		RIGHT,
-	}
-
+	
 	private enum PrefabChild
     {
 		PlayerSprite = 0,
@@ -112,8 +106,6 @@ public class Player_Ver2 : BaseStatusClass
 	private int jump_count = 0;             //ジャンプ回数
 	private bool jump_key_flag = false;     //ジャンプキー連続判定制御用
 	private bool ground_on = false;			//地面に立っているか
-	private int now_move = 0;				//左:-1・停止:0・右:1
-	private bool player_frip = false;		//プレイヤーの向きtrue右false左
 	private bool move_stop = false;         //動きを止めたいとき使用
 	private Ray2D cursor_ray;               //飛ばすレイ
 	private RaycastHit2D cursor_hit;        //レイが何かに当たった時の情報
@@ -134,8 +126,9 @@ public class Player_Ver2 : BaseStatusClass
 
 
 	//攻撃関連
-	private Vector3 mousePos;				//マウスの位置取得用
-	private Quaternion atkQuaternion;		//攻撃角度
+	private Vector3 mousePos;               //マウスの位置取得用
+	private Quaternion atkQuaternion;       //攻撃角度
+	private float mouse_distance = 0;		//マウスと主人公の距離
 	private bool attack_ok = true;			//攻撃出来るかどうか出来るときtrue
 	private bool dont_move = false;         //敵の向きを1回取る用
 	private Ray2D attack_ray;				//飛ばすレイ
@@ -153,6 +146,7 @@ public class Player_Ver2 : BaseStatusClass
 	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
 	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
 	private int attack_out_count = 0;       //攻撃が当たらなかったときに飛ぶ回数
+	private Vector2 jump_velocity;          //クリックジャンプの慣性保存用
 	private Vector3 target;                 //自身から見たマウスの位置
 
 
@@ -163,14 +157,7 @@ public class Player_Ver2 : BaseStatusClass
 	private Vector3 ground_rayPosition;			//レイを発射する位置
 	private GameObject SearchGameObject = null; //レイに触れたオブジェクト取得用
 
-
-    //private GameObject[] dotObjects = new GameObject[8];
-    //[SerializeField, Header("カーソルオブジェクトプレハブ")]
-    //private GameObject dotPrefab;
-    //[SerializeField, Header("カーソル間隔")]
-    //private float dotTimeInterval = 0.5f;
-
-
+	
     void Start()
 	{
 		//リジットボディ登録
@@ -181,14 +168,7 @@ public class Player_Ver2 : BaseStatusClass
 
 		//フィーバータイムに必要なコンボ数共有用
 		combo_fever_in = FeverCombo;
-
-		////ドットカーソル初期化
-		//for (int i = 0; i < dotObjects.Length; i++)
-		//{
-		//    dotObjects[i] = Instantiate(dotPrefab);
-		//    dotObjects[i].transform.parent = transform;
-		//}
-
+		
 		//やじるしを表示するかどうか
 		if (AttackCursor)
 		{
@@ -237,19 +217,6 @@ public class Player_Ver2 : BaseStatusClass
 					}
 				}
 
-     //           //カーソル表示
-     //           var currentTime = dotTimeInterval;
-
-     //           for (int i = 0; i < dotObjects.Length; i++)
-     //           {
-     //               var positions = new Vector2();
-					//positions.x = (transform.position.x + ((mousePos.x - transform.position.x) * currentTime));
-     //               positions.y = (transform.position.y + ((mousePos.y - transform.position.y) * currentTime));
-
-     //               dotObjects[i].transform.position = positions;
-     //               currentTime += dotTimeInterval;
-     //           }
-
                 //攻撃
                 if (Input.GetMouseButtonDown(0))
 				{
@@ -260,14 +227,20 @@ public class Player_Ver2 : BaseStatusClass
 						//レイを発射する位置の調整
 						attack_rayPosition = transform.position;
 
+						//レイの長さを設定
+						if (Vector2.Distance(mousePos, transform.position) <= AttackDistance)
+							mouse_distance = Vector2.Distance(mousePos, transform.position);
+						else
+							mouse_distance = AttackDistance;
+
 						//レイを飛ばす
 						attack_ray = new Ray2D(attack_rayPosition, mousePos - attack_rayPosition);
 
 						//Enemyとだけ衝突する
-						attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, AttackDistance, attack_layerMask);
+						attack_hit = Physics2D.Raycast(attack_ray.origin, attack_ray.direction, mouse_distance, attack_layerMask);
 
 						//レイを黄色で表示させる
-						Debug.DrawRay(attack_ray.origin, attack_ray.direction * AttackDistance, Color.yellow);
+						Debug.DrawRay(attack_ray.origin, attack_ray.direction * mouse_distance, Color.yellow);
 
 						//コライダーとレイが接触
 						if (attack_hit.collider)
@@ -361,65 +334,55 @@ public class Player_Ver2 : BaseStatusClass
 					transform.GetChild((int)PrefabChild.Arrow).gameObject.SetActive(false);
 				}
 
-				//移動処理
-				if (!move_stop)
-				{
-					if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-					{
-						now_move = (int)Direction.LEFT;
-						player_frip = false;//左向き
+				////移動処理
+				//if (!move_stop)
+				//{
+				//	if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+				//	{
+				//		//最高速度になるとそれ以上加速しない
+				//		if (rb2D.velocity.x > -LimitSpeed)
+				//		{
+				//			rb2D.AddForce(-transform.right * MoveSpeed, ForceMode2D.Force);
+				//		}
+				//	}
+				//	if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+				//	{
+				//		//最高速度になるとそれ以上加速しない
+				//		if (rb2D.velocity.x < LimitSpeed)
+				//		{
+				//			rb2D.AddForce(transform.right * MoveSpeed, ForceMode2D.Force);
+				//		}
+				//	}
+				//}
 
-						//最高速度になるとそれ以上加速しない
-						if (rb2D.velocity.x > -LimitSpeed)
-						{
-							rb2D.AddForce(-transform.right * (MoveSpeed), ForceMode2D.Force);
-						}
-					}
-					if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
-					{
-						now_move = (int)Direction.RIGHT;
-						player_frip = true;//右向き
+				////ジャンプ処理
+				//if (Input.GetKey(KeyCode.Space) && jump_count < 1)
+				//{
+				//	if (!jump_key_flag)
+				//	{
+				//		jump_key_flag = true;
+				//		move_stop = false;
 
-						//最高速度になるとそれ以上加速しない
-						if (rb2D.velocity.x < LimitSpeed)
-						{
-							rb2D.AddForce(transform.right * (MoveSpeed), ForceMode2D.Force);
-						}
-					}
-					if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D) || !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-					{
-						now_move = (int)Direction.STOP;
-					}
-				}
+				//		rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
-				//ジャンプ処理
-				if (Input.GetKey(KeyCode.Space) && jump_count < 1)
-				{
-					if (!jump_key_flag)
-					{
-						jump_key_flag = true;
-						move_stop = false;
-
-						rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
-
-						//カウント増加
-						jump_count++;
-					}
-				}
-				else
-				{
-					jump_key_flag = false;
-				}
+				//		//カウント増加
+				//		jump_count++;
+				//	}
+				//}
+				//else
+				//{
+				//	jump_key_flag = false;
+				//}
 
 				//クリックでカーソル方向にジャンプ採用するかは未定
 				if(attack_out)
                 {
-					//いったん加速度をリセット
-					rb2D.velocity = Vector3.zero;
-					//マウスの方向に設定したパワー分飛ばす
-					rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
-					attack_out = false;
-				}
+                    //いったん加速度をリセット
+                    rb2D.velocity = Vector3.zero;
+                    //マウスの方向に設定したパワー分飛ばす
+                    rb2D.AddForce(new Vector2(target.x, target.y).normalized * AttackOutPower, ForceMode2D.Impulse);
+                    attack_out = false;
+                }
 
 				//レイが敵に当たった場合
 				if (hit_enemy)
