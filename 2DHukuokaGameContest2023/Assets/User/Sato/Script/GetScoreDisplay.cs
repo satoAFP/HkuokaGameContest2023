@@ -19,8 +19,8 @@ public class GetScoreDisplay : MonoBehaviour
         {
             if (first)
             {
-                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
-                clone.transform.parent = gameObject.transform;
+                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity, transform.parent);
+                clone.GetComponent<RectTransform>().localPosition = new Vector3(530, 380, 0);
                 clone.GetComponent<Text>().text = ManagerAccessor.Instance.systemManager.BossScore.ToString();
                 first = false;
             }
@@ -32,8 +32,8 @@ public class GetScoreDisplay : MonoBehaviour
             //ƒ{ƒX“|‚µ‚½Œã‚Í“ü‚ç‚È‚¢
             if (!ManagerAccessor.Instance.systemManager.BossDethEnd)
             {
-                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity);
-                clone.transform.parent = gameObject.transform;
+                GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity, transform.parent);
+                clone.GetComponent<RectTransform>().localPosition = new Vector3(530, 380, 0);
                 clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
 
                 MemScore = ManagerAccessor.Instance.systemManager.Score;
