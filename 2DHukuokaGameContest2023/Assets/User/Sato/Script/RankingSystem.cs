@@ -8,6 +8,9 @@ public class RankingSystem : MonoBehaviour
     [SerializeField, Header("ランキング表示用")]
     private Text[] RankingText;
 
+    [SerializeField, Header("ランキングスコア表示用")]
+    private Text[] RankingScoreText;
+
     [SerializeField, Header("ランキング表示時のアクティブにするオブジェクト")]
     private GameObject[] ActiveObj;
 
@@ -45,7 +48,10 @@ public class RankingSystem : MonoBehaviour
     {
         //十位まで表示
         for (int i = 0; i < RankingText.Length; i++)
-            RankingText[i].text = (i + 1) + "位　" + Score[i].ToString();
+        {
+            RankingText[i].text = (i + 1) + "";
+            RankingScoreText[i].text = Score[i].ToString();
+        }
     }
 
     /// <summary>
