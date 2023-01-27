@@ -25,4 +25,5 @@ public class ManagerAccessor
     public BossManager bossManager;
     public RankingSystem rankingSystem;
     public SoundManager soundManager;
+    public MenuPop menuPop;
 }
