@@ -15,19 +15,20 @@ public class OnCursolUI : MonoBehaviour
         mouse.x -= 1920 / 2;
         mouse.y -= 1080 / 2;
 
-        Vector2 pos = gameObject.transform.parent.GetComponent<RectTransform>().localPosition;
-        Vector2 size = gameObject.transform.parent.GetComponent<RectTransform>().sizeDelta;
+        GameObject parent = gameObject.transform.parent.gameObject;
+        Vector2 pos = parent.GetComponent<RectTransform>().localPosition;
+        Vector2 size = parent.GetComponent<RectTransform>().sizeDelta;
 
 
         if (mouse.x > pos.x - (size.x / 2) && mouse.x < pos.x + (size.x / 2) &&
             mouse.y > pos.y - (size.y / 2) && mouse.y < pos.y + (size.y / 2)) 
         {
-            gameObject.transform.parent.gameObject.GetComponent<Outline>().effectColor = color;
+            parent.GetComponent<Outline>().effectColor = color;
             
         }
         else
         {
-            gameObject.transform.parent.gameObject.GetComponent<Outline>().effectColor = new Color(1, 1, 1, 0);
+            parent.GetComponent<Outline>().effectColor = new Color(1, 1, 1, 0);
         }
     }
 }
