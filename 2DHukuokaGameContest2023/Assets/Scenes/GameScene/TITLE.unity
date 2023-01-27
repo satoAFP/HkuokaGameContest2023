@@ -545,14 +545,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c933b26d34b938b498feee5e46a9d67e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6d8eb6c018a8d04d948dea513f051d7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 2, y: 2}
+  m_EffectDistance: {x: 2.5, y: 2.5}
   m_UseGraphicAlpha: 1
 --- !u!1001 &343788077
 PrefabInstance:
@@ -1016,14 +1016,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c933b26d34b938b498feee5e46a9d67e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6d8eb6c018a8d04d948dea513f051d7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 2, y: 2}
+  m_EffectDistance: {x: 2.5, y: 2.5}
   m_UseGraphicAlpha: 1
 --- !u!1 &687277084
 GameObject:
@@ -1258,7 +1258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 2, y: 2}
+  m_EffectDistance: {x: 2.5, y: 2.5}
   m_UseGraphicAlpha: 1
 --- !u!1001 &801725134
 PrefabInstance:
@@ -1622,7 +1622,19 @@ PrefabInstance:
     - target: {fileID: 1421105476953772685, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c933b26d34b938b498feee5e46a9d67e, type: 3}
+      objectReference: {fileID: 21300000, guid: e6d8eb6c018a8d04d948dea513f051d7, type: 3}
+    - target: {fileID: 1421105476953772685, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1421105476953772685, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1421105476953772685, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1421105476953772687, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_SizeDelta.x
       value: 400
@@ -1742,7 +1754,19 @@ PrefabInstance:
     - target: {fileID: 8360405048911472665, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c933b26d34b938b498feee5e46a9d67e, type: 3}
+      objectReference: {fileID: 21300000, guid: e6d8eb6c018a8d04d948dea513f051d7, type: 3}
+    - target: {fileID: 8360405048911472665, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8360405048911472665, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8360405048911472665, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
 --- !u!224 &806579977 stripped
@@ -2054,7 +2078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 2, y: 2}
+  m_EffectDistance: {x: 2.5, y: 2.5}
   m_UseGraphicAlpha: 1
 --- !u!224 &1009868844 stripped
 RectTransform:
