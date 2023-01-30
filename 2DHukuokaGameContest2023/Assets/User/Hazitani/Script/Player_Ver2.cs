@@ -292,6 +292,10 @@ public class Player_Ver2 : BaseStatusClass
 										ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
 									}
 								}
+								else
+                                {
+									attack_out_count = AttackOutCount;
+								}
 							}
 						}
 					}
