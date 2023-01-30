@@ -28,10 +28,12 @@ public class Graph : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //‚»‚ê‚¼‚ê‚Ìî•ñæ“¾
         score = ManagerAccessor.Instance.systemManager.Score;
         allcombo = ManagerAccessor.Instance.systemManager.AllCombo;
         time = ManagerAccessor.Instance.systemManager.Time;
 
+        //1““–‚½‚è‚Ì”’l
         hps = Needle[0].GetComponent<RectTransform>().sizeDelta.y / MaxScore;
         hpc = Needle[1].GetComponent<RectTransform>().sizeDelta.y / MaxCombo;
         hpt = Needle[2].GetComponent<RectTransform>().sizeDelta.y / MaxTime;
