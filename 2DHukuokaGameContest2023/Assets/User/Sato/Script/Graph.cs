@@ -110,7 +110,9 @@ public class Graph : MonoBehaviour
             if (OverEvaluationFrag[i])
                 overcount++;
 
-        if (overcount == 2)
+        if (overcount == 3)
+            EvaluationText.text = "頂きに立ちし者";
+        else if (overcount == 2)
             EvaluationText.text = "リミットブレイカー";
         else if (overcount == 1)
         {
