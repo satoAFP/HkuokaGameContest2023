@@ -49,8 +49,9 @@ public class TimeSystem : MonoBehaviour
             first = false;
         }
 
-        //フレームカウント
-        FrameCount++;
+        //メニューを開いていないときフレームカウント
+        if (!ManagerAccessor.Instance.menuPop.menu_pop_now)
+            FrameCount++;
 
 
         //スタートまでのカウントダウン
