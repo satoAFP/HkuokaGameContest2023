@@ -1748,7 +1748,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 0a1ff64ced5f9ee4d8f0e7d42e263f0a, type: 3}
-    m_FontSize: 68
+    m_FontSize: 61
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1759,7 +1759,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30B9\u30E9\u30C3\u30B7\u30E5\u30B4\u30C3\u30C9"
+  m_Text: "\u30EA\u30DF\u30C3\u30C8\u30D6\u30EC\u30A4\u30AB\u30FC"
 --- !u!114 &6337807958603252889
 MonoBehaviour:
   m_ObjectHideFlags: 0
