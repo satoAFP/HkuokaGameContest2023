@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SystemManager : MonoBehaviour
+public class SystemManager : Shake
 {
     [System.NonSerialized]
     public int Combo = 0;           //コンボ数
@@ -50,15 +50,6 @@ public class SystemManager : MonoBehaviour
     [SerializeField, Header("フィーバー待機時間(秒)"), Range(0, 100)]
     private int feverStopTime;
 
-    [SerializeField, Header("コンボリセット演出の時間(フレーム数)"), Range(0, 100)]
-    private int comboResetTime;
-
-    [SerializeField, Header("動く幅"), Range(0, 50)]
-    private float moveWidth;
-
-    [SerializeField, Header("待機フレーム"), Range(0, 10)]
-    private int stopFrame;
-
     [SerializeField, Header("ボスのHP"), Range(1, 20)]
     public int BossHP;
 
@@ -71,11 +62,6 @@ public class SystemManager : MonoBehaviour
     private bool fever_in = false;      //フィーバーのイン　（右端から中央まで）
     private bool fever_out = false;     //フィーバーのアウト（中央から左端まで）
     private int fever_stop_time = 0;    //フィーバー中央待機時間計測用
-    private int combo_reset_time = 0;   //コンボリセットの時間
-    private bool reset_once = false;    //コンボリセットで1回のみ実行
-    private Vector3 firstPos;       //初期位置記憶用
-    private Vector3 movePos;        //移動量入力用
-    private int frameCount = 0;     //フレームカウント用
 
 
     private void Start()
@@ -90,10 +76,8 @@ public class SystemManager : MonoBehaviour
         //フィーバーイメージを端に設定
         imageFever.transform.localPosition = feverPos;
 
-
-        //揺れの初期位置設定
-        firstPos = textCombo.transform.localPosition;
-        movePos = textCombo.transform.localPosition;
+        //初期位置設定
+        SetStartPos(textCombo.gameObject);
     }
 
     private void FixedUpdate()
@@ -154,7 +138,7 @@ public class SystemManager : MonoBehaviour
             }
 
             combo_reset_time++;
-            ComboResetShaking();
+            ComboResetShaking(textCombo.gameObject);
 
             if (combo_reset_time >= comboResetTime)
             {
@@ -164,22 +148,6 @@ public class SystemManager : MonoBehaviour
                 textCombo.transform.localPosition = firstPos;
                 ManagerAccessor.Instance.player.combo_reset = false;
             }
-        }
-    }
-
-    //コンボリセット揺れ(HitStop流用)
-    private void ComboResetShaking()
-    {
-        frameCount++;
-        if (frameCount == stopFrame)
-        {
-            if (firstPos.x <= textCombo.transform.localPosition.x)
-                movePos.x = firstPos.x - moveWidth;
-            else
-                movePos.x = firstPos.x + moveWidth;
-
-            textCombo.transform.localPosition = movePos;
-            frameCount = 0;
         }
     }
 }

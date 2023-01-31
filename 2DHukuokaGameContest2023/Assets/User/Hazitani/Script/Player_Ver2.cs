@@ -40,7 +40,7 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("攻撃を外した時の飛ぶ力"), Range(0, 100)]
 	private float AttackOutPower;
 
-	[SerializeField, Header("攻撃を外した時の飛べる回数"), Range(0, 100)]
+	[SerializeField, Header("攻撃を外せる回数")]
 	private int AttackOutCount;
 
 	[SerializeField, Header("攻撃を外した時に飛べるかどうか")]
@@ -110,21 +110,23 @@ public class Player_Ver2 : BaseStatusClass
 	private Ray2D cursor_ray;               //飛ばすレイ
 	private RaycastHit2D cursor_hit;        //レイが何かに当たった時の情報
 	private Vector3 cursor_rayPosition;     //レイを発射する位置
-	private Vector2 menu_velocity;			//メニュー後慣性保存用
+	private Vector2 menu_velocity;          //メニュー後慣性保存用
 
 
 	//システム関連
 	[System.NonSerialized]
 	public int combo_fever_in = 10;			//フィーバータイムに必要なコンボ数共有用
 	[System.NonSerialized]
-	public int combo_fever_count = 0;      //フィーバータイムに入るために必要なコンボ数カウント用
+	public int combo_fever_count = 0;		//フィーバータイムに入るために必要なコンボ数カウント用
 	[System.NonSerialized]
 	public int time_fever = 0;              //フィーバータイムの時間を数える用
 	[System.NonSerialized]
 	public int score_add = 0;               //これから加算されるスコア
 	[System.NonSerialized]
 	public bool combo_reset = false;        //コンボが減った時true
-	private bool menu_once = false;			//メニューを閉じた後実行回数制御用
+	private bool menu_once = false;         //メニューを閉じた後実行回数制御用
+	[System.NonSerialized]
+	public bool fever_down = false;			//フィーヴァーゲージが減った時true
 
 
 	//攻撃関連
@@ -147,10 +149,9 @@ public class Player_Ver2 : BaseStatusClass
 	[System.NonSerialized]
 	public BaseEnemyFly enemyObj = null;    //攻撃に当たった敵のオブジェクト
 	private bool attack_out = false;        //攻撃が敵に当たらなかった時true
-	private int attack_out_count = 0;       //攻撃が当たらなかったときに飛ぶ回数
 	private Vector2 jump_velocity;          //クリックジャンプの慣性保存用
 	private Vector3 target;                 //自身から見たマウスの位置
-
+	private int attack_out_count = 0;		//攻撃を外せる回数
 
 	//接地関連
 	private Ray2D ground_ray;					//飛ばすレイ
@@ -170,7 +171,10 @@ public class Player_Ver2 : BaseStatusClass
 
 		//フィーバータイムに必要なコンボ数共有用
 		combo_fever_in = FeverCombo;
-		
+
+		//攻撃を外せる回数設定
+		attack_out_count = AttackOutCount;
+
 		//やじるしを表示するかどうか
 		if (AttackCursor)
 		{
@@ -253,6 +257,7 @@ public class Player_Ver2 : BaseStatusClass
 								hit_enemy_pos = enemyObj.transform.position;
 								hit_enemy = true;
 								hitstop_frame = 0;
+								attack_out_count = AttackOutCount;
 							}
 						}
 						//攻撃外した
@@ -260,11 +265,36 @@ public class Player_Ver2 : BaseStatusClass
                         {
 							if (AttackOutOn)
 							{
-								//ぶっ飛び回数上限に達していない時
-								if (attack_out_count < AttackOutCount)
+								attack_out = true;
+
+								if (!ManagerAccessor.Instance.systemManager.FeverTime)
 								{
-									attack_out_count++;
-									attack_out = true;
+									//攻撃が外れて0になったらフィーバーまでのコンボが減る
+									if (combo_fever_count > 0)
+									{
+										combo_fever_count--;
+										fever_down = true;
+									}
+									else
+									{
+										if (attack_out_count > 0)
+										{
+											attack_out_count--;
+										}
+										fever_down = true;
+									}
+
+									//攻撃を一定回数外すとコンボリセット
+									if (attack_out_count <= 0)
+									{
+										//コンボをリセットして反映
+										ManagerAccessor.Instance.systemManager.Combo = 0;
+										ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+									}
+								}
+								else
+                                {
+									attack_out_count = AttackOutCount;
 								}
 							}
 						}
@@ -302,7 +332,7 @@ public class Player_Ver2 : BaseStatusClass
 
 					//マウスカーソルの設定
 					Cursor.visible = MouseCursor;
-					Cursor.lockState = CursorLockMode.Confined;
+					//Cursor.lockState = CursorLockMode.Confined;
 
 					//落下最高速度を超えないようにする
 					if (rb2D.velocity.y < -FallSpeed)
@@ -490,6 +520,7 @@ public class Player_Ver2 : BaseStatusClass
 						{
 							//フィーバータイム終了
 							ManagerAccessor.Instance.systemManager.FeverTime = false;
+							ManagerAccessor.Instance.feverGage.countdown = FeverTime;
 							time_fever = 0;
 
 							//オーラの処理
@@ -514,8 +545,8 @@ public class Player_Ver2 : BaseStatusClass
 		else
 		{
 			//マウスカーソルの設定
-			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
+			//Cursor.visible = true;
+			//Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 		}
@@ -690,9 +721,6 @@ public class Player_Ver2 : BaseStatusClass
 	{
 		//剣の回転
 		StartCoroutine(StartRotato());
-
-		//クリックジャンプ回数リセット
-		attack_out_count = 0;
 
 		//コンボ増やして反映
 		ManagerAccessor.Instance.systemManager.Combo++;

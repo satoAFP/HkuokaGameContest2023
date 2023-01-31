@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FeverGage : MonoBehaviour
+public class FeverGage : Shake
 {
     [SerializeField, Header("フィルオブジェクト")]
     private GameObject FillObj;
@@ -20,13 +20,24 @@ public class FeverGage : MonoBehaviour
     [SerializeField, Header("通常時のゲージ色")]
     private Color32 CommonColor;
 
+    [SerializeField, Header("フィーバーオブジェクト")]
+    public Slider sliderFever;
+
 
     private bool once = false;
-    private float countdown = 10.0f;
+    [System.NonSerialized]
+    public float countdown = 10.0f;
 
     private void Start()
     {
+        //マネージャーに登録
+        ManagerAccessor.Instance.feverGage = this;
+
+        countdown = ManagerAccessor.Instance.player.FeverTime;
+
         this.GetComponent<Slider>().value = 0;
+
+        SetStartPos(sliderFever.gameObject);
     }
 
     private void FixedUpdate()
@@ -38,6 +49,19 @@ public class FeverGage : MonoBehaviour
                 once = true;
                 FillObj.GetComponent<Image>().color = CommonColor;
                 FillObj.GetComponent<Image>().sprite = CommonSprite;
+            }
+
+            if(ManagerAccessor.Instance.player.fever_down)
+            {
+                combo_reset_time++;
+                ComboResetShaking(sliderFever.gameObject);
+
+                if (combo_reset_time >= comboResetTime)
+                {
+                    combo_reset_time = 0;
+                    this.transform.localPosition = firstPos;
+                    ManagerAccessor.Instance.player.fever_down = false;
+                }
             }
             
             this.GetComponent<Slider>().value = ManagerAccessor.Instance.player.combo_fever_count;
