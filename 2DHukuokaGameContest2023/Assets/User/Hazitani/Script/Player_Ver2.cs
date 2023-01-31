@@ -89,7 +89,10 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("フィーバータイムの時間"), Range(0, 100)]
 	public int FeverTime;
 
-	
+	[SerializeField, Header("ジャンプ時のSE")]
+	private AudioClip SE;
+
+
 	private enum PrefabChild
     {
 		PlayerSprite = 0,
@@ -247,6 +250,10 @@ public class Player_Ver2 : BaseStatusClass
 
 						//レイを黄色で表示させる
 						Debug.DrawRay(attack_ray.origin, attack_ray.direction * mouse_distance, Color.yellow);
+
+						//SE鳴らす
+						//gameObject.GetComponent<AudioSource>().Stop();
+						gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
 
 						//コライダーとレイが接触
 						if (attack_hit.collider)
