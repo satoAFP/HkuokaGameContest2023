@@ -2035,6 +2035,10 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: SE
+      value: 
+      objectReference: {fileID: 8300000, guid: a29f5cb419f19654ab7f342e7a3ae173, type: 3}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: AttackOutOn
       value: 1
       objectReference: {fileID: 0}
@@ -7795,8 +7799,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.5294118, b: 0, a: 0}
-  m_EffectDistance: {x: 12, y: 12}
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 3, y: 3}
   m_UseGraphicAlpha: 1
 --- !u!4 &1079265371 stripped
 Transform:
