@@ -27,5 +27,4 @@ public class ManagerAccessor
     public SoundManager soundManager;
     public MenuPop menuPop;
     public FeverGage feverGage;
-    public Shake shake;
 }

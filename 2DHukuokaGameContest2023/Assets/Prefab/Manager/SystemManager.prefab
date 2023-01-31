@@ -43,6 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4084299b95717d94883d3cc7f868cc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comboResetTime: 15
+  moveWidth: 10
+  stopFrame: 1
   textCombo: {fileID: 0}
   textMaxCombo: {fileID: 0}
   textScore: {fileID: 0}
@@ -50,9 +53,6 @@ MonoBehaviour:
   feverPos: {x: 1200, y: 350, z: 0}
   feverSpeed: 30
   feverStopTime: 2
-  comboResetTime: 15
-  moveWidth: 10
-  stopFrame: 1
   BossHP: 10
   BossScore: 1000000
   BossDethTime: 2
