@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagerScript : MonoBehaviour
 {
+    [SerializeField, Header("ƒNƒŠƒbƒNŽž‚ÌES")] private AudioClip SE;
+
     private void Start()
     {
         ManagerAccessor.Instance.sceneManager = this;
@@ -12,11 +14,17 @@ public class SceneManagerScript : MonoBehaviour
 
     public void SceneMove(string name)
     {
+        //SE–Â‚ç‚·
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         SceneManager.LoadScene(name);
     }
 
     public void SceneReload()
     {
+        //SE–Â‚ç‚·
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

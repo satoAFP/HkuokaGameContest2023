@@ -11,6 +11,8 @@ public class RankingSystem : MonoBehaviour
     [SerializeField, Header("ランキング表示時のアクティブにするオブジェクト")]
     private GameObject[] ActiveObj;
 
+    [SerializeField, Header("クリック時のES")] private AudioClip SE;
+
     [System.NonSerialized]
     public int[] Score;         //計算用スコア
 
@@ -22,6 +24,9 @@ public class RankingSystem : MonoBehaviour
 
     public void OnRanking()
     {
+        //SE鳴らす
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         //オブジェクト表示
         for (int i = 0; i < ActiveObj.Length; i++)
             ActiveObj[i].SetActive(true);
@@ -34,6 +39,9 @@ public class RankingSystem : MonoBehaviour
 
     public void OfRanking()
     {
+        //SE鳴らす
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         //オブジェクト表示
         for (int i = 0; i < ActiveObj.Length; i++)
             ActiveObj[i].SetActive(false);
@@ -108,6 +116,9 @@ public class RankingSystem : MonoBehaviour
     //ランキングデータ消去用
     public void DeleteScore()
     {
+        //SE鳴らす
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         PlayerPrefs.DeleteAll();
     }
 

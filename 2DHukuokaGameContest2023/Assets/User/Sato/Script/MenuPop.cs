@@ -9,6 +9,8 @@ public class MenuPop : MonoBehaviour
 
     [SerializeField, Header("メニューボタンのテキスト")] private Text text;
 
+    [SerializeField, Header("クリック時のES")] private AudioClip SE;
+
     [System.NonSerialized] public bool menu_pop_now = false;
 
     private void Start()
@@ -19,6 +21,9 @@ public class MenuPop : MonoBehaviour
 
     public void PopMenu()
     {
+        //SE鳴らす
+        gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+
         if (Menu.activeSelf)
         {
             Menu.SetActive(false);

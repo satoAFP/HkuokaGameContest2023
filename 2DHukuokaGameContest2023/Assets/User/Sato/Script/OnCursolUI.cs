@@ -7,6 +7,9 @@ public class OnCursolUI : MonoBehaviour
 {
     [SerializeField, Header("変化させる色")] private Color color;
 
+    [SerializeField, Header("カーソルを合わせた時のSE")] private AudioClip SE;
+
+    private bool first = true;
 
     // Update is called once per frame
     void Update()
@@ -24,11 +27,16 @@ public class OnCursolUI : MonoBehaviour
             mouse.y > pos.y - (size.y / 2) && mouse.y < pos.y + (size.y / 2)) 
         {
             parent.GetComponent<Outline>().effectColor = color;
-            
+
+            //入るたびにならす
+            if (first)
+                gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
+            first = false;
         }
         else
         {
             parent.GetComponent<Outline>().effectColor = new Color(1, 1, 1, 0);
+            first = true;
         }
     }
 }
