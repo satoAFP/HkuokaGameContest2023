@@ -12,6 +12,7 @@ public class SceneManagerScript : MonoBehaviour
 
     public void SceneMove(string name)
     {
+        Cursor.visible = true;
         SceneManager.LoadScene(name);
     }
 
