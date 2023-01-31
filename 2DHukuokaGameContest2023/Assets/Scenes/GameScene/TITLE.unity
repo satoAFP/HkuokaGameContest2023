@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 3, y: 3}
+  m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 1
 --- !u!1001 &343788077
 PrefabInstance:
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 3, y: 3}
+  m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 1
 --- !u!1 &687277084
 GameObject:
@@ -1322,7 +1322,7 @@ PrefabInstance:
     - target: {fileID: 1421105475571147196, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_FontData.m_Font
       value: 
-      objectReference: {fileID: 12800000, guid: 0a1ff64ced5f9ee4d8f0e7d42e263f0a, type: 3}
+      objectReference: {fileID: 12800000, guid: 8b6af2e40f369e14c8d029fc7f18cba0, type: 3}
     - target: {fileID: 1421105475571147196, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_FontData.m_FontStyle
       value: 1
@@ -1714,7 +1714,7 @@ PrefabInstance:
     - target: {fileID: 6061242391453845697, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_FontData.m_Font
       value: 
-      objectReference: {fileID: 12800000, guid: 0a1ff64ced5f9ee4d8f0e7d42e263f0a, type: 3}
+      objectReference: {fileID: 12800000, guid: 8b6af2e40f369e14c8d029fc7f18cba0, type: 3}
     - target: {fileID: 6061242391453845697, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_FontData.m_MaxSize
       value: 118
@@ -2209,7 +2209,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 0a1ff64ced5f9ee4d8f0e7d42e263f0a, type: 3}
+    m_Font: {fileID: 12800000, guid: 8b6af2e40f369e14c8d029fc7f18cba0, type: 3}
     m_FontSize: 60
     m_FontStyle: 1
     m_BestFit: 0
@@ -2592,7 +2592,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 0a1ff64ced5f9ee4d8f0e7d42e263f0a, type: 3}
+    m_Font: {fileID: 12800000, guid: 8b6af2e40f369e14c8d029fc7f18cba0, type: 3}
     m_FontSize: 50
     m_FontStyle: 1
     m_BestFit: 0
