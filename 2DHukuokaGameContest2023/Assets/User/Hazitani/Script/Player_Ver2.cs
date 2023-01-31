@@ -312,6 +312,10 @@ public class Player_Ver2 : BaseStatusClass
 			//まだスタートしていない
 			if (!ManagerAccessor.Instance.systemManager.GameStart)
 			{
+				//マウスカーソルの設定
+				Cursor.visible = MouseCursor;
+				//Cursor.lockState = CursorLockMode.Confined;
+
 				rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 			}
 			else
@@ -545,7 +549,7 @@ public class Player_Ver2 : BaseStatusClass
 		else
 		{
 			//マウスカーソルの設定
-			//Cursor.visible = true;
+			Cursor.visible = true;
 			//Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
