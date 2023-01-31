@@ -24,12 +24,6 @@ public class Shake : MonoBehaviour
     [System.NonSerialized]
     protected bool reset_once = false;    //コンボリセットで1回のみ実行
 
-    private void Start()
-    {
-        //マネージャーに登録
-        ManagerAccessor.Instance.shake = this;
-    }
-
     //初期位置設定
     protected void SetStartPos(GameObject obj)
     {
