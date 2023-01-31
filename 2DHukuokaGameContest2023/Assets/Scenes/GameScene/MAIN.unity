@@ -1158,6 +1158,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41cac895da65eeb42967c1431b12c25c, type: 3}
+--- !u!114 &116405572 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8668948014500744725, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+  m_PrefabInstance: {fileID: 256007501}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &125164984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,7 +1988,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: AttackOutCount
-      value: 100
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: AttackOutPower
@@ -2155,6 +2166,26 @@ PrefabInstance:
     - target: {fileID: 8668948014500744728, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
       propertyPath: m_Name
       value: FeverGage
+      objectReference: {fileID: 0}
+    - target: {fileID: 8668948014500744728, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8668948014500744730, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: moveWidth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8668948014500744730, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: stopFrame
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8668948014500744730, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: sliderFever
+      value: 
+      objectReference: {fileID: 116405572}
+    - target: {fileID: 8668948014500744730, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: comboResetTime
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8668948014500744731, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
       propertyPath: m_Pivot.x
@@ -3550,7 +3581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7143794379980919924, guid: af50b5cd0abc70741b328edd57eca5bc, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7143794379980919924, guid: af50b5cd0abc70741b328edd57eca5bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7719,7 +7750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2509048705533358506, guid: 1f6d6a48e2375554b89a089b1f449f72, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2509048705533358506, guid: 1f6d6a48e2375554b89a089b1f449f72, type: 3}
       propertyPath: m_LocalPosition.x

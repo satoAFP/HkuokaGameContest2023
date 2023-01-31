@@ -33,7 +33,7 @@ public class FeverGage : Shake
         //マネージャーに登録
         ManagerAccessor.Instance.feverGage = this;
 
-        countdown = ManagerAccessor.Instance.player.FeverTime;
+        //countdown = ManagerAccessor.Instance.player.FeverTime;
 
         this.GetComponent<Slider>().value = 0;
 
