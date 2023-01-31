@@ -14915,7 +14915,7 @@ PrefabInstance:
       objectReference: {fileID: 12800000, guid: 8b6af2e40f369e14c8d029fc7f18cba0, type: 3}
     - target: {fileID: 3148385014746977012, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3638772889662330374, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: m_Pivot.x
