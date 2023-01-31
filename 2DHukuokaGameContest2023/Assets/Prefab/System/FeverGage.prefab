@@ -103,6 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947affb4a1c594a48ba02d4e4eaf37d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comboResetTime: 15
+  moveWidth: 10
+  stopFrame: 1
   FillObj: {fileID: 8668948016388554578}
   FeverSprite: {fileID: 21300000, guid: 08c60d507a1383949929fcb1b6aac169, type: 3}
   FeverColor:
@@ -112,6 +115,7 @@ MonoBehaviour:
   CommonColor:
     serializedVersion: 2
     rgba: 4278224895
+  sliderFever: {fileID: 8668948014500744725}
 --- !u!1 &8668948014896452220
 GameObject:
   m_ObjectHideFlags: 0

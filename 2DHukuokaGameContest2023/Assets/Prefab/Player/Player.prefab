@@ -371,16 +371,20 @@ MonoBehaviour:
   Gravity: 50
   FallSpeed: 20
   AttackDistance: 5
+  AttackOutPower: 21.5
+  AttackOutCount: 3
+  AttackOutOn: 1
   AttackCoolTime: 10
   AttackMovePos: {x: 0.5, y: 0, z: 0}
-  AttackMoveSpeed: 0.7
+  AttackMoveSpeed: 1
   SubjugationKnockback: {x: 9, y: 20}
+  AttackedMove: 1
   HitStopFrame: 7
   RotationAnimator: {fileID: 779877733}
-  AttackCursor: 1
+  AttackCursor: 0
   CousorColorOk:
     serializedVersion: 2
-    rgba: 4278190335
+    rgba: 4278224895
   CousorColorNo:
     serializedVersion: 2
     rgba: 4294967295
