@@ -17,6 +17,9 @@ public class TimeSystem : MonoBehaviour
     [SerializeField, Header("カウントダウン表示用テキスト")]
     private Text CountDownText;
 
+    [SerializeField, Header("ゲーム終了表示用テキスト")]
+    private GameObject TimeUpText;
+
     [SerializeField, Header("ランキングパネル")]
     private GameObject ResultPanel;
 
@@ -89,14 +92,17 @@ public class TimeSystem : MonoBehaviour
                 //共有情報のゲーム終了
                 ManagerAccessor.Instance.systemManager.GameEnd = true;
 
-                //画面揺らす
+                //ボス撃破なら画面揺らす
                 if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
                     ManagerAccessor.Instance.systemManager.MoveCamera = true;
+                else//タイムアップならテキスト表示
+                    TimeUpText.SetActive(true);
 
                 if (ManagerAccessor.Instance.systemManager.BossDethTime * 50 <= BossDethCount)
                 {
                     //画面揺れ止める
                     ManagerAccessor.Instance.systemManager.MoveCamera = false;
+                    TimeUpText.SetActive(false);
 
                     if (first2)
                     {
