@@ -252,7 +252,6 @@ public class Player_Ver2 : BaseStatusClass
 						Debug.DrawRay(attack_ray.origin, attack_ray.direction * mouse_distance, Color.yellow);
 
 						//SE鳴らす
-						//gameObject.GetComponent<AudioSource>().Stop();
 						gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
 
 						//コライダーとレイが接触
