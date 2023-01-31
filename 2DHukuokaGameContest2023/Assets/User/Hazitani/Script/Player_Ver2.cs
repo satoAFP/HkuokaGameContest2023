@@ -545,7 +545,7 @@ public class Player_Ver2 : BaseStatusClass
 		else
 		{
 			//マウスカーソルの設定
-			//Cursor.visible = true;
+			Cursor.visible = true;
 			//Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
