@@ -1931,6 +1931,10 @@ PrefabInstance:
       propertyPath: AttackCursor
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 347360261909828779, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 347360261909828781, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_Name
       value: Player (1)
@@ -1941,7 +1945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828950, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.6
+      value: -17.17
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828950, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4838,7 +4842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 670145996862546728, guid: 5ff1eed83865cc34391143cc6c5d57c0, type: 3}
       propertyPath: FirstSpownFrame
-      value: 120
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 670145996862546730, guid: 5ff1eed83865cc34391143cc6c5d57c0, type: 3}
       propertyPath: m_Name
