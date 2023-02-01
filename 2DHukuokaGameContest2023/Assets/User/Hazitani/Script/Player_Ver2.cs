@@ -127,6 +127,7 @@ public class Player_Ver2 : BaseStatusClass
 	public int score_add = 0;               //これから加算されるスコア
 	[System.NonSerialized]
 	public bool combo_reset = false;        //コンボが減った時true
+	private bool combo_reset_once = false;  //回数制限用
 	private bool menu_once = false;         //メニューを閉じた後実行回数制御用
 	[System.NonSerialized]
 	public bool fever_down = false;			//フィーヴァーゲージが減った時true
@@ -259,6 +260,8 @@ public class Player_Ver2 : BaseStatusClass
 						{
 							if (attack_hit.collider.tag == "Enemy")
 							{
+								combo_reset_once = false;
+								Debug.Log(combo_reset);
 								enemyObj = attack_hit.collider.gameObject.GetComponent<BaseEnemyFly>();
 								hit_enemy_pos = enemyObj.transform.position;
 								hit_enemy = true;
@@ -293,10 +296,15 @@ public class Player_Ver2 : BaseStatusClass
 									//攻撃を一定回数外すとコンボリセット
 									if (attack_out_count <= 0)
 									{
-										//コンボをリセットして反映
-										ManagerAccessor.Instance.systemManager.Combo = 0;
-										ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
-										combo_reset = true;
+										if (!combo_reset_once)
+										{
+											combo_reset_once = true;
+
+											//コンボをリセットして反映
+											ManagerAccessor.Instance.systemManager.Combo = 0;
+											ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+											combo_reset = true;
+										}
 									}
 								}
 								else
