@@ -2340,6 +2340,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2102048170}
     m_Modifications:
+    - target: {fileID: 8668948014500744725, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8668948014500744728, guid: 6c3ce9b5b9a05a84f9b3bdfda701dae9, type: 3}
       propertyPath: m_Name
       value: FeverGage
