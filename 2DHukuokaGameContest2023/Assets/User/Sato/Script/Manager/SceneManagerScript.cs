@@ -17,6 +17,8 @@ public class SceneManagerScript : MonoBehaviour
         //SE�炷
         gameObject.GetComponent<AudioSource>().PlayOneShot(SE);
 
+        Cursor.visible = true;
+
         SceneManager.LoadScene(name);
     }
 
