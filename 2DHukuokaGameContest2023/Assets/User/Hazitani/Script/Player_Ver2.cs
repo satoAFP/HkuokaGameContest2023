@@ -296,6 +296,7 @@ public class Player_Ver2 : BaseStatusClass
 										//コンボをリセットして反映
 										ManagerAccessor.Instance.systemManager.Combo = 0;
 										ManagerAccessor.Instance.systemManager.textCombo.text = ManagerAccessor.Instance.systemManager.Combo.ToString();
+										combo_reset = true;
 									}
 								}
 								else
