@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PlayerAnimation : BaseStatusClass
@@ -13,6 +14,7 @@ public class PlayerAnimation : BaseStatusClass
 	///			rainbow_aura
 	///			aura
 	///		Arrow
+	///			ArrowImage
 	///		
 	/// この順番じゃないとGetChild関数がバグります
 	/// </summary>
@@ -76,6 +78,15 @@ public class PlayerAnimation : BaseStatusClass
 
 	[SerializeField, Header("止める時間(秒)"), Range(0, 100)]
 	private int StopTime;
+
+	[SerializeField, Header("オープニングテキスト")]
+	private Text OpeningText;
+
+	[SerializeField, Header("テキストフェードイン位置")]
+	private float TextFadeIn;
+
+	[SerializeField, Header("テキストフェードアウト位置")]
+	private float TextFadeOut;
 
 	public enum Direction
 	{
@@ -153,7 +164,9 @@ public class PlayerAnimation : BaseStatusClass
 	private Vector3 velocity;                   //移動量
 	private float view = 0.0f;                  //カメラ用
 	private bool JumpAni = false;               //ジャンプ用
-	private int stopTime = 0;					//止める時間
+	private int stopTime = 0;                   //止める時間
+	private float textAlpha = 0;				//テキストの透明度
+	private bool textAlpha_out = false;			//テキストの透明度
 	private bool first = true;
 
 
@@ -255,7 +268,27 @@ public class PlayerAnimation : BaseStatusClass
 		Cursor.visible = MouseCursor;
 		//Cursor.lockState = CursorLockMode.Confined;
 
-
+		//テキストフェードイン
+		if (transform.position.x >= TextFadeIn && !textAlpha_out)
+		{
+			if (textAlpha < 1.0f)
+			{
+				textAlpha += 0.1f;
+				OpeningText.color = new Color(1.0f, 0.53f, 0.0f, textAlpha);
+			}
+			else
+			{
+				textAlpha_out = true;
+			}
+		}
+		else if(transform.position.x >= TextFadeOut && textAlpha_out)
+        {
+			if (textAlpha > 0.0f)
+			{
+				textAlpha -= 0.1f;
+				OpeningText.color = new Color(1.0f, 0.53f, 0.0f, textAlpha);
+			}
+		}
 
 		//座標の固定と解除
 		if (freeze)
