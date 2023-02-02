@@ -712,7 +712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: EndTime
-      value: 180
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: ResultPanel
@@ -3104,6 +3104,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -366
       objectReference: {fileID: 0}
+    - target: {fileID: 1421105475712600580, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1421105475829480808, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -3226,7 +3230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1421105476116916382, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1421105476336763679, guid: 11e6700a57cc320439a6b703f335813f, type: 3}
       propertyPath: m_AnchorMax.y
