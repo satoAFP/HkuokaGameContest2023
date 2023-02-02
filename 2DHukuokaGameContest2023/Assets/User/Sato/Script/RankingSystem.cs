@@ -6,7 +6,13 @@ using UnityEngine.UI;
 public class RankingSystem : MonoBehaviour
 {
     [SerializeField, Header("ランキング表示用")]
-    private Text[] RankingText;
+    private Text[] ScoreText;
+
+    [SerializeField, Header("ランキング表示用")]
+    private Text[] ComboText;
+
+    [SerializeField, Header("ランキング表示用")]
+    private Text[] TimeText;
 
     [SerializeField, Header("ランキング表示時のアクティブにするオブジェクト")]
     private GameObject[] ActiveObj;
@@ -15,6 +21,12 @@ public class RankingSystem : MonoBehaviour
 
     [System.NonSerialized]
     public int[] Score;         //計算用スコア
+
+    [System.NonSerialized]
+    public int[] Combo;         //計算用スコア
+
+    [System.NonSerialized]
+    public int[] Time;         //計算用スコア
 
     private void Start()
     {
@@ -52,12 +64,20 @@ public class RankingSystem : MonoBehaviour
     public void DisplayRanking()
     {
         //十位まで表示
-        for (int i = 0; i < RankingText.Length; i++)
+        for (int i = 0; i < ScoreText.Length; i++)
         {
             if (i + 1 < 10)
-                RankingText[i].text = " " + (i + 1) + "位　" + Score[i].ToString();
+            {
+                ScoreText[i].text = " " + (i + 1) + "位　" + Score[i].ToString();
+                ComboText[i].text = " " + (i + 1) + "位　" + Combo[i].ToString();
+                TimeText[i].text = " " + (i + 1) + "位　" + Time[i].ToString();
+            }
             else
-                RankingText[i].text = (i + 1) + "位　" + Score[i].ToString();
+            {
+                ScoreText[i].text = (i + 1) + "位　" + Score[i].ToString();
+                ComboText[i].text = (i + 1) + "位　" + Combo[i].ToString();
+                TimeText[i].text = (i + 1) + "位　" + Time[i].ToString();
+            }
         }
     }
 
@@ -68,7 +88,7 @@ public class RankingSystem : MonoBehaviour
     {
         int max = 0;
         int max_pos = 0;
-
+        //スコアのソート
         for (int i = 0; i < Score.Length; i++)
         {
             max = Score[i];
@@ -87,14 +107,64 @@ public class RankingSystem : MonoBehaviour
             Score[max_pos] = Score[i];
             Score[i] = max;
         }
+
+        max = 0;
+        max_pos = 0;
+        //コンボのソート
+        for (int i = 0; i < Combo.Length; i++)
+        {
+            max = Combo[i];
+            max_pos = i;
+            for (int j = i + 1; j < Combo.Length; j++)
+            {
+                if (Combo[i] < Combo[j])
+                {
+                    if (max < Combo[j])
+                    {
+                        max = Combo[j];
+                        max_pos = j;
+                    }
+                }
+            }
+            Combo[max_pos] = Combo[i];
+            Combo[i] = max;
+        }
+
+        max = 0;
+        max_pos = 0;
+        //タイムのソート
+        for (int i = 0; i < Time.Length; i++)
+        {
+            max = Time[i];
+            max_pos = i;
+            for (int j = i + 1; j < Time.Length; j++)
+            {
+                if (Time[i] < Time[j])
+                {
+                    if (max < Time[j])
+                    {
+                        max = Time[j];
+                        max_pos = j;
+                    }
+                }
+            }
+            Time[max_pos] = Time[i];
+            Time[i] = max;
+        }
     }
 
     //初期化
     public void Init()
     {
-        Score = new int[RankingText.Length + 1];
+        Score = new int[ScoreText.Length + 1];
+        Combo = new int[ComboText.Length + 1];
+        Time = new int[TimeText.Length + 1];
         for (int i = 0; i < Score.Length; i++)
+        {
             Score[i] = 0;
+            Combo[i] = 0;
+            Time[i] = 0;
+        }
     }
 
 
@@ -102,7 +172,11 @@ public class RankingSystem : MonoBehaviour
     public void MemScore()
     {
         for (int i = 0; i < Score.Length; i++)
+        {
             PlayerPrefs.SetInt("SCORE" + i, Score[i]);
+            PlayerPrefs.SetInt("COMBO" + i, Combo[i]);
+            PlayerPrefs.SetInt("TIME" + i, Time[i]);
+        }
         PlayerPrefs.Save();
     }
 
@@ -110,7 +184,11 @@ public class RankingSystem : MonoBehaviour
     public void WriteScore()
     {
         for (int i = 0; i < Score.Length; i++)
+        {
             Score[i] = PlayerPrefs.GetInt("SCORE" + i, 0);
+            Combo[i] = PlayerPrefs.GetInt("COMBO" + i, 0);
+            Time[i] = PlayerPrefs.GetInt("TIME" + i, 0);
+        }
     }
 
     //ランキングデータ消去用

@@ -23,6 +23,12 @@ public class TimeSystem : MonoBehaviour
     [SerializeField, Header("ランキングパネル")]
     private GameObject ResultPanel;
 
+    [SerializeField, Header("ボス撃破時時のSE")]
+    private AudioClip ClearSE;
+
+    [SerializeField, Header("タイムアップ時のSE")]
+    private AudioClip TimeUpSE;
+
     private int FrameCount = 0;         //フレームカウント用
     private int CDFrameCount = 0;       //カウントダウンカウント用
     private int BossDethCount = 0;      //ボスが死んでからリザルトまで行く時間をカウントする変数
@@ -31,7 +37,7 @@ public class TimeSystem : MonoBehaviour
     //最初の一回だけ入れる処理
     private bool first = true;          
     private bool first2 = true;
-
+    private bool first3 = true;
 
     private void Start()
     {
@@ -94,9 +100,23 @@ public class TimeSystem : MonoBehaviour
 
                 //ボス撃破なら画面揺らす
                 if (ManagerAccessor.Instance.systemManager.BossHP <= 0)
+                {
                     ManagerAccessor.Instance.systemManager.MoveCamera = true;
+
+                    //SEを鳴らす
+                    if(first3)
+                        gameObject.GetComponent<AudioSource>().PlayOneShot(ClearSE);
+                    first3 = false;
+                }
                 else//タイムアップならテキスト表示
+                {
                     TimeUpText.SetActive(true);
+
+                    //SEを鳴らす
+                    if (first3)
+                        gameObject.GetComponent<AudioSource>().PlayOneShot(TimeUpSE);
+                    first3 = false;
+                }
 
                 if (ManagerAccessor.Instance.systemManager.BossDethTime * 50 <= BossDethCount)
                 {
@@ -123,6 +143,8 @@ public class TimeSystem : MonoBehaviour
                         ranking.Init();
                         ranking.WriteScore();
                         ranking.Score[10] = ManagerAccessor.Instance.systemManager.Score;
+                        ranking.Combo[10] = ManagerAccessor.Instance.systemManager.MaxCombo;
+                        ranking.Time[10] = ManagerAccessor.Instance.systemManager.Time;
                         ranking.Sort();
                         ranking.MemScore();
 
