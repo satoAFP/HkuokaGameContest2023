@@ -922,6 +922,9 @@ MonoBehaviour:
   freeze: 0
   cameras: {fileID: 208791135}
   StopTime: 0
+  OpeningText: {fileID: 1447446617}
+  TextFadeIn: -10
+  TextFadeOut: 10
 --- !u!1001 &277207045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2430,7 +2433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828950, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.17
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 347360261909828950, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7850,7 +7853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.5294118, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.5294118, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

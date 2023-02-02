@@ -14,6 +14,7 @@ public class Player_Ver2 : BaseStatusClass
 	///			rainbow_aura
 	///			aura
 	///		Arrow
+	///			ArrowImage
 	///		
 	/// ‚±‚Ì‡”Ô‚¶‚á‚È‚¢‚ÆGetChildŠÖ”‚ªƒoƒO‚è‚Ü‚·
 	/// </summary>
