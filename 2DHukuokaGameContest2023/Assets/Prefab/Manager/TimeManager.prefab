@@ -153,6 +153,7 @@ MonoBehaviour:
   CountDownText: {fileID: 7696781470574570386}
   TimeUpText: {fileID: 3514715804856216091}
   ResultPanel: {fileID: 0}
+  StartSE: {fileID: 8300000, guid: 204e4a819eb4da04fbe080f4c62fb45a, type: 3}
   ClearSE: {fileID: 8300000, guid: 4175276d5608c2140b8f57d6e6f1ae4e, type: 3}
   TimeUpSE: {fileID: 8300000, guid: 204e4a819eb4da04fbe080f4c62fb45a, type: 3}
 --- !u!82 &2401422918739372114

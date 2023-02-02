@@ -23,6 +23,9 @@ public class TimeSystem : MonoBehaviour
     [SerializeField, Header("ランキングパネル")]
     private GameObject ResultPanel;
 
+    [SerializeField, Header("ゲーム開始時のSE")]
+    private AudioClip StartSE;
+
     [SerializeField, Header("ボス撃破時時のSE")]
     private AudioClip ClearSE;
 
@@ -77,6 +80,8 @@ public class TimeSystem : MonoBehaviour
                 ManagerAccessor.Instance.systemManager.GameStart = true;
                 ManagerAccessor.Instance.player.rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
                 CountDownText.gameObject.SetActive(false);
+
+                gameObject.GetComponent<AudioSource>().PlayOneShot(StartSE);
             }
         }
 
