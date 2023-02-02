@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TimeSystem : MonoBehaviour
 {
@@ -81,7 +82,8 @@ public class TimeSystem : MonoBehaviour
                 ManagerAccessor.Instance.player.rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
                 CountDownText.gameObject.SetActive(false);
 
-                gameObject.GetComponent<AudioSource>().PlayOneShot(StartSE);
+                if (SceneManager.GetActiveScene().name == "MAIN")
+                    gameObject.GetComponent<AudioSource>().PlayOneShot(StartSE);
             }
         }
 
