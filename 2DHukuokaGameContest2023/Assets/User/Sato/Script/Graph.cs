@@ -138,7 +138,7 @@ public class Graph : MonoBehaviour
         }
         else
         {
-            EvaluationText.text = "向いてない";
+            EvaluationText.text = "スラッシュノーマル";
         }
 
     }
