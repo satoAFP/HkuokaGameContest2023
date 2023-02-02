@@ -711,8 +711,12 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
+      propertyPath: ClearSE
+      value: 
+      objectReference: {fileID: 8300000, guid: 1e0b4ddc984363446a3e5b9668d9fbf4, type: 3}
+    - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: EndTime
-      value: 3
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: ResultPanel
