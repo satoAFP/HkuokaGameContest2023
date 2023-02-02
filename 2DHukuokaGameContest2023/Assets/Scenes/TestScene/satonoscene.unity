@@ -4076,9 +4076,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 162164526}
     m_Modifications:
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
+      propertyPath: ClearSE
+      value: 
+      objectReference: {fileID: 8300000, guid: 4175276d5608c2140b8f57d6e6f1ae4e, type: 3}
+    - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: EndTime
-      value: 180
+      value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
+      propertyPath: TimeUpSE
+      value: 
+      objectReference: {fileID: 8300000, guid: 204e4a819eb4da04fbe080f4c62fb45a, type: 3}
     - target: {fileID: 5884149224539423080, guid: 02bff9d649d585e45a7b0cd6daca61e3, type: 3}
       propertyPath: ResultPanel
       value: 
