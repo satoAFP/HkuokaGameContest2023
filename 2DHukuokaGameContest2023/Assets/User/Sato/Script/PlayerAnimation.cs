@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerAnimation : BaseStatusClass
 {
@@ -212,19 +213,6 @@ public class PlayerAnimation : BaseStatusClass
 					}
 				}
 
-				////カーソル表示
-				//var currentTime = dotTimeInterval;
-
-				//for (int i = 0; i < dotObjects.Length; i++)
-				//{
-				//	var positions = new Vector2();
-				//	positions.x = (transform.position.x + atkQuaternion.z + currentTime);
-				//	positions.y = (transform.position.y + atkQuaternion.z + currentTime);
-
-				//	dotObjects[i].transform.position = positions;
-				//	currentTime += dotTimeInterval;
-				//}
-
 				//攻撃
 				if (AttackAni && !freeze)
 				{
@@ -265,7 +253,7 @@ public class PlayerAnimation : BaseStatusClass
 	{
 		//マウスカーソルの設定
 		Cursor.visible = MouseCursor;
-		Cursor.lockState = CursorLockMode.Confined;
+		//Cursor.lockState = CursorLockMode.Confined;
 
 
 
@@ -377,24 +365,24 @@ public class PlayerAnimation : BaseStatusClass
 
 
 		//ジャンプ処理
-		if (JumpAni && !freeze)
-		{
-			if (!jump_key_flag)
-			{
-				JumpAni = false;
-				jump_key_flag = true;
-				move_stop = false;
+		//if (JumpAni && !freeze)
+		//{
+		//	if (!jump_key_flag)
+		//	{
+		//		JumpAni = false;
+		//		jump_key_flag = true;
+		//		move_stop = false;
 
-				rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
+		//		rb2D.velocity = new Vector2(rb2D.velocity.x, JumpPower);
 
-				//カウント増加
-				jump_count++;
-			}
-		}
-		else
-		{
-			jump_key_flag = false;
-		}
+		//		//カウント増加
+		//		jump_count++;
+		//	}
+		//}
+		//else
+		//{
+		//	jump_key_flag = false;
+		//}
 
 		//レイが敵に当たった場合
 		if (hit_enemy)
@@ -501,13 +489,12 @@ public class PlayerAnimation : BaseStatusClass
 		//アニメーション用
 		if (collider.gameObject.tag == "Ani1")
 		{
-			freeze = true;
+			//freeze = true;
 			AttackAni = true;
 		}
 		if (collider.gameObject.tag == "Ani2")
 		{
-			freeze = true;
-			JumpAni = true;
+			SceneManager.LoadScene("MAIN");
 		}
 	}
 	private void OnCollisionEnter2D(Collision2D collision)

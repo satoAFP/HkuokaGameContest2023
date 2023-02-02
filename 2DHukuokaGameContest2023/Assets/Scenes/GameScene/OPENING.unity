@@ -701,7 +701,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222289913}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: -3, z: 0}
+  m_LocalPosition: {x: 14, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -920,7 +920,7 @@ MonoBehaviour:
   FeverTime: 10
   freeze: 0
   cameras: {fileID: 208791135}
-  StopTime: 2
+  StopTime: 0
 --- !u!1001 &277207045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4842,7 +4842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 670145996862546728, guid: 5ff1eed83865cc34391143cc6c5d57c0, type: 3}
       propertyPath: FirstSpownFrame
-      value: 100
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 670145996862546730, guid: 5ff1eed83865cc34391143cc6c5d57c0, type: 3}
       propertyPath: m_Name
