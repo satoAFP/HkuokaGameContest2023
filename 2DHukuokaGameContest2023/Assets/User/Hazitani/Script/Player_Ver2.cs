@@ -81,6 +81,9 @@ public class Player_Ver2 : BaseStatusClass
 	[SerializeField, Header("マウスカーソルの表示")]
 	private bool MouseCursor;
 
+	[SerializeField, Header("マウスカーソルオブジェクト")]
+	private GameObject MouseObj;
+
 	[SerializeField, Header("オレンジオーラ出すまでのコンボ数"), Range(0, 100)]
 	private int OrangeCombo;
 
@@ -131,7 +134,7 @@ public class Player_Ver2 : BaseStatusClass
 	private bool combo_reset_once = false;  //回数制限用
 	private bool menu_once = false;         //メニューを閉じた後実行回数制御用
 	[System.NonSerialized]
-	public bool fever_down = false;			//フィーヴァーゲージが減った時true
+	public bool fever_down = false;			//フィーバーゲージが減った時true
 
 
 	//攻撃関連
@@ -328,9 +331,22 @@ public class Player_Ver2 : BaseStatusClass
 			//まだスタートしていない
 			if (!ManagerAccessor.Instance.systemManager.GameStart)
 			{
-				//マウスカーソルの設定
-				Cursor.visible = MouseCursor;
-				//Cursor.lockState = CursorLockMode.Confined;
+				//メニューが表示されていない
+				if (!ManagerAccessor.Instance.menuPop.menu_pop_now)
+				{
+					//マウスカーソルの設定
+					MouseObj.SetActive(true);
+					Cursor.visible = MouseCursor;
+					Cursor.lockState = CursorLockMode.Confined;
+				}
+				else
+                {
+					//メニュー表示中は止める
+					MouseObj.SetActive(false);
+					Cursor.visible = true;
+					Cursor.lockState = CursorLockMode.None;
+					menu_once = false;
+				}
 
 				rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 			}
@@ -351,8 +367,9 @@ public class Player_Ver2 : BaseStatusClass
 					menu_velocity = rb2D.velocity;
 
 					//マウスカーソルの設定
+					MouseObj.SetActive(true);
 					Cursor.visible = MouseCursor;
-					//Cursor.lockState = CursorLockMode.Confined;
+					Cursor.lockState = CursorLockMode.Confined;
 
 					//落下最高速度を超えないようにする
 					if (rb2D.velocity.y < -FallSpeed)
@@ -558,6 +575,9 @@ public class Player_Ver2 : BaseStatusClass
                 {
 					//メニュー表示中は止める
 					rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+					MouseObj.SetActive(false);
+					Cursor.visible = true;
+					Cursor.lockState = CursorLockMode.None;
 					menu_once = false;
 				}
 			}
@@ -566,7 +586,7 @@ public class Player_Ver2 : BaseStatusClass
 		{
 			//マウスカーソルの設定
 			Cursor.visible = true;
-			//Cursor.lockState = CursorLockMode.None;
+			Cursor.lockState = CursorLockMode.None;
 
 			rb2D.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 		}
