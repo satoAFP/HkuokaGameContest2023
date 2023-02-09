@@ -49,3 +49,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScoreText: {fileID: 2359789811964522525, guid: e467bb94008732a47b68f94ef61e7153, type: 3}
+  TextPos: {x: 390, y: 295, z: 0}

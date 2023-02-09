@@ -15,8 +15,8 @@ public class OnCursolUI : MonoBehaviour
     void Update()
     {
         Vector2 mouse = Input.mousePosition;
-        mouse.x -= 1920 / 2;
-        mouse.y -= 1080 / 2;
+        mouse.x -= 1600 / 2;
+        mouse.y -= 900 / 2;
 
         GameObject parent = gameObject.transform.parent.gameObject;
         Vector2 pos = parent.GetComponent<RectTransform>().localPosition;

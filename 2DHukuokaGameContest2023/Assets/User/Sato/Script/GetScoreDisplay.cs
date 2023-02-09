@@ -8,6 +8,9 @@ public class GetScoreDisplay : MonoBehaviour
     [SerializeField, Header("表示させたいテキスト")]
     private GameObject ScoreText;
 
+    [SerializeField, Header("表示させたい座標")]
+    private Vector3 TextPos;
+
     private int MemScore = 0;
     private bool first = true;  //最初だけ入る処理
 
@@ -20,7 +23,7 @@ public class GetScoreDisplay : MonoBehaviour
             if (first)
             {
                 GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity, transform.parent);
-                clone.GetComponent<RectTransform>().localPosition = new Vector3(530, 380, 0);
+                clone.GetComponent<RectTransform>().localPosition = TextPos;
                 clone.GetComponent<Text>().text = ManagerAccessor.Instance.systemManager.BossScore.ToString();
                 first = false;
             }
@@ -33,7 +36,7 @@ public class GetScoreDisplay : MonoBehaviour
             if (!ManagerAccessor.Instance.systemManager.BossDethEnd)
             {
                 GameObject clone = Instantiate(ScoreText, transform.position, Quaternion.identity, transform.parent);
-                clone.GetComponent<RectTransform>().localPosition = new Vector3(530, 380, 0);
+                clone.GetComponent<RectTransform>().localPosition = TextPos;
                 clone.GetComponent<Text>().text = ManagerAccessor.Instance.player.score_add.ToString();
 
                 MemScore = ManagerAccessor.Instance.systemManager.Score;
