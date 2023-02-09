@@ -2043,6 +2043,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: a29f5cb419f19654ab7f342e7a3ae173, type: 3}
     - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
+      propertyPath: MouseObj
+      value: 
+      objectReference: {fileID: 844626694}
+    - target: {fileID: 347360261909828778, guid: 29bb6c19b0111ce419a7e59d58aea220, type: 3}
       propertyPath: AttackOutOn
       value: 1
       objectReference: {fileID: 0}
@@ -6529,6 +6533,11 @@ Transform:
   m_Father: {fileID: 846041302}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &844626694 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3742582296486336905, guid: 4e88d83df26843944a5ce199b453b126, type: 3}
+  m_PrefabInstance: {fileID: 2019484389}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &845281183
 PrefabInstance:
   m_ObjectHideFlags: 0

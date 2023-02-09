@@ -10,6 +10,8 @@ public class SceneManagerScript : MonoBehaviour
     private void Start()
     {
         ManagerAccessor.Instance.sceneManager = this;
+
+        //Screen.SetResolution(1920, 1080, false, 60);
     }
 
     public void SceneMove(string name)
