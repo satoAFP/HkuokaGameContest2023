@@ -14127,7 +14127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2636084069856586222, guid: 9908609c288a844428b820cd287b5f38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 106
+      value: 116
       objectReference: {fileID: 0}
     - target: {fileID: 2636084069903403428, guid: 9908609c288a844428b820cd287b5f38, type: 3}
       propertyPath: m_RootOrder
@@ -14219,7 +14219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2636084070155657334, guid: 9908609c288a844428b820cd287b5f38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 108
+      value: 113
       objectReference: {fileID: 0}
     - target: {fileID: 2636084070420501544, guid: 9908609c288a844428b820cd287b5f38, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14227,7 +14227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2636084070420501544, guid: 9908609c288a844428b820cd287b5f38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 110
+      value: 113
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9908609c288a844428b820cd287b5f38, type: 3}
@@ -15646,6 +15646,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2102048170}
     m_Modifications:
+    - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
+      propertyPath: MaxTime
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
+      propertyPath: MaxCombo
+      value: 130
+      objectReference: {fileID: 0}
+    - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
+      propertyPath: MaxScore
+      value: 2000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
+      propertyPath: OverCombo
+      value: 170
+      objectReference: {fileID: 0}
+    - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
+      propertyPath: OverScore
+      value: 2200000
+      objectReference: {fileID: 0}
     - target: {fileID: 427066790983080680, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: m_FontData.m_Font
       value: 
