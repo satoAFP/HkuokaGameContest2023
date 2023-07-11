@@ -15652,19 +15652,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: MaxCombo
-      value: 130
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: MaxScore
-      value: 2000000
+      value: 1500000
       objectReference: {fileID: 0}
     - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: OverCombo
-      value: 170
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 70172561072498646, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: OverScore
-      value: 2200000
+      value: 2000000
       objectReference: {fileID: 0}
     - target: {fileID: 427066790983080680, guid: 69cc290c531f2b04e82ffc25addce1bb, type: 3}
       propertyPath: m_FontData.m_Font
